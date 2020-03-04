@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>ArrayList 实现原理与源码分析</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_arraylist_实现原理与源码分析">1. <code>ArrayList</code> 实现原理与源码分析</a>
+<ul class="sectlevel2">
+<li><a href="#_类图">1.1. 类图</a></li>
+<li><a href="#_初始化">1.2. 初始化</a></li>
+<li><a href="#_添加元素">1.3. 添加元素</a></li>
+<li><a href="#_删除元素">1.4. 删除元素</a></li>
+<li><a href="#_测试遍历速度">1.5. 测试遍历速度</a></li>
+<li><a href="#_问题">1.6. 问题</a></li>
+<li><a href="#_参考资料">1.7. 参考资料</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_arraylist_实现原理与源码分析"><a class="anchor" href="#_arraylist_实现原理与源码分析"></a>1. <code>ArrayList</code> 实现原理与源码分析</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>对于每种抽象数据类型并不存在什么法则来告诉我们必须要有哪些操作，这是一个设计决策。--《数据结构与算法分析》</p>
+</div>
+<div class="sect2">
+<h3 id="_类图"><a class="anchor" href="#_类图"></a>1.1. 类图</h3>
+<div class="paragraph">
+<p>先来看一下 <code>ArrayList</code> 的类图：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./diag-e5444ec6a2cc3781e161e5f5824005be.svg" alt="diag e5444ec6a2cc3781e161e5f5824005be" width="100%" height="499">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>支持泛型，继承了 <code>AbstractList</code>，实现了 <code>List</code> 接口。</p>
+</li>
+<li>
+<p><code>RandomAccess</code> 用来表明其支持快速（通常是固定时间）随机访问。</p>
+</li>
+<li>
+<p><code>Cloneable</code> 可以调用 <code>Object.clone()</code> 方法返回该对象的浅拷贝。</p>
+</li>
+<li>
+<p><code>Serializable</code> 此类可被序列化</p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p>为什么还要再次实现 <code>List</code> 接口？（其父类已经实现此接口部分方法： <code>AbstractList</code> 实现 <code>List</code> 接口中除 <code>size()</code> , <code>get(int index)</code> 之外的所有函数）。</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>抽象类实现接口，可以不真正实现所有方法（可以抽象实现）。</strong></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_初始化"><a class="anchor" href="#_初始化"></a>1.2. 初始化</h3>
+<div class="paragraph">
+<p>首先，我们看一下 <code>ArrayList</code> 的初始化：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Default initial capacity.
+ */
+private static final int DEFAULT_CAPACITY = 10;
+
+/**
+ * Shared empty array instance used for empty instances.
+ */
+private static final Object[] EMPTY_ELEMENTDATA = {};
+
+/**
+ * Shared empty array instance used for default sized empty instances. We
+ * distinguish this from EMPTY_ELEMENTDATA to know how much to inflate when
+ * first element is added.
+ */
+private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+/**
+ * The array buffer into which the elements of the ArrayList are stored.
+ * The capacity of the ArrayList is the length of this array buffer. Any
+ * empty ArrayList with elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA
+ * will be expanded to DEFAULT_CAPACITY when the first element is added.
+ */
+transient Object[] elementData; // non-private to simplify nested class access
+
+/**
+ * The size of the ArrayList (the number of elements it contains).
+ *
+ * @serial
+ */
+private int size;
+
+/**
+ * Constructs an empty list with the specified initial capacity.
+ *
+ * @param  initialCapacity  the initial capacity of the list
+ * @throws IllegalArgumentException if the specified initial capacity
+ *         is negative
+ */
+public ArrayList(int initialCapacity) {
+    if (initialCapacity &gt; 0) {
+        this.elementData = new Object[initialCapacity];
+    } else if (initialCapacity == 0) {
+        this.elementData = EMPTY_ELEMENTDATA;
+    } else {
+        throw new IllegalArgumentException("Illegal Capacity: "+
+                                           initialCapacity);
+    }
+}
+
+/**
+ * Constructs an empty list with an initial capacity of ten.
+ */
+public ArrayList() {
+    this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
+}
+
+/**
+ * Constructs a list containing the elements of the specified
+ * collection, in the order they are returned by the collection's
+ * iterator.
+ *
+ * @param c the collection whose elements are to be placed into this list
+ * @throws NullPointerException if the specified collection is null
+ */
+public ArrayList(Collection&lt;? extends E&gt; c) {
+    elementData = c.toArray();
+    if ((size = elementData.length) != 0) {
+        // defend against c.toArray (incorrectly) not returning Object[]
+        // (see e.g. https://bugs.openjdk.java.net/browse/JDK-6260652)
+        if (elementData.getClass() != Object[].class)
+            elementData = Arrays.copyOf(elementData, size, Object[].class);
+    } else {
+        // replace with empty array.
+        this.elementData = EMPTY_ELEMENTDATA;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从上述代码中可以猜测，<strong><code>ArrayList</code> 内部使用数组来保存元素的，并且使用一个整型 <code>int</code> 变量来保存长度。</strong></p>
+</div>
+<div class="paragraph">
+<p><code>ArrayList</code> 初始化工作分三种情况：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>无参构造函数初始化时，直接将内部数组初始化为 <code>DEFAULTCAPACITY_EMPTY_ELEMENTDATA</code>。在第一次添加元素时，再初始化为默认容量是 <code>10</code> 的数组。</p>
+</li>
+<li>
+<p>指定容量大小进行初始化时，容量大于 <code>0</code> 则初始化为指定容量的数组；如果等于 <code>0</code> 则初始化为默认空数组 <code>EMPTY_ELEMENTDATA</code>。否则抛出异常。</p>
+</li>
+<li>
+<p>如果使用 <code>Collection</code> 实例来初始化，不为空则将调用 <code>toArray()</code> 方法来初始化 <code>elementData</code>；如果为空则初始化为默认空数组 <code>EMPTY_ELEMENTDATA</code>。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_添加元素"><a class="anchor" href="#_添加元素"></a>1.3. 添加元素</h3>
+<div class="paragraph">
+<p>在进行正常测试前，先展示一下"透视" <code>ArrayList</code> 的工具类：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Objects;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-03 11:10
+ */
+public class ArrayListBaseTest {
+    /**
+     * 通过反射查看 {@link ArrayList} 的内部属性
+     */
+    public void xray(ArrayList list) {
+        Class clazz = list.getClass();
+        try {
+            Field elementData = clazz.getDeclaredField("elementData");
+            elementData.setAccessible(true);
+            Object[] objects = (Object[]) elementData.get(list);
+            Field sizeField = clazz.getDeclaredField("size");
+            sizeField.setAccessible(true);
+
+            int size = 0;
+            for (int i = 0; i &lt; objects.length; i++) {
+                if (Objects.nonNull(objects[i])) {
+                    ++size;
+                }
+            }
+            System.out.println("length = " + objects.length
+                    + ", size = " + sizeField.get(list)
+                    + ", arraySize = " + size);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>正式测试：将初始化长度设置为 <code>8</code>，同时将添加元素的个数设置为 <code>8 * 2</code> 来方便观察数组增长情况。通过上述的工具方法，可以将 <code>ArrayList</code> 内部的数据进一步展示出来：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testAddAtTail() {
+    int initialCapacity = 8;
+    ArrayList&lt;Integer&gt; integers = new ArrayList&lt;&gt;(initialCapacity);
+    for (int i = 0; i &lt; initialCapacity * 2; i++) {
+        xray(integers);
+        integers.add(i);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JDK 相关源代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Increases the capacity to ensure that it can hold at least the
+ * number of elements specified by the minimum capacity argument.
+ *
+ * @param minCapacity the desired minimum capacity
+ * @throws OutOfMemoryError if minCapacity is less than zero
+ */
+private Object[] grow(int minCapacity) {
+    return elementData = Arrays.copyOf(elementData,
+                                       newCapacity(minCapacity));
+}
+
+private Object[] grow() {
+    return grow(size + 1);
+}
+
+/**
+ * Returns a capacity at least as large as the given minimum capacity.
+ * Returns the current capacity increased by 50% if that suffices.
+ * Will not return a capacity greater than MAX_ARRAY_SIZE unless
+ * the given minimum capacity is greater than MAX_ARRAY_SIZE.
+ *
+ * @param minCapacity the desired minimum capacity
+ * @throws OutOfMemoryError if minCapacity is less than zero
+ */
+private int newCapacity(int minCapacity) {
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);
+    if (newCapacity - minCapacity &lt;= 0) {
+        if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
+            return Math.max(DEFAULT_CAPACITY, minCapacity);
+        if (minCapacity &lt; 0) // overflow
+            throw new OutOfMemoryError();
+        return minCapacity;
+    }
+    return (newCapacity - MAX_ARRAY_SIZE &lt;= 0)
+        ? newCapacity
+        : hugeCapacity(minCapacity);
+}
+
+private static int hugeCapacity(int minCapacity) {
+    if (minCapacity &lt; 0) // overflow
+        throw new OutOfMemoryError();
+    return (minCapacity &gt; MAX_ARRAY_SIZE)
+        ? Integer.MAX_VALUE
+        : MAX_ARRAY_SIZE;
+}
+
+/**
+ * This helper method split out from add(E) to keep method
+ * bytecode size under 35 (the -XX:MaxInlineSize default value),
+ * which helps when add(E) is called in a C1-compiled loop.
+ */
+private void add(E e, Object[] elementData, int s) {
+    if (s == elementData.length)
+        elementData = grow();
+    elementData[s] = e;
+    size = s + 1;
+}
+
+/**
+ * Appends the specified element to the end of this list.
+ *
+ * @param e element to be appended to this list
+ * @return {@code true} (as specified by {@link Collection#add})
+ */
+public boolean add(E e) {
+    modCount++;
+    add(e, elementData, size);
+    return true;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>经过测试发现，<code>ArrayList</code> 是在容量达到数组长度之后，再次添加才会扩容，扩容长度为 <code>int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1)</code>，最小为原始长度，最大不能超过 <code>int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8</code>。</p>
+</div>
+<div class="paragraph">
+<p>之所以最大长度为 <code>Integer.MAX_VALUE</code> 减去 <code>8</code>，文档解释是因为某些 VM 保留数组头部用于存储一些 header words。但是在 <code>hugeCapacity(int minCapacity)</code> 方法中，在最小容量大于 <code>MAX_ARRAY_SIZE</code>，又可以返回 <code>Integer.MAX_VALUE</code>。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testAddAtHeader() {
+    int initialCapacity = 8;
+    ArrayList&lt;Integer&gt; integers = new ArrayList&lt;&gt;(initialCapacity);
+    for (int i = 0; i &lt; initialCapacity * 2; i++) {
+        xray(integers);
+        integers.add(0, i);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Inserts the specified element at the specified position in this
+ * list. Shifts the element currently at that position (if any) and
+ * any subsequent elements to the right (adds one to their indices).
+ *
+ * @param index index at which the specified element is to be inserted
+ * @param element element to be inserted
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ */
+public void add(int index, E element) {
+    rangeCheckForAdd(index);
+    modCount++;
+    final int s;
+    Object[] elementData;
+    if ((s = size) == (elementData = this.elementData).length)
+        elementData = grow();
+    System.arraycopy(elementData, index,
+                     elementData, index + 1,
+                     s - index);
+    elementData[index] = element;
+    size = s + 1;
+}
+
+/**
+ * A version of rangeCheck used by add and addAll.
+ */
+private void rangeCheckForAdd(int index) {
+    if (index &gt; size || index &lt; 0)
+        throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从这里看出，在头部插入添加元素，实际就是将指定坐标位置以及右侧所有元素向后移动一位，腾出空间存放新元素。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Appends all of the elements in the specified collection to the end of
+ * this list, in the order that they are returned by the
+ * specified collection's Iterator.  The behavior of this operation is
+ * undefined if the specified collection is modified while the operation
+ * is in progress.  (This implies that the behavior of this call is
+ * undefined if the specified collection is this list, and this
+ * list is nonempty.)
+ *
+ * @param c collection containing elements to be added to this list
+ * @return {@code true} if this list changed as a result of the call
+ * @throws NullPointerException if the specified collection is null
+ */
+public boolean addAll(Collection&lt;? extends E&gt; c) {
+    Object[] a = c.toArray();
+    modCount++;
+    int numNew = a.length;
+    if (numNew == 0)
+        return false;
+    Object[] elementData;
+    final int s;
+    if (numNew &gt; (elementData = this.elementData).length - (s = size))
+        elementData = grow(s + numNew);
+    System.arraycopy(a, 0, elementData, s, numNew);
+    size = s + numNew;
+    return true;
+}
+
+/**
+ * Inserts all of the elements in the specified collection into this
+ * list, starting at the specified position.  Shifts the element
+ * currently at that position (if any) and any subsequent elements to
+ * the right (increases their indices).  The new elements will appear
+ * in the list in the order that they are returned by the
+ * specified collection's iterator.
+ *
+ * @param index index at which to insert the first element from the
+ *              specified collection
+ * @param c collection containing elements to be added to this list
+ * @return {@code true} if this list changed as a result of the call
+ * @throws IndexOutOfBoundsException {@inheritDoc}
+ * @throws NullPointerException if the specified collection is null
+ */
+public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+    rangeCheckForAdd(index);
+
+    Object[] a = c.toArray();
+    modCount++;
+    int numNew = a.length;
+    if (numNew == 0)
+        return false;
+    Object[] elementData;
+    final int s;
+    if (numNew &gt; (elementData = this.elementData).length - (s = size))
+        elementData = grow(s + numNew);
+
+    int numMoved = s - index;
+    if (numMoved &gt; 0)
+        System.arraycopy(elementData, index,
+                         elementData, index + numNew,
+                         numMoved);
+    System.arraycopy(a, 0, elementData, index, numNew);
+    size = s + numNew;
+    return true;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>向 <code>ArrayList</code> 中添加集合实例，则是集合示例转化成数组，然后利用数组拷贝的方式来高效完成添加工作。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_删除元素"><a class="anchor" href="#_删除元素"></a>1.4. 删除元素</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_测试遍历速度"><a class="anchor" href="#_测试遍历速度"></a>1.5. 测试遍历速度</h3>
+<div class="paragraph">
+<p><code>ArrayList</code> 的遍历方式有如下几种：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>标准迭代器方式</p>
+</li>
+<li>
+<p>外部 <code>for</code> 循环 + <code>get(index)</code></p>
+</li>
+<li>
+<p><code>forEach(lambda)</code> 方法</p>
+</li>
+<li>
+<p><code>for(E e: arrayList)</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>基准测试当然非 Java Microbenchmark Harness 莫属了。直接上代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+import org.openjdk.jmh.annotations.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-03 13:09
+ */
+@BenchmarkMode(Mode.Throughput)
+@Warmup(iterations = 3)
+@State(Scope.Benchmark)
+@Threads(8)
+public class ArrayListIteratorSpeedTest {
+
+    private ArrayList&lt;Integer&gt; arrayList = null;
+
+    @Setup(Level.Iteration)
+    public void setup() {
+        int capacity = 1_000_000;
+        arrayList = new ArrayList&lt;&gt;(capacity);
+        for (int i = 0; i &lt; capacity; i++) {
+            arrayList.add(i);
+        }
+    }
+
+    @Benchmark
+    public void testIterator() {
+        Integer iteratorValue = null;
+        Iterator&lt;Integer&gt; iterator = arrayList.iterator();
+        while (iterator.hasNext()) {
+            iteratorValue = iterator.next();
+        }
+    }
+
+    @Benchmark
+    public void testRandomAccess() {
+        Integer randomAccessValue = null;
+        int size = arrayList.size();
+        for (int i = 0; i &lt; size; i++) {
+            randomAccessValue = arrayList.get(i);
+        }
+    }
+
+    @Benchmark
+    public void testForEachLambda() {
+        arrayList.forEach(this::devnull);
+    }
+
+    public void devnull(Integer value) {
+        Integer forEachLambdaValue = value;
+    }
+
+    @Benchmark
+    public void testForEach() {
+        Integer forEachValue = null;
+        for (Integer integer : arrayList) {
+            forEachValue = integer;
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>运行结果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在代码中，常常看到 <code>modCount</code> 属性，这个属性是从 <code>AbstractList</code> 继承到的一个重要属性。 这个属性用于在使用迭代器（<code>ListIterator</code>，<code>Iterator</code>）遍历的时候，用来检查列表中的元素是否发生结构性变化（列表元素数量发生改变）了，主要在多线程环境下需要使用，防止一个线程正在迭代遍历，另一个线程修改了这个列表的结构。<code>ArrayList</code> 是非线程安全的，多线程同时修改会抛出异常。<code>writeObject</code>（序列化时），也可能会抛出此异常。</p>
+</div>
+<div class="paragraph">
+<p>检查到修改不一致就抛出异常是 fail-fast 机制，是 Java 集合(Collection)中的一种错误机制。它只能被用来检测错误，因为JDK并不保证 fail-fast 机制一定会发生。如果发生 fail-fast，则推荐使用 <code>JUC</code> 中对应的类。</p>
+</div>
+<div class="paragraph">
+<p>简单来说，Java 的序列化机制是通过在运行时判断类的 <code>serialVersionUID</code> 来验证版本一致性的。在进行反序列化时，JVM会把传来的字节流中的 <code>serialVersionUID</code> 与本地相应实体（类）的 <code>serialVersionUID</code> 进行比较，如果相同就认为是一致的，可以进行反序列化，否则就会出现序列化版本不一致的异常。(InvalidCastException)</p>
+</div>
+<div class="paragraph">
+<p><code>serialVersionUID</code> 有两种显示的生成方式：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>一个是默认的L类型数字，比如：private static final long serialVersionUID = 1L;</p>
+</li>
+<li>
+<p>一个是根据类名、接口名、成员方法及属性等来生成一个64位的哈希字段。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>当实现 <code>java.io.Serializable</code> 接口的实体（类）没有显式地定义一个名为 <code>serialVersionUID</code>，类型为 <code>long</code> 的变量时，Java序列化机制会根据编译的class(它通过类名，方法名等诸多因素经过计算而得，理论上是一一映射的关系，也就是唯一的)自动生成一个 <code>serialVersionUID</code> 作序列化版本比较用，这种情况下，如果class文件(类名,方法明等)没有发生变化(增加空格,换行,增加注释,等等)，就算再编译多次，<code>serialVersionUID</code> 也不会变化的.</p>
+</div>
+<div class="paragraph">
+<p>如果我们不希望通过编译来强制划分软件版本，即实现序列化接口的实体能够兼容先前版本，未作更改的类，就需要显式地定义一个名为 <code>serialVersionUID</code>，类型为 <code>long</code> 的变量，不修改这个变量值的序列化实体都可以相互进行串行化和反串行化。</p>
+</div>
+<div class="paragraph">
+<p>3.观察3两个重要属性
+关键字 transient（瞬态）被标记为transient的属性在对象被序列化的时候不会被保存。
+why?
+假如elementData的长度为10，而其中只有5个元素，那么在序列化的时候只需要存储5个元素，而数组中后面5个元素是不需要存储的。于是将elementData定义为transient，避免了Java自带的序列化机制，并定义了两个方法，实现了自己可控制的序列化操作。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">//更新
+public E set(int index, E element) {
+	rangeCheck(index);
+
+	E oldValue = elementData(index);
+	elementData[index] = element;
+	return oldValue;
+}
+//查找
+
+public E get(int index) {
+	rangeCheck(index);
+
+	return elementData(index);
+}
+
+//是否包含
+public boolean contains(Object o) {
+	return indexOf(o) &gt;= 0;
+}
+
+public int indexOf(Object o) {
+	if (o == null) {
+		for (int i = 0; i &lt; size; i++)
+			if (elementData[i]==null)
+				return i;
+	} else {
+		for (int i = 0; i &lt; size; i++)
+			if (o.equals(elementData[i]))
+				return i;
+	}
+	return -1;
+}
+//反向查找
+public int lastIndexOf(Object o) {
+	if (o == null) {
+		for (int i = size-1; i &gt;= 0; i--)
+			if (elementData[i]==null)
+				return i;
+	} else {
+		for (int i = size-1; i &gt;= 0; i--)
+			if (o.equals(elementData[i]))
+				return i;
+	}
+	return -1;
+}
+//容量判断
+
+public int size() {
+	return size;
+}
+
+public boolean isEmpty() {
+	return size == 0;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>1.浅克隆（shallow clone）</p>
+</div>
+<div class="paragraph">
+<p>被复制对象的所有基础类型变量（byte,short,int,long,char,boolean,float,double）与原有对象中变量具有相同的值，修改其值不会影响原对象；而复制对象中引用类型（数组，类对象等）还是指向原来对象，修改其值会影响原对象。</p>
+</div>
+<div class="paragraph">
+<p>2.深克隆（deep clone）</p>
+</div>
+<div class="paragraph">
+<p>被复制对象的所有基础类型变量（byte,short,int,long,char,boolean,float,double）与原有对象中变量具有相同的值，修改其值不会影响原对象；并且复制对象中引用类型（数组，类对象等）指向被复制过的新对象，修改其值不会影响原对象。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public Object clone() {
+	try {
+		ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.clone();
+		v.elementData = Arrays.copyOf(elementData, size);
+		v.modCount = 0;
+		return v;
+	} catch (CloneNotSupportedException e) {
+		// this shouldn't happen, since we are Cloneable
+		throw new InternalError(e);
+	}
+}
+
+public Object[] toArray() {
+	return Arrays.copyOf(elementData, size);
+}
+
+@SuppressWarnings("unchecked")
+public &lt;T&gt; T[] toArray(T[] a) {
+	if (a.length &lt; size)
+		// Make a new array of a's runtime type, but my contents:
+		return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+	System.arraycopy(elementData, 0, a, 0, size);
+	if (a.length &gt; size)
+		a[size] = null;
+	return a;
+}
+
+// Positional Access Operations
+//得到指定索引处的元素
+@SuppressWarnings("unchecked")
+E elementData(int index) {
+	return (E) elementData[index];
+}
+//清空
+public void clear() {
+	modCount++;
+
+	// clear to let GC do its work
+	for (int i = 0; i &lt; size; i++)
+		elementData[i] = null;
+
+	size = 0;
+}
+
+
+protected void removeRange(int fromIndex, int toIndex) {
+	modCount++;
+	int numMoved = size - toIndex;
+	System.arraycopy(elementData, toIndex, elementData, fromIndex,
+					 numMoved);
+
+	// clear to let GC do its work
+	int newSize = size - (toIndex-fromIndex);
+	for (int i = newSize; i &lt; size; i++) {
+		elementData[i] = null;
+	}
+	size = newSize;
+}
+
+ //检查数否超出数组长度 用于添加元素时
+private void rangeCheck(int index) {
+	if (index &gt;= size)
+		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+}
+//检查是否溢出
+private void rangeCheckForAdd(int index) {
+	if (index &gt; size || index &lt; 0)
+		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+}
+
+private String outOfBoundsMsg(int index) {
+	return "Index: "+index+", Size: "+size;
+}
+//删除指定集合的元素
+public boolean removeAll(Collection&lt;?&gt; c) {
+	Objects.requireNonNull(c);
+	return batchRemove(c, false);
+}
+//仅保留指定集合的元素
+public boolean retainAll(Collection&lt;?&gt; c) {
+	Objects.requireNonNull(c);
+	return batchRemove(c, true);
+}
+* @param complement true时从数组保留指定集合中元素的值，为false时从数组删除指定集合中元素的值。
+* @return 数组中重复的元素都会被删除(而不是仅删除一次或几次)，有任何删除操作都会返回true
+private boolean batchRemove(Collection&lt;?&gt; c, boolean complement) {
+	final Object[] elementData = this.elementData;
+	int r = 0, w = 0;
+	boolean modified = false;
+	try {
+		for (; r &lt; size; r++)
+			if (c.contains(elementData[r]) == complement)
+				elementData[w++] = elementData[r];
+	} finally {
+		// Preserve behavioral compatibility with AbstractCollection,
+		// even if c.contains() throws.
+		if (r != size) {
+			System.arraycopy(elementData, r,
+							 elementData, w,
+							 size - r);
+			w += size - r;
+		}
+		if (w != size) {
+			// clear to let GC do its work
+			for (int i = w; i &lt; size; i++)
+				elementData[i] = null;
+			modCount += size - w;
+			size = w;
+			modified = true;
+		}
+	}
+	return modified;
+}
+ //保存数组实例的状态到一个流（即它序列化）。写入过程数组被更改会抛出异常
+private void writeObject(java.io.ObjectOutputStream s)
+	throws java.io.IOException{
+	// Write out element count, and any hidden stuff
+	int expectedModCount = modCount;
+	s.defaultWriteObject();
+
+	// Write out size as capacity for behavioural compatibility with clone()
+	s.writeInt(size);
+
+	// Write out all elements in the proper order.
+	for (int i=0; i&lt;size; i++) {
+		s.writeObject(elementData[i]);
+	}
+
+	if (modCount != expectedModCount) {
+		throw new ConcurrentModificationException();
+	}
+}
+//上面是写，这个就是读了。
+private void readObject(java.io.ObjectInputStream s)
+	throws java.io.IOException, ClassNotFoundException {
+	elementData = EMPTY_ELEMENTDATA;
+
+	// Read in size, and any hidden stuff
+	s.defaultReadObject();
+
+	// Read in capacity
+	s.readInt(); // ignored
+
+	if (size &gt; 0) {
+		// be like clone(), allocate array based upon size not capacity
+		ensureCapacityInternal(size);
+
+		Object[] a = elementData;
+		// Read in all elements in the proper order.
+		for (int i=0; i&lt;size; i++) {
+			a[i] = s.readObject();
+		}
+	}
+}
+
+public ListIterator&lt;E&gt; listIterator(int index) {
+	if (index &lt; 0 || index &gt; size)
+		throw new IndexOutOfBoundsException("Index: "+index);
+	return new ListItr(index);
+}
+实现Iterable
+public ListIterator&lt;E&gt; listIterator() {
+	return new ListItr(0);
+}
+实现Iterable
+public Iterator&lt;E&gt; iterator() {
+	return new Itr();
+}</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>//通用的迭代器实现 迭代器（Iterator）模式</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private class Itr implements Iterator&lt;E&gt; {
+	int cursor;       // index of next element to return
+	int lastRet = -1; // index of last element returned; -1 if no such
+	int expectedModCount = modCount;
+
+	public boolean hasNext() {
+		return cursor != size;
+	}
+
+	@SuppressWarnings("unchecked")
+	public E next() {
+		checkForComodification();
+		int i = cursor;
+		if (i &gt;= size)
+			throw new NoSuchElementException();
+		Object[] elementData = ArrayList.this.elementData;
+		if (i &gt;= elementData.length)
+			throw new ConcurrentModificationException();
+		cursor = i + 1;
+		return (E) elementData[lastRet = i];
+	}
+
+	public void remove() {
+		if (lastRet &lt; 0)
+			throw new IllegalStateException();
+		checkForComodification();
+
+		try {
+			ArrayList.this.remove(lastRet);
+			cursor = lastRet;
+			lastRet = -1;
+			expectedModCount = modCount;
+		} catch (IndexOutOfBoundsException ex) {
+			throw new ConcurrentModificationException();
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void forEachRemaining(Consumer&lt;? super E&gt; consumer) {
+		Objects.requireNonNull(consumer);
+		final int size = ArrayList.this.size;
+		int i = cursor;
+		if (i &gt;= size) {
+			return;
+		}
+		final Object[] elementData = ArrayList.this.elementData;
+		if (i &gt;= elementData.length) {
+			throw new ConcurrentModificationException();
+		}
+		while (i != size &amp;&amp; modCount == expectedModCount) {
+			consumer.accept((E) elementData[i++]);
+		}
+		// update once at end of iteration to reduce heap write traffic
+		cursor = i;
+		lastRet = i - 1;
+		checkForComodification();
+	}
+
+	final void checkForComodification() {
+		if (modCount != expectedModCount)
+			throw new ConcurrentModificationException();
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中的ListItr继承Itr，实现了ListIterator接口，同时重写了hasPrevious()，nextIndex()， previousIndex()，previous()，set(E e)，add(E e)等方法，所以这也可以看出了Iterator和ListIterator的区别，就是ListIterator在Iterator的基础上增加了添加对象，修改对象，逆向遍历等方法，这些是Iterator不能实现的。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private class ListItr extends Itr implements ListIterator&lt;E&gt; {
+	ListItr(int index) {
+		super();
+		cursor = index;
+	}
+
+	public boolean hasPrevious() {
+		return cursor != 0;
+	}
+
+	public int nextIndex() {
+		return cursor;
+	}
+
+	public int previousIndex() {
+		return cursor - 1;
+	}
+
+	@SuppressWarnings("unchecked")
+	public E previous() {
+		checkForComodification();
+		int i = cursor - 1;
+		if (i &lt; 0)
+			throw new NoSuchElementException();
+		Object[] elementData = ArrayList.this.elementData;
+		if (i &gt;= elementData.length)
+			throw new ConcurrentModificationException();
+		cursor = i;
+		return (E) elementData[lastRet = i];
+	}
+
+	public void set(E e) {
+		if (lastRet &lt; 0)
+			throw new IllegalStateException();
+		checkForComodification();
+
+		try {
+			ArrayList.this.set(lastRet, e);
+		} catch (IndexOutOfBoundsException ex) {
+			throw new ConcurrentModificationException();
+		}
+	}
+
+	public void add(E e) {
+		checkForComodification();
+
+		try {
+			int i = cursor;
+			ArrayList.this.add(i, e);
+			cursor = i + 1;
+			lastRet = -1;
+			expectedModCount = modCount;
+		} catch (IndexOutOfBoundsException ex) {
+			throw new ConcurrentModificationException();
+		}
+	}
+}
+//返回指定范围的子数组
+public List&lt;E&gt; subList(int fromIndex, int toIndex) {
+	subListRangeCheck(fromIndex, toIndex, size);
+	return new SubList(this, 0, fromIndex, toIndex);
+}
+
+static void subListRangeCheck(int fromIndex, int toIndex, int size) {
+	if (fromIndex &lt; 0)
+		throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
+	if (toIndex &gt; size)
+		throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+	if (fromIndex &gt; toIndex)
+		throw new IllegalArgumentException("fromIndex(" + fromIndex +
+										   ") &gt; toIndex(" + toIndex + ")");
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中的SubList继承AbstractList，实现了RandmAccess接口，类内部实现了对子序列的增删改查等方法，但它同时也充分利用了内部类的优点，就是共享ArrayList的全局变量，例如检查器变量modCount，数组elementData等，所以SubList进行的增删改查操作都是对ArrayList的数组进行的，并没有创建新的数组(不浪费内存资源)。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private class SubList extends AbstractList&lt;E&gt; implements RandomAccess {
+	private final AbstractList&lt;E&gt; parent;
+	private final int parentOffset;
+	private final int offset;
+	int size;
+
+	SubList(AbstractList&lt;E&gt; parent,
+			int offset, int fromIndex, int toIndex) {
+		this.parent = parent;
+		this.parentOffset = fromIndex;
+		this.offset = offset + fromIndex;
+		this.size = toIndex - fromIndex;
+		this.modCount = ArrayList.this.modCount;
+	}
+
+	public E set(int index, E e) {
+		rangeCheck(index);
+		checkForComodification();
+		E oldValue = ArrayList.this.elementData(offset + index);
+		ArrayList.this.elementData[offset + index] = e;
+		return oldValue;
+	}
+
+	public E get(int index) {
+		rangeCheck(index);
+		checkForComodification();
+		return ArrayList.this.elementData(offset + index);
+	}
+
+	public int size() {
+		checkForComodification();
+		return this.size;
+	}
+
+	public void add(int index, E e) {
+		rangeCheckForAdd(index);
+		checkForComodification();
+		parent.add(parentOffset + index, e);
+		this.modCount = parent.modCount;
+		this.size++;
+	}
+
+	public E remove(int index) {
+		rangeCheck(index);
+		checkForComodification();
+		E result = parent.remove(parentOffset + index);
+		this.modCount = parent.modCount;
+		this.size--;
+		return result;
+	}
+
+	protected void removeRange(int fromIndex, int toIndex) {
+		checkForComodification();
+		parent.removeRange(parentOffset + fromIndex,
+						   parentOffset + toIndex);
+		this.modCount = parent.modCount;
+		this.size -= toIndex - fromIndex;
+	}
+
+	public boolean addAll(Collection&lt;? extends E&gt; c) {
+		return addAll(this.size, c);
+	}
+
+	public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+		rangeCheckForAdd(index);
+		int cSize = c.size();
+		if (cSize==0)
+			return false;
+
+		checkForComodification();
+		parent.addAll(parentOffset + index, c);
+		this.modCount = parent.modCount;
+		this.size += cSize;
+		return true;
+	}
+
+	public Iterator&lt;E&gt; iterator() {
+		return listIterator();
+	}
+
+	public ListIterator&lt;E&gt; listIterator(final int index) {
+		checkForComodification();
+		rangeCheckForAdd(index);
+		final int offset = this.offset;
+
+		return new ListIterator&lt;E&gt;() {
+			int cursor = index;
+			int lastRet = -1;
+			int expectedModCount = ArrayList.this.modCount;
+
+			public boolean hasNext() {
+				return cursor != SubList.this.size;
+			}
+
+			@SuppressWarnings("unchecked")
+			public E next() {
+				checkForComodification();
+				int i = cursor;
+				if (i &gt;= SubList.this.size)
+					throw new NoSuchElementException();
+				Object[] elementData = ArrayList.this.elementData;
+				if (offset + i &gt;= elementData.length)
+					throw new ConcurrentModificationException();
+				cursor = i + 1;
+				return (E) elementData[offset + (lastRet = i)];
+			}
+
+			public boolean hasPrevious() {
+				return cursor != 0;
+			}
+
+			@SuppressWarnings("unchecked")
+			public E previous() {
+				checkForComodification();
+				int i = cursor - 1;
+				if (i &lt; 0)
+					throw new NoSuchElementException();
+				Object[] elementData = ArrayList.this.elementData;
+				if (offset + i &gt;= elementData.length)
+					throw new ConcurrentModificationException();
+				cursor = i;
+				return (E) elementData[offset + (lastRet = i)];
+			}
+
+			@SuppressWarnings("unchecked")
+			public void forEachRemaining(Consumer&lt;? super E&gt; consumer) {
+				Objects.requireNonNull(consumer);
+				final int size = SubList.this.size;
+				int i = cursor;
+				if (i &gt;= size) {
+					return;
+				}
+				final Object[] elementData = ArrayList.this.elementData;
+				if (offset + i &gt;= elementData.length) {
+					throw new ConcurrentModificationException();
+				}
+				while (i != size &amp;&amp; modCount == expectedModCount) {
+					consumer.accept((E) elementData[offset + (i++)]);
+				}
+				// update once at end of iteration to reduce heap write traffic
+				lastRet = cursor = i;
+				checkForComodification();
+			}
+
+			public int nextIndex() {
+				return cursor;
+			}
+
+			public int previousIndex() {
+				return cursor - 1;
+			}
+
+			public void remove() {
+				if (lastRet &lt; 0)
+					throw new IllegalStateException();
+				checkForComodification();
+
+				try {
+					SubList.this.remove(lastRet);
+					cursor = lastRet;
+					lastRet = -1;
+					expectedModCount = ArrayList.this.modCount;
+				} catch (IndexOutOfBoundsException ex) {
+					throw new ConcurrentModificationException();
+				}
+			}
+
+			public void set(E e) {
+				if (lastRet &lt; 0)
+					throw new IllegalStateException();
+				checkForComodification();
+
+				try {
+					ArrayList.this.set(offset + lastRet, e);
+				} catch (IndexOutOfBoundsException ex) {
+					throw new ConcurrentModificationException();
+				}
+			}
+
+			public void add(E e) {
+				checkForComodification();
+
+				try {
+					int i = cursor;
+					SubList.this.add(i, e);
+					cursor = i + 1;
+					lastRet = -1;
+					expectedModCount = ArrayList.this.modCount;
+				} catch (IndexOutOfBoundsException ex) {
+					throw new ConcurrentModificationException();
+				}
+			}
+
+			final void checkForComodification() {
+				if (expectedModCount != ArrayList.this.modCount)
+					throw new ConcurrentModificationException();
+			}
+		};
+	}
+
+	public List&lt;E&gt; subList(int fromIndex, int toIndex) {
+		subListRangeCheck(fromIndex, toIndex, size);
+		return new SubList(this, offset, fromIndex, toIndex);
+	}
+
+	private void rangeCheck(int index) {
+		if (index &lt; 0 || index &gt;= this.size)
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+	}
+
+	private void rangeCheckForAdd(int index) {
+		if (index &lt; 0 || index &gt; this.size)
+			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+	}
+
+	private String outOfBoundsMsg(int index) {
+		return "Index: "+index+", Size: "+this.size;
+	}
+
+	private void checkForComodification() {
+		if (ArrayList.this.modCount != this.modCount)
+			throw new ConcurrentModificationException();
+	}
+
+	public Spliterator&lt;E&gt; spliterator() {
+		checkForComodification();
+		return new ArrayListSpliterator&lt;E&gt;(ArrayList.this, offset,
+										   offset + this.size, this.modCount);
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">//按照比较器的判断逻辑进行排序
+@Override
+@SuppressWarnings("unchecked")
+public void sort(Comparator&lt;? super E&gt; c) {
+	final int expectedModCount = modCount;
+	Arrays.sort((E[]) elementData, 0, size, c);
+	if (modCount != expectedModCount) {
+		throw new ConcurrentModificationException();
+	}
+	modCount++;
+}
+ 以下基于 1.8，和函数式编程相关的方法
+@Override
+public void forEach(Consumer&lt;? super E&gt; action) {
+	Objects.requireNonNull(action);
+	final int expectedModCount = modCount;
+	@SuppressWarnings("unchecked")
+	final E[] elementData = (E[]) this.elementData;
+	final int size = this.size;
+	for (int i=0; modCount == expectedModCount &amp;&amp; i &lt; size; i++) {
+		action.accept(elementData[i]);
+	}
+	if (modCount != expectedModCount) {
+		throw new ConcurrentModificationException();
+	}
+}
+
+@Override
+public Spliterator&lt;E&gt; spliterator() {
+	return new ArrayListSpliterator&lt;&gt;(this, 0, -1, 0);
+}
+
+static final class ArrayListSpliterator&lt;E&gt; implements Spliterator&lt;E&gt; {
+
+
+	private final ArrayList&lt;E&gt; list;
+	private int index; // current index, modified on advance/split
+	private int fence; // -1 until used; then one past last index
+	private int expectedModCount; // initialized when fence set
+
+	/** Create new spliterator covering the given  range */
+	ArrayListSpliterator(ArrayList&lt;E&gt; list, int origin, int fence,
+						 int expectedModCount) {
+		this.list = list; // OK if null unless traversed
+		this.index = origin;
+		this.fence = fence;
+		this.expectedModCount = expectedModCount;
+	}
+
+	private int getFence() { // initialize fence to size on first use
+		int hi; // (a specialized variant appears in method forEach)
+		ArrayList&lt;E&gt; lst;
+		if ((hi = fence) &lt; 0) {
+			if ((lst = list) == null)
+				hi = fence = 0;
+			else {
+				expectedModCount = lst.modCount;
+				hi = fence = lst.size;
+			}
+		}
+		return hi;
+	}
+
+	public ArrayListSpliterator&lt;E&gt; trySplit() {
+		int hi = getFence(), lo = index, mid = (lo + hi) &gt;&gt;&gt; 1;
+		return (lo &gt;= mid) ? null : // divide range in half unless too small
+			new ArrayListSpliterator&lt;E&gt;(list, lo, index = mid,
+										expectedModCount);
+	}
+
+	public boolean tryAdvance(Consumer&lt;? super E&gt; action) {
+		if (action == null)
+			throw new NullPointerException();
+		int hi = getFence(), i = index;
+		if (i &lt; hi) {
+			index = i + 1;
+			@SuppressWarnings("unchecked") E e = (E)list.elementData[i];
+			action.accept(e);
+			if (list.modCount != expectedModCount)
+				throw new ConcurrentModificationException();
+			return true;
+		}
+		return false;
+	}
+
+	public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+		int i, hi, mc; // hoist accesses and checks from loop
+		ArrayList&lt;E&gt; lst; Object[] a;
+		if (action == null)
+			throw new NullPointerException();
+		if ((lst = list) != null &amp;&amp; (a = lst.elementData) != null) {
+			if ((hi = fence) &lt; 0) {
+				mc = lst.modCount;
+				hi = lst.size;
+			}
+			else
+				mc = expectedModCount;
+			if ((i = index) &gt;= 0 &amp;&amp; (index = hi) &lt;= a.length) {
+				for (; i &lt; hi; ++i) {
+					@SuppressWarnings("unchecked") E e = (E) a[i];
+					action.accept(e);
+				}
+				if (lst.modCount == mc)
+					return;
+			}
+		}
+		throw new ConcurrentModificationException();
+	}
+
+	public long estimateSize() {
+		return (long) (getFence() - index);
+	}
+
+	public int characteristics() {
+		return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
+	}
+}
+
+@Override
+public boolean removeIf(Predicate&lt;? super E&gt; filter) {
+	Objects.requireNonNull(filter);
+	// figure out which elements are to be removed
+	// any exception thrown from the filter predicate at this stage
+	// will leave the collection unmodified
+	int removeCount = 0;
+	final BitSet removeSet = new BitSet(size);
+	final int expectedModCount = modCount;
+	final int size = this.size;
+	for (int i=0; modCount == expectedModCount &amp;&amp; i &lt; size; i++) {
+		@SuppressWarnings("unchecked")
+		final E element = (E) elementData[i];
+		if (filter.test(element)) {
+			removeSet.set(i);
+			removeCount++;
+		}
+	}
+	if (modCount != expectedModCount) {
+		throw new ConcurrentModificationException();
+	}
+
+	// shift surviving elements left over the spaces left by removed elements
+	final boolean anyToRemove = removeCount &gt; 0;
+	if (anyToRemove) {
+		final int newSize = size - removeCount;
+		for (int i=0, j=0; (i &lt; size) &amp;&amp; (j &lt; newSize); i++, j++) {
+			i = removeSet.nextClearBit(i);
+			elementData[j] = elementData[i];
+		}
+		for (int k=newSize; k &lt; size; k++) {
+			elementData[k] = null;  // Let gc do its work
+		}
+		this.size = newSize;
+		if (modCount != expectedModCount) {
+			throw new ConcurrentModificationException();
+		}
+		modCount++;
+	}
+
+	return anyToRemove;
+}
+
+@Override
+@SuppressWarnings("unchecked")
+public void replaceAll(UnaryOperator&lt;E&gt; operator) {
+	Objects.requireNonNull(operator);
+	final int expectedModCount = modCount;
+	final int size = this.size;
+	for (int i=0; modCount == expectedModCount &amp;&amp; i &lt; size; i++) {
+		elementData[i] = operator.apply((E) elementData[i]);
+	}
+	if (modCount != expectedModCount) {
+		throw new ConcurrentModificationException();
+	}
+	modCount++;
+}
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>总结，
+  	List接口可调整大小的数组实现。实现所有可选的List操作，并允许所有元素，包括null，元素可重复。
+  	除了列表接口外，该类提供了一种方法来操作该数组的大小来存储该列表中的数组的大小。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>时间复杂度：
+方法size、isEmpty、get、set、iterator和listIterator的调用是常数时间的。
+	添加删除的时间复杂度为O(N)。其他所有操作也都是线性时间复杂度。</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>容量：
+	每个ArrayList都有容量，容量大小至少为List元素的长度，默认初始化为10。
+ 容量可以自动增长。
+ 如果提前知道数组元素较多，可以在添加元素前通过调用ensureCapacity()方法提前增加容量以减小后期容量自动增长的开销。
+ 也可以通过带初始容量的构造器初始化这个容量。</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre> 线程不安全：
+ 	ArrayList不是线程安全的。
+ 	如果需要应用到多线程中，需要在外部做同步。
+**指导意义**
+那种遍历性能更优？应该使用哪种遍历方式？
+《编写高质量代码：改善Java程序的151个建议》一书认为使用传统的下标遍历是优于增强型for循环的，而《Effective Java中文版 第2版》推荐的是增强型for循环，说for-each循环没有性能损失。何解？
+在ArrayList大小为十万之前，五种遍历方式时间消耗几乎一样
+即便在千万大小的ArrayList中，几种遍历方式相差也不过50ms左右（for-each循环较大），且在常用的十万左右时间几乎相等，考虑foreach简洁的优点，我们大可选用foreach这种简便方式进行遍历。</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/compareListLoop.png" alt="compareListLoop">
+</div>
+</div>
+<div class="paragraph">
+<p>这是对ArrayList效率影响比较大的一个因素。
+每当执行Add等添加元素的方法，都会检查内部数组的容量是否不够了，如果是，它就会以当前容量 的 1.5 倍来重新构建一个数组，将旧元素Copy到新数组中，然后丢弃旧数组，在这个临界点的扩容操作，应该来说是比较影响效率的。 正确的预估可能的元素，是提高ArrayList使用效率的重要途径。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_问题"><a class="anchor" href="#_问题"></a>1.6. 问题</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Java 中有很多标识类的接口。这些表示类有什么意义？是否在 Java 虚拟机中对其进行了特殊处理？</p>
+</li>
+<li>
+<p>在实现 <code>java.io.Serializable</code> 时，如果不声明 <code>serialVersionUID</code> 变量时，是否会生成这个值？默认的值是什么？在序列化时，是如何保存这个值？在反序列化时，如何从对象的字节码中获取这个值？比较后，如果不同又怎么处理的？</p>
+</li>
+<li>
+<p>在 <code>ArrayList</code> 中有 <code>writeObject(java.io.ObjectOutputStream s)</code> 和 <code>readObject(java.io.ObjectInputStream s)</code> 方法。在单例模式中，为了解决反序列化的问题，会添加 <code>readResolve()</code> 方法。这三个方法有什么用？什么时候被什么调用？被什么调用？设置断点调试一下，看 <strong>调用栈</strong>。</p>
+</li>
+<li>
+<p>ArrayList 在扩容时，使用的是 <code>oldCapacity + (oldCapacity &gt;&gt; 1)</code>，这里 <code>oldCapacity &gt;&gt; 1</code> 就是直接移位将 oldCapacity 的值减半，取到的值就是 oldCapacity/2 后的最大正整数。</p>
+</li>
+<li>
+<p>ArrayList 中有 <code>rangeCheck(int index)</code> 和 <code>rangeCheckForAdd(int index)</code>，区别就是前者没有做负数检查。为什么会有这种区别？为什么不检查负数？再为什么不检查负数为什么还能抛出 <code>ArrayIndexOutOfBoundsException</code> 异常？（文档中）</p>
+</li>
+<li>
+<p>《数据结构与算法分析》 中提到 <code>Iterator</code> 和 <code>ListIterator</code> 的区别以及 <code>ListIterator</code> 中一个特殊的使用。再次看书来确认一下。</p>
+</li>
+<li>
+<p>通过指令来对比 Iterat or 和 foreach 之间的性能差异。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.7. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://www.hollischuang.com/archives/1144">单例与序列化的那些事儿-HollisChuang&#8217;s Blog</a></p>
+</li>
+<li>
+<p><a href="http://www.hollischuang.com/archives/197">深度分析Java的枚举类型—-枚举的线程安全性及序列化问题-HollisChuang&#8217;s Blog</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-03-03 17:20:08 +0800
+</div>
+</div>
+</body>
+</html>

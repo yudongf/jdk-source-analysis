@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>LinkedList</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment @import statement to use as custom stylesheet */
+/*@import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700";*/
+article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section{display:block}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+abbr[title]{border-bottom:1px dotted}
+b,strong{font-weight:bold}
+dfn{font-style:italic}
+hr{-moz-box-sizing:content-box;box-sizing:content-box;height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{font-family:inherit;font-weight:400;font-size:1em;line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em;height:0}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
+ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
+ul.square{list-style-type:square}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+abbr,acronym{text-transform:uppercase;font-size:90%;color:rgba(0,0,0,.8);border-bottom:1px dotted #ddd;cursor:help}
+abbr{text-transform:none}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote cite{display:block;font-size:.9375em;color:rgba(0,0,0,.6)}
+blockquote cite::before{content:"\2014 \0020"}
+blockquote cite a,blockquote cite a:visited{color:rgba(0,0,0,.6)}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+:not(pre)>code.nobreak{word-wrap:normal}
+:not(pre)>code.nowrap{white-space:nowrap}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:-ms-flexbox;display:-webkit-flex;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:rgba(255,255,255,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details>summary:first-of-type{cursor:pointer;display:list-item;outline:none;margin-bottom:.75em}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font-size:inherit}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
+.exampleblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child{margin-bottom:0}
+.sidebarblock{border-style:solid;border-width:1px;border-color:#dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;-webkit-border-radius:4px;border-radius:4px}
+.sidebarblock>:first-child{margin-top:0}
+.sidebarblock>:last-child{margin-bottom:0}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;-webkit-border-radius:4px;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{border-right:1px solid currentColor;opacity:.35;padding-right:.5em}
+pre.pygments .lineno{border-right:1px solid currentColor;opacity:.35;display:inline-block;margin-right:.75em}
+pre.pygments .lineno::before{content:"";margin-right:-.125em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
+table.tableblock{max-width:100%;border-collapse:separate}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.frame-all{border-width:1px}
+table.frame-sides{border-width:0 1px}
+table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
+ul.inline{display:-ms-flexbox;display:-webkit-box;display:flex;-ms-flex-flow:row wrap;-webkit-flex-flow:row wrap;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+.gist .file-data>table{border:0;background:#fff;width:100%;margin-bottom:0}
+.gist .file-data>table td.line-data{width:99%}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,span.alt{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;-webkit-box-shadow:0 1px 4px #e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{-webkit-box-shadow:none!important;box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media print,amzn-kf8{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_linkedlist">1. LinkedList</a>
+<ul class="sectlevel2">
+<li><a href="#_类图">1.1. 类图</a></li>
+<li><a href="#_初始化">1.2. 初始化</a></li>
+<li><a href="#_分析工具">1.3. 分析工具</a></li>
+<li><a href="#_添加元素">1.4. 添加元素</a></li>
+<li><a href="#_redis_的_list">1.5. Redis 的 List</a></li>
+<li><a href="#_redis_的_ziplist">1.6. Redis 的 ziplist</a></li>
+<li><a href="#_redis_中的_quicklist">1.7. Redis 中的 quicklist</a></li>
+<li><a href="#_参考资料">1.8. 参考资料</a></li>
+<li><a href="#_类的继承关系">1.9. 类的继承关系</a></li>
+<li><a href="#_类的属性">1.10. 类的属性</a></li>
+<li><a href="#_类的构造器">1.11. 类的构造器</a></li>
+<li><a href="#_类的方法">1.12. 类的方法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_linkedlist"><a class="anchor" href="#_linkedlist"></a>1. LinkedList</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_类图"><a class="anchor" href="#_类图"></a>1.1. 类图</h3>
+<div class="paragraph">
+<p>先来看一下 <code>ArrayList</code> 的类图：</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./diag-0a1a36b1bfc746ed88c5db48ad5ce645.svg" alt="diag 0a1a36b1bfc746ed88c5db48ad5ce645" width="100%" height="607">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_初始化"><a class="anchor" href="#_初始化"></a>1.2. 初始化</h3>
+<div class="paragraph">
+<p>先看看 <code>LinkedList</code> 中内部属性和构造函数：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">transient int size = 0;
+
+/**
+ * Pointer to first node.
+ */
+transient Node&lt;E&gt; first;
+
+/**
+ * Pointer to last node.
+ */
+transient Node&lt;E&gt; last;
+
+/*
+void dataStructureInvariants() {
+    assert (size == 0)
+        ? (first == null &amp;&amp; last == null)
+        : (first.prev == null &amp;&amp; last.next == null);
+}
+*/
+
+/**
+ * Constructs an empty list.
+ */
+public LinkedList() {
+}
+
+/**
+ * Constructs a list containing the elements of the specified
+ * collection, in the order they are returned by the collection's
+ * iterator.
+ *
+ * @param  c the collection whose elements are to be placed into this list
+ * @throws NullPointerException if the specified collection is null
+ */
+public LinkedList(Collection&lt;? extends E&gt; c) {
+    this();
+    addAll(c);
+}
+
+private static class Node&lt;E&gt; {
+    E item;
+    Node&lt;E&gt; next;
+    Node&lt;E&gt; prev;
+
+    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从这里一眼即可看出内部使用一个双向链表来保存数据。初始化工作也及其干净，什么也不干。另外一个构造函数后面再分析。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+D瓜哥觉得使用初始化的头尾节点更方便代码书写，少了很多繁琐的判断。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_分析工具"><a class="anchor" href="#_分析工具"></a>1.3. 分析工具</h3>
+<div class="paragraph">
+<p>使用反射来获取内部属性，然后做进一步分析。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+import java.lang.reflect.Field;
+import java.util.LinkedList;
+import java.util.Objects;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-03 16:16
+ */
+public class LinkedListBaseTest {
+    /**
+     * 使用反射读取 LinkedList 内部属性
+     */
+    public void xray(LinkedList&lt;?&gt; list) {
+        Class&lt;? extends LinkedList&gt; clazz = list.getClass();
+        try {
+            Field nodeField = clazz.getDeclaredField("first");
+            nodeField.setAccessible(true);
+            Object node = nodeField.get(list);
+            System.out.println("length=" + length(node) + ", size=" + list.size());
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int length(Object node) {
+        int result = 0;
+        if (Objects.isNull(node)) {
+            return result;
+        }
+        try {
+            Class&lt;?&gt; nodeClass = node.getClass();
+            Field nextField = nodeClass.getDeclaredField("next");
+            nextField.setAccessible(true);
+            while (Objects.nonNull(node)) {
+                node = nextField.get(node);
+                result++;
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_添加元素"><a class="anchor" href="#_添加元素"></a>1.4. 添加元素</h3>
+<div class="paragraph">
+<p>测试代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testAddAtTail() {
+    LinkedList&lt;Integer&gt; list = new LinkedList&lt;&gt;();
+    for (int i = 0; i &lt; 16; i++) {
+        xray(list);
+        list.add(i);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JDK 源码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Links e as last element.
+ */
+void linkLast(E e) {
+    final Node&lt;E&gt; l = last;
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);
+    last = newNode;
+    if (l == null)
+        first = newNode;
+    else
+        l.next = newNode;
+    size++;
+    modCount++;
+}
+
+/**
+ * Appends the specified element to the end of this list.
+ *
+ * &lt;p&gt;This method is equivalent to {@link #addLast}.
+ *
+ * @param e element to be appended to this list
+ * @return {@code true} (as specified by {@link Collection#add})
+ */
+public boolean add(E e) {
+    linkLast(e);
+    return true;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>再来看看从头部插入元素：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testAddAtHeader() {
+    LinkedList&lt;Integer&gt; list = new LinkedList&lt;&gt;();
+    for (int i = 0; i &lt; 16; i++) {
+        xray(list);
+        list.addFirst(i);
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JDK 源码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Links e as first element.
+ */
+private void linkFirst(E e) {
+    final Node&lt;E&gt; f = first;
+    final Node&lt;E&gt; newNode = new Node&lt;&gt;(null, e, f);
+    first = newNode;
+    if (f == null)
+        last = newNode;
+    else
+        f.prev = newNode;
+    size++;
+    modCount++;
+}
+
+/**
+ * Inserts the specified element at the beginning of this list.
+ *
+ * @param e the element to add
+ */
+public void addFirst(E e) {
+    linkFirst(e);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从这里就能看出，<code>LinkedList</code> 在 <code>add(e)</code>、<code>addLast(e)</code> 或者 <code>addFirst(e)</code> 时，都是对链表的首尾进行操作，会比较高效。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redis_的_list"><a class="anchor" href="#_redis_的_list"></a>1.5. Redis 的 List</h3>
+<div class="paragraph">
+<p>Redis 底层也有很多地方使用到链表，并且也是双向链表。</p>
+</div>
+<div class="listingblock">
+<div class="title">adlist.h</div>
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">typedef struct listNode {
+    struct listNode *prev;
+    struct listNode *next;
+    void *value;
+} listNode;
+
+typedef struct listIter {
+    listNode *next;
+    int direction;
+} listIter;
+
+typedef struct list {
+    listNode *head;
+    listNode *tail;
+    void *(*dup)(void *ptr);
+    void (*free)(void *ptr);
+    int (*match)(void *ptr, void *key);
+    unsigned long len;
+} list;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Redis 的链表实现特点是：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>双向：节点带有前后指针；</p>
+</li>
+<li>
+<p>无环：首尾没有相连，所以没有构成环状；</p>
+</li>
+<li>
+<p>链表保存了首尾指针；</p>
+</li>
+<li>
+<p>多态：可以保存不同类型的值，这里成为泛型也许更符合 Java 中的语义。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redis_的_ziplist"><a class="anchor" href="#_redis_的_ziplist"></a>1.6. Redis 的 ziplist</h3>
+<div class="paragraph">
+<p>Redis 官方在 ziplist.c 文件的注释中对 ziplist 进行了定义：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>The ziplist is a specially encoded dually linked list that is designed
+to be very memory efficient. It stores both strings and integer values,
+where integers are encoded as actual integers instead of a series of
+characters. It allows push and pop operations on either side of the list
+in O(1) time. However, because every operation requires a reallocation of
+the memory used by the ziplist, the actual complexity is related to the
+amount of memory used by the ziplist.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; redis/ziplist.c
+</div>
+</div>
+<div class="paragraph">
+<p>就是说，ziplist 是一个经过特殊编码的双向链表，它的设计目标就是为了提高存储效率。ziplist 可以用于存储字符串或整数，其中整数是按真正的二进制表示进行编码的，而不是编码成字符串序列。它能以 O(1) 的时间复杂度在表的两端提供 <code>push</code> 和 <code>pop</code> 操作。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-linenums" data-lang="linenums">The general layout of the ziplist is as follows:
+
+&lt;zlbytes&gt; &lt;zltail&gt; &lt;zllen&gt; &lt;entry&gt; &lt;entry&gt; ... &lt;entry&gt; &lt;zlend&gt;
+
+NOTE: all fields are stored in little endian, if not specified otherwise.</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>&lt;zlbytes&gt;</code>: 32bit，表示ziplist占用的字节总数（也包括&lt;zlbytes&gt;本身占用的4个字节）。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>&lt;zltail&gt;</code>: 32bit，表示ziplist表中最后一项（entry）在ziplist中的偏移字节数。
+<div class="paragraph">
+<p><code>&lt;zltail&gt;</code> 的存在，使得我们可以很方便地找到最后一项（不用遍历整个ziplist），从而可以在ziplist尾端快速地执行push或pop操作。</p>
+</div></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>&lt;zllen&gt;</code>: 16bit， 表示ziplist中数据项（entry）的个数。zllen字段因为只有16bit，所以可以表达的最大值为2^16-1。<code>&lt;zllen&gt;</code> 等于16bit全为1的情况，那么 <code>&lt;zllen&gt;</code> 就不表示数据项个数了，这时要想知道 ziplist 中数据项总数，那么必须对ziplist从头到尾遍历各个数据项，才能计数出来。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><code>&lt;entry&gt;</code>: 表示真正存放数据的数据项，长度不定。一个数据项（entry）也有它自己的内部结构，这个稍后再解释。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><code>&lt;zlend&gt;</code>: ziplist 最后 1 个字节，是一个结束标记，值固定等于 255。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>ziplist 将表中每一项存放在前后连续的地址空间内，一个ziplist整体占用一大块内存。它是一个表（list），但其实不是一个链表（linked list）。</p>
+</div>
+<div class="paragraph">
+<p>ziplist 为了在细节上节省内存，对于值的存储采用了变长的编码方式。</p>
+</div>
+<div class="paragraph">
+<p>每一个数据项&lt;entry&gt;的构成：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-linenums" data-lang="linenums">&lt;prevlen&gt; &lt;encoding&gt; &lt;entry-data&gt;</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>&lt;prevlen&gt;</code>: 表示前一个数据项占用的总字节数。
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如果前一个数据项占用字节数小于254，那么 <code>&lt;prevlen&gt;</code> 就只用一个字节来表示，这个字节的值就是前一个数据项的占用字节数： <code>&lt;prevlen from 0 to 253&gt; &lt;encoding&gt; &lt;entry&gt;</code></p>
+</li>
+<li>
+<p>如果前一个数据项占用字节数大于等于254，那么 <code>&lt;prevlen&gt;</code> 就用5个字节来表示，其中第1个字节的值是254（作为这种情况的一个标记），而后面4个字节组成一个整型值，来真正存储前一个数据项的占用字节数</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>0xFE &lt;4 bytes unsigned little endian prevlen&gt; &lt;encoding&gt; &lt;entry&gt;</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>&lt;encoding&gt;</code>: 表示当前数据项的类型，整型或者字符串。</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td><code>&lt;entry-data&gt;</code>: 数据</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>关于 <code>&lt;encoding&gt; &lt;entry-data&gt;</code> 的编码，直接引用官方文档：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> The encoding field of the entry depends on the content of the
+ entry. When the entry is a string, the first 2 bits of the encoding first
+ byte will hold the type of encoding used to store the length of the string,
+ followed by the actual length of the string. When the entry is an integer
+ the first 2 bits are both set to 1. The following 2 bits are used to specify
+ what kind of integer will be stored after this header. An overview of the
+ different types and encodings is as follows. The first byte is always enough
+ to determine the kind of entry.
+
+ |00pppppp| - 1 byte
+      String value with length less than or equal to 63 bytes (6 bits).
+      "pppppp" represents the unsigned 6 bit length.
+ |01pppppp|qqqqqqqq| - 2 bytes
+      String value with length less than or equal to 16383 bytes (14 bits).
+      IMPORTANT: The 14 bit number is stored in big endian.
+ |10000000|qqqqqqqq|rrrrrrrr|ssssssss|tttttttt| - 5 bytes
+      String value with length greater than or equal to 16384 bytes.
+      Only the 4 bytes following the first byte represents the length
+      up to 32^2-1. The 6 lower bits of the first byte are not used and
+      are set to zero.
+      IMPORTANT: The 32 bit number is stored in big endian.
+ |11000000| - 3 bytes
+      Integer encoded as int16_t (2 bytes).
+ |11010000| - 5 bytes
+      Integer encoded as int32_t (4 bytes).
+ |11100000| - 9 bytes
+      Integer encoded as int64_t (8 bytes).
+ |11110000| - 4 bytes
+      Integer encoded as 24 bit signed (3 bytes).
+ |11111110| - 2 bytes
+      Integer encoded as 8 bit signed (1 byte).
+ |1111xxxx| - (with xxxx between 0000 and 1101) immediate 4 bit integer.
+      Unsigned integer from 0 to 12. The encoded value is actually from
+      1 to 13 because 0000 and 1111 can not be used, so 1 should be
+      subtracted from the encoded 4 bit value to obtain the right value.
+ |11111111| - End of ziplist special entry.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>引用在网上找的例子，来做个说明：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/redis-ziplist-sample.png" alt="redis ziplist sample">
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>这个ziplist一共包含 33 个字节。字节编号从 <code>byte[0]</code> 到 <code>byte[32]</code>。图中每个字节的值使用 16 进制表示。</p>
+</li>
+<li>
+<p>头 4 个字节（<code>0x21000000</code>）是按小端（little endian）模式存储的 <code>&lt;zlbytes&gt;</code> 字段。什么是小端呢？就是指数据的低字节保存在内存的低地址中（参见维基百科词条 <a href="https://en.wikipedia.org/wiki/Endianness">Endianness</a>）。因此，这里 <code>&lt;zlbytes&gt;</code> 的值应该解析成 <code>0x00000021</code>，用十进制表示正好就是33。</p>
+</li>
+<li>
+<p>接下来 4 个字节（<code>byte[4..7]</code>）是 <code>&lt;zltail&gt;</code>，用小端存储模式来解释，它的值是 <code>0x0000001D</code>（值为29），表示最后一个数据项在 <code>byte[29]</code> 的位置（那个数据项为 <code>0x05FE14</code>）。</p>
+</li>
+<li>
+<p>再接下来 2 个字节（<code>byte[8..9]</code>），值为 <code>0x0004</code>，表示这个 ziplist 里一共存有4项数据。</p>
+</li>
+<li>
+<p>接下来 6 个字节（<code>byte[10..15]</code>）是第 1 个数据项。其中，<code>prevlen=0</code>，因为它前面没有数据项；<code>len=4</code>，相当于前面定义的9种情况中的第1种，表示后面4个字节按字符串存储数据，数据的值为：<code>name</code>。</p>
+</li>
+<li>
+<p>接下来 8 个字节（<code>byte[16..23]</code>）是第 2 个数据项，与前面数据项存储格式类似，存储 1 个字符串：<code>tielei</code>。</p>
+</li>
+<li>
+<p>接下来 5 个字节（<code>byte[24..28]</code>）是第 3 个数据项，与前面数据项存储格式类似，存储 1 个字符串： <code>age</code>。</p>
+</li>
+<li>
+<p>接下来3个字节（<code>byte[29..31]</code>）是最后一个数据项，它的格式与前面的数据项存储格式不太一样。其中，第 1 个字节 <code>prevlen=5</code>，表示前一个数据项占用 5 个字节；第 2 个字节 = <code>FE</code>，相当于前面定义的9种情况中的第8种，所以后面还有1个字节用来表示真正的数据，并且以整数表示。它的值是20（0x14）。</p>
+</li>
+<li>
+<p>最后1个字节（<code>byte[32]</code>）表示 <code>&lt;zlend&gt;</code>，是固定的值255（0xFF）。</p>
+</li>
+</ol>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如何反向访问 ziplist ？</p>
+</li>
+<li>
+<p>如何从 ziplist 中删除数据？删除数据后，对应位置的 Bits 位怎么处理？</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Redis 在下面这个几个地方使用了 ziplist：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>列表键值包含少了的列表项，并且列表项只是整数或者短小的字符串时。（在最新版 Redis 中测试，使用的是 quicklist）</p>
+</li>
+<li>
+<p>在哈希键值包含少量键值对，并且每个键值对只包含整数或短小字符串时。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redis_中的_quicklist"><a class="anchor" href="#_redis_中的_quicklist"></a>1.7. Redis 中的 quicklist</h3>
+<div class="paragraph">
+<p>Redis 对外暴露的 list 数据类型，它底层实现所依赖的内部数据结构就是 quicklist。</p>
+</div>
+<div class="paragraph">
+<p>list 是一个能维持数据项先后顺序的列表（各个数据项的先后顺序由插入位置决定），便于在表的两端追加和删除数据，而对于中间位置的存取具有 O(N) 的时间复杂度。</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>quicklist.c - A doubly linked list of ziplists</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; redis/quicklist.c
+</div>
+</div>
+<div class="paragraph">
+<p>Redis 在 <code>quicklist.c</code> 就说明了，quicklist 是一个双向链表，而且是一个 ziplist 的双向链表。quicklist 的每个节点都是一个 ziplist。这样设计大概又是一个空间和时间的折中：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>双向链表便于在表的两端进行 <code>push</code> 和 <code>pop</code> 操作，但是它的内存开销比较大。首先，它在每个节点上除了要保存数据之外，还要额外保存两个指针；其次，双向链表的各个节点是单独的内存块，地址不连续，节点多了容易产生内存碎片。</p>
+</li>
+<li>
+<p>ziplist 由于是一整块连续内存，所以存储效率很高。但是，它不利于修改操作，每次数据变动都会引发一次内存的`realloc`。特别是当 ziplist 长度很长的时候，一次 realloc 可能会导致大批量的数据拷贝，进一步降低性能。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>于是，结合了双向链表和 ziplist 的优点，quicklist 就应运而生了。</p>
+</div>
+<div class="paragraph">
+<p>新问题：到底一个 quicklist 节点包含多长的 ziplist 合适呢？</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>每个quicklist节点上的ziplist越短，则内存碎片越多。</p>
+</li>
+<li>
+<p>每个quicklist节点上的ziplist越长，则为ziplist分配大块连续内存空间的难度就越大。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Redis 提供了一个配置参数 <code>list-max-ziplist-size</code> 让使用者可以来根据自己的情况进行调整:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>list-max-ziplist-size -2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个参数可正可负：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>当取正值的时候，表示按照数据项个数来限定每个 quicklist 节点上的 ziplist 长度。</p>
+</li>
+<li>
+<p>当取负值的时候，表示按照占用字节数来限定每个 quicklist 节点上的 ziplist 长度。这时，它只能取 <code>-1</code> 到 <code>-5</code> 这五个值，每个值含义如下：</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-5</code>: 每个 quicklist 节点上的 ziplist 大小不能超过 64 Kb。（注：1kb &#8658; 1024 bytes）</p>
+</li>
+<li>
+<p><code>-4</code>: 每个 quicklist 节点上的 ziplist 大小不能超过 32 Kb。</p>
+</li>
+<li>
+<p><code>-3</code>: 每个 quicklist 节点上的 ziplist 大小不能超过 16 Kb。</p>
+</li>
+<li>
+<p><code>-2</code>: 每个 quicklist 节点上的 ziplist 大小不能超过 8 Kb。（-2是Redis给出的默认值）</p>
+</li>
+<li>
+<p><code>-1</code>: 每个 quicklist 节点上的 ziplist 大小不能超过 4 Kb。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>list的设计目标是能够用来存储很长的数据列表的。当列表很长的时候，最容易被访问的很可能是两端的数据，中间的数据被访问的频率比较低。list 还提供了一个选项，能够把中间的数据节点进行压缩，从而进一步节省内存空间。Redis 的配置参数 <code>list-compress-depth</code> 就是用来完成这个设置的。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>list-compress-depth 0 // 0 是特殊值，表示都不压缩，默认值。</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个参数表示一个quicklist两端不被压缩的节点个数。注：这里的节点个数是指quicklist双向链表的节点个数，而不是指ziplist里面的数据项个数。一个 quicklist 节点上的 ziplist，如果被压缩，就是整体被压缩的。</p>
+</div>
+<div class="paragraph">
+<p>Redis 对于 quicklist 内部节点的压缩算法，采用的 <a href="https://en.wikipedia.org/wiki/LZ4_(compression_algorithm)">LZF</a> ——一种无损压缩算法。</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>添加过程中，如何处理中间位置的压缩工作？</p>
+</li>
+<li>
+<p>头部或者尾部删除，导致 quicklistNode 的非压缩节点不符合设置，怎么处理？</p>
+</li>
+<li>
+<p>如果中间删除，节点为压缩节点，怎么处理？</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">quicklist.h</div>
+<div class="content">
+<pre class="highlight"><code class="language-c" data-lang="c">/* Node, quicklist, and Iterator are the only data structures used currently. */
+
+/* quicklistNode is a 32 byte struct describing a ziplist for a quicklist.
+ * We use bit fields keep the quicklistNode at 32 bytes.
+ * count: 16 bits, max 65536 (max zl bytes is 65k, so max count actually &lt; 32k).
+ * encoding: 2 bits, RAW=1, LZF=2.
+ * container: 2 bits, NONE=1, ZIPLIST=2.
+ * recompress: 1 bit, bool, true if node is temporarry decompressed for usage.
+ * attempted_compress: 1 bit, boolean, used for verifying during testing.
+ * extra: 10 bits, free for future use; pads out the remainder of 32 bits */
+typedef struct quicklistNode {
+    struct quicklistNode *prev;
+    struct quicklistNode *next;
+    unsigned char *zl;
+    unsigned int sz;             /* ziplist size in bytes */
+    unsigned int count : 16;     /* count of items in ziplist */
+    unsigned int encoding : 2;   /* RAW==1 or LZF==2 */
+    unsigned int container : 2;  /* NONE==1 or ZIPLIST==2 */
+    unsigned int recompress : 1; /* was this node previous compressed? */
+    unsigned int attempted_compress : 1; /* node can't compress; too small */
+    unsigned int extra : 10; /* more bits to steal for future usage */
+} quicklistNode;
+
+/* quicklistLZF is a 4+N byte struct holding 'sz' followed by 'compressed'.
+ * 'sz' is byte length of 'compressed' field.
+ * 'compressed' is LZF data with total (compressed) length 'sz'
+ * NOTE: uncompressed length is stored in quicklistNode-&gt;sz.
+ * When quicklistNode-&gt;zl is compressed, node-&gt;zl points to a quicklistLZF */
+typedef struct quicklistLZF {
+    unsigned int sz; /* LZF size in bytes*/
+    char compressed[];
+} quicklistLZF;
+
+/* Bookmarks are padded with realloc at the end of of the quicklist struct.
+ * They should only be used for very big lists if thousands of nodes were the
+ * excess memory usage is negligible, and there's a real need to iterate on them
+ * in portions.
+ * When not used, they don't add any memory overhead, but when used and then
+ * deleted, some overhead remains (to avoid resonance).
+ * The number of bookmarks used should be kept to minimum since it also adds
+ * overhead on node deletion (searching for a bookmark to update). */
+typedef struct quicklistBookmark {
+    quicklistNode *node;
+    char *name;
+} quicklistBookmark;
+
+/* quicklist is a 40 byte struct (on 64-bit systems) describing a quicklist.
+ * 'count' is the number of total entries.
+ * 'len' is the number of quicklist nodes.
+ * 'compress' is: -1 if compression disabled, otherwise it's the number
+ *                of quicklistNodes to leave uncompressed at ends of quicklist.
+ * 'fill' is the user-requested (or default) fill factor.
+ * 'bookmakrs are an optional feature that is used by realloc this struct,
+ *      so that they don't consume memory when not used. */
+typedef struct quicklist {
+    quicklistNode *head;
+    quicklistNode *tail;
+    unsigned long count;        /* total count of all entries in all ziplists */
+    unsigned long len;          /* number of quicklistNodes */
+    int fill : QL_FILL_BITS;              /* fill factor for individual nodes */
+    unsigned int compress : QL_COMP_BITS; /* depth of end nodes not to compress;0=off */
+    unsigned int bookmark_count: QL_BM_BITS;
+    quicklistBookmark bookmarks[];
+} quicklist;
+
+typedef struct quicklistIter {
+    const quicklist *quicklist;
+    quicklistNode *current;
+    unsigned char *zi;
+    long offset; /* offset in current ziplist */
+    int direction;
+} quicklistIter;
+
+typedef struct quicklistEntry {
+    const quicklist *quicklist;
+    quicklistNode *node;
+    unsigned char *zi;
+    unsigned char *value;
+    long long longval;
+    unsigned int sz;
+    int offset;
+} quicklistEntry;</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/redis-quicklist-structure.png" alt="redis quicklist structure">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">127.0.0.1:6379&gt; rpush numbers 1 3 5
+(integer) 3
+127.0.0.1:6379&gt; type numbers
+list
+127.0.0.1:6379&gt; OBJECT encoding numbers
+"quicklist"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.8. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://zhangtielei.com/posts/blog-redis-ziplist.html">Redis内部数据结构详解(4)——ziplist</a></p>
+</li>
+<li>
+<p><a href="http://zhangtielei.com/posts/blog-redis-quicklist.html">Redis内部数据结构详解(5)——quicklist</a></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>ArrayList更适合随机访问，而LinkedList更适合插入和删除。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>对add(E e)方法的分析，可以得知LinkedList添加数据的效率高；</p>
+</li>
+<li>
+<p>对remove(int index)方法的分析，可以了解到LinkedList删除数据的效率高；</p>
+</li>
+<li>
+<p>对get(int index),set(int index, E element)方法的分析，可以看出LinkdedList查询的效率不高（需要定位，最差要遍历一半）；</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>核心数据结构通过内部类体现，Node就是实际的结点，存放了结点元素和前后结点的引用。</p>
+</div>
+<div class="paragraph">
+<p>在1.7之前LinkedList是通过headerEntry实现的一个首尾相连的循环链表的。<br>
+从1.7开始，LinkedList是一个Node实现的非循环链表。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">private static class Node&lt;E&gt; {
+    E item;
+    Node&lt;E&gt; next;
+    Node&lt;E&gt; prev;
+
+    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>代码开始</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package java.util;
+
+import java.util.function.Consumer;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_类的继承关系"><a class="anchor" href="#_类的继承关系"></a>1.9. 类的继承关系</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/DiagramForLinkedList.png" alt="DiagramForLinkedList">
+</div>
+</div>
+<div class="paragraph">
+<p>继承自AbstractSequentialList，一个LinkedList抽象的实现；
+重点关注实现了Deque接口。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class LinkedList&lt;E&gt;
+    extends AbstractSequentialList&lt;E&gt;
+    implements List&lt;E&gt;, Deque&lt;E&gt;, Cloneable, java.io.Serializable
+{</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_类的属性"><a class="anchor" href="#_类的属性"></a>1.10. 类的属性</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //存储元素个数
+    transient int size = 0;
+
+    //存储头结点
+    transient Node&lt;E&gt; first;
+
+    //存储尾结点
+    transient Node&lt;E&gt; last;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_类的构造器"><a class="anchor" href="#_类的构造器"></a>1.11. 类的构造器</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //无参构造器
+    public LinkedList() {
+    }
+
+    //通过一个集合初始化LinkedList，元素顺序由这个集合的迭代器返回顺序决定
+    public LinkedList(Collection&lt;? extends E&gt; c) {
+        //调用无参构造器
+        this();
+        //添加元素
+        addAll(c);
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_类的方法"><a class="anchor" href="#_类的方法"></a>1.12. 类的方法</h3>
+<div class="paragraph">
+<p>主要的方法的基础是link和unlink方法组,Node&lt;E&gt; node(int index)定位方法（均不是public）</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/linkedlist插入新结点.png" alt="linkedlist插入新结点">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //在指定节点前插入节点，节点succ不能为空
+    void linkBefore(E e, Node&lt;E&gt; succ) {
+        //获取succ的前结点
+        final Node&lt;E&gt; pred = succ.prev;
+        final Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, succ);
+        succ.prev = newNode;
+        if (pred == null)//如果前结点为空
+            first = newNode;
+        else
+            pred.next = newNode;
+        size++;
+        modCount++;
+    }
+    //把对应参数作为第一个节点，内部使用
+    private void linkFirst(E e) {
+        //获取头结点
+        final Node&lt;E&gt; f = first;
+        //定义新结点
+        final Node&lt;E&gt; newNode = new Node&lt;&gt;(null, e, f);
+        first = newNode;
+        if (f == null)//头结点为null
+            // 赋值尾结点（结果只有一个元素）
+            last = newNode;
+        else
+            //把原来的首结点的引用指向这个新加的结点
+            f.prev = newNode;
+        size++;
+        modCount++;
+        //LinkedList也采用了“快速失败”的机制，通过记录modCount参数来实现。在面对并发的修改时，
+        //迭代器很快就会完全失败，而不是冒着在将来某个不确定时间发生任意不确定行为的风险。
+
+    }
+
+    //把对应参数作为尾节点（和前一个方法类似）
+    void linkLast(E e) {
+        // 获取尾结点，l为final类型，不可更改
+        final Node&lt;E&gt; l = last;
+        final Node&lt;E&gt; newNode = new Node&lt;&gt;(l, e, null);
+        last = newNode;
+        if (l == null)
+            first = newNode;
+        else
+            l.next = newNode;
+        size++;
+        modCount++;
+    }</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/linkedlist删除指定的结点.png" alt="linkedlist删除指定的结点">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">      //删除指定节点并返回被删除的元素值
+      E unlink(Node&lt;E&gt; x) {
+          // assert x != null;
+          final E element = x.item;
+          final Node&lt;E&gt; next = x.next;
+          final Node&lt;E&gt; prev = x.prev;
+
+          if (prev == null) {
+              first = next;
+          } else {
+              prev.next = next;
+              x.prev = null;
+          }
+
+          if (next == null) {
+              last = prev;
+          } else {
+              next.prev = prev;
+              x.next = null;
+          }
+
+          x.item = null;
+          size--;
+          modCount++;
+          return element;
+      }
+    //删除首节点并返回删除前首节点的值，内部使用
+    private E unlinkFirst(Node&lt;E&gt; f) {
+        // assert f == first &amp;&amp; f != null;
+        final E element = f.item;
+        final Node&lt;E&gt; next = f.next;
+        f.item = null;
+        f.next = null; // help GC
+        first = next;
+        if (next == null)
+            last = null;
+        else
+            next.prev = null;
+        size--;
+        modCount++;
+        return element;
+    }
+    //删除尾节点并返回删除前尾节点的值，内部使用
+    private E unlinkLast(Node&lt;E&gt; l) {
+        // assert l == last &amp;&amp; l != null;
+        final E element = l.item;
+        final Node&lt;E&gt; prev = l.prev;
+        l.item = null;
+        l.prev = null; // help GC
+        last = prev;
+        if (prev == null)
+            first = null;
+        else
+            prev.next = null;
+        size--;
+        modCount++;
+        return element;
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">//获取第一个元素
+    public E getFirst() {
+        final Node&lt;E&gt; f = first;
+        if (f == null)
+            throw new NoSuchElementException();
+        return f.item;
+    }
+//获取最后一个元素
+    public E getLast() {
+        final Node&lt;E&gt; l = last;
+        if (l == null)
+            throw new NoSuchElementException();
+        return l.item;
+    }
+
+//删除第一个元素并返回删除的元素
+    public E removeFirst() {
+        final Node&lt;E&gt; f = first;
+        if (f == null)
+            throw new NoSuchElementException();
+        return unlinkFirst(f);
+    }
+//删除最后一个元素并返回删除的值
+    public E removeLast() {
+        final Node&lt;E&gt; l = last;
+        if (l == null)
+            throw new NoSuchElementException();
+        return unlinkLast(l);
+    }
+//添加元素作为第一个元素
+    public void addFirst(E e) {
+        linkFirst(e);
+    }
+ //添加元素作为最后一个元素
+    public void addLast(E e) {
+        linkLast(e);
+    }
+ //检查是否包含某个元素，返回bool
+    public boolean contains(Object o) {
+        return indexOf(o) != -1;
+    }
+//返回列表长度
+    public int size() {
+        return size;
+    }
+//添加一个元素，默认添加到末尾作为最后一个元素
+    public boolean add(E e) {
+        linkLast(e);
+        return true;
+    }
+//删除指定元素，默认从first节点开始，删除第一次出现的那个元素（需要迭代）
+    public boolean remove(Object o) {
+        if (o == null) {
+            for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+                if (x.item == null) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        } else {
+            for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+                if (o.equals(x.item)) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    //添加指定集合的元素到列表，从最后开始添加
+    public boolean addAll(Collection&lt;? extends E&gt; c) {
+        //调用addAll(int index, Collection&lt;? extends E&gt; c)
+        return addAll(size, c);
+    }
+   //从指定位置往后追加，index和之后的元素向后顺延
+    public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
+        checkPositionIndex(index);
+        //转化成数组
+        Object[] a = c.toArray();
+        int numNew = a.length;
+        if (numNew == 0)
+            return false;
+
+        Node&lt;E&gt; pred, succ;
+        if (index == size) {
+            succ = null;
+            pred = last;
+        } else {//如果不是从末尾开始添加，获取新加串的前后结点
+            succ = node(index);
+            pred = succ.prev;
+        }
+        //遍历数组并添加到列表中
+        for (Object o : a) {
+            @SuppressWarnings("unchecked") E e = (E) o;
+            Node&lt;E&gt; newNode = new Node&lt;&gt;(pred, e, null);
+            if (pred == null)
+                first = newNode;
+            else
+                pred.next = newNode;//如果存在前节点，前节点会向后指向新加的节点
+            pred = newNode;//新加的节点成为前一个节点
+        }
+
+        if (succ == null) {
+            last = pred;//如果是从最后开始添加的，则最后添加的节点成为尾节点
+        } else {
+            pred.next = succ;//如果不是从最后开始添加的，则最后添加的节点向后指向之前得到的后续第一个节点
+            succ.prev = pred;//后续的第一个节点也应改为向前指向最后一个添加的节点
+        }
+
+        size += numNew;
+        modCount++;
+        return true;
+    }
+    //清空表
+    public void clear() {
+        //方便gc回收垃圾
+        for (Node&lt;E&gt; x = first; x != null; ) {
+            Node&lt;E&gt; next = x.next;
+            x.item = null;
+            x.next = null;
+            x.prev = null;
+            x = next;
+        }
+        first = last = null;
+        size = 0;
+        modCount++;
+    }
+
+    //获取指定索引的节点的值
+    public E get(int index) {
+        checkElementIndex(index);
+        return node(index).item;
+    }
+    //修改指定索引的值并返回之前的值
+    public E set(int index, E element) {
+        checkElementIndex(index);
+        Node&lt;E&gt; x = node(index);
+        E oldVal = x.item;
+        //只是把item替换掉
+        x.item = element;
+        return oldVal;
+    }
+    //在指定位置后面添加元素
+    public void add(int index, E element) {
+        checkPositionIndex(index);
+
+        if (index == size)
+            linkLast(element);
+        else
+            linkBefore(element, node(index));
+    }
+    //删除指定位置的元素
+    public E remove(int index) {
+        checkElementIndex(index);
+        return unlink(node(index));
+    }
+    //检查索引是否超出范围（checkElementIndex调用），因为元素索引是0~size-1的，所以index必须满足0&lt;=index&lt;size
+    private boolean isElementIndex(int index) {
+        return index &gt;= 0 &amp;&amp; index &lt; size;
+    }
+    //检查位置是否超出范围（checkPositionIndex调用），index必须在index~size之间（含），如果超出，返回false
+    private boolean isPositionIndex(int index) {
+        return index &gt;= 0 &amp;&amp; index &lt;= size;
+    }
+    //异常详情
+    private String outOfBoundsMsg(int index) {
+        return "Index: "+index+", Size: "+size;
+    }
+    //检查元素索引是否超出范围（set,get,remove时检查），若已超出，就抛出异常
+    private void checkElementIndex(int index) {
+        if (!isElementIndex(index))
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+    //检查位置是否超出范围（为添加和迭代检查使用），若已超出，就抛出异常
+    private void checkPositionIndex(int index) {
+        if (!isPositionIndex(index))
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    }
+    //获取指定位置的节点
+    //该方法返回双向链表中指定位置处的节点，而链表中是没有下标索引的，要指定位置出的元素，就要遍历该链表，从源码的实现中，我们看到这里有一个加速动作。
+    //源码中先将index与长度size的一半比较，如果index&lt;size/2，就只从位置0往后遍历到位置index处，而如果index&gt;size/2，就只从位置size往前遍历到位置index处。这样可以减少一部分不必要的遍历。
+    Node&lt;E&gt; node(int index) {
+        // assert isElementIndex(index);
+
+        if (index &lt; (size &gt;&gt; 1)) {
+            Node&lt;E&gt; x = first;
+            for (int i = 0; i &lt; index; i++)
+                x = x.next;
+            return x;
+        } else {
+            Node&lt;E&gt; x = last;
+            for (int i = size - 1; i &gt; index; i--)
+                x = x.prev;
+            return x;
+        }
+    }
+    //获取第一个指定元素的索引位置并返回索引，不存在就返回-1
+    public int indexOf(Object o) {
+        int index = 0;
+        if (o == null) {
+            for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+                if (x.item == null)
+                    return index;
+                index++;
+            }
+        } else {
+            for (Node&lt;E&gt; x = first; x != null; x = x.next) {
+                if (o.equals(x.item))
+                    return index;
+                index++;
+            }
+        }
+        return -1;
+    }
+    //获取最后一个指定元素索引的索引并返回索引，不存在就返回-1
+    public int lastIndexOf(Object o) {
+        int index = size;
+        if (o == null) {
+            for (Node&lt;E&gt; x = last; x != null; x = x.prev) {
+                index--;
+                if (x.item == null)
+                    return index;
+            }
+        } else {
+            for (Node&lt;E&gt; x = last; x != null; x = x.prev) {
+                index--;
+                if (o.equals(x.item))
+                    return index;
+            }
+        }
+        return -1;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Queue操作</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //提供普通队列和双端队列的功能，FIFO
+     //出队（从前端），获得第一个元素，不存在会返回null，不会删除元素（节点）
+    public E peek() {
+        final Node&lt;E&gt; f = first;
+        return (f == null) ? null : f.item;
+    }
+    //出队（从前端），不删除元素，若为null会抛出异常而不是返回null
+    public E element() {
+        return getFirst();
+    }
+    //出队（从前端），如果不存在会返回null，存在的话会返回值并移除这个元素（节点）
+    public E poll() {
+        final Node&lt;E&gt; f = first;
+        return (f == null) ? null : unlinkFirst(f);
+    }
+    //出队（从前端），如果不存在会抛出异常而不是返回null，存在的话会返回值并移除这个元素（节点）
+    public E remove() {
+        return removeFirst();
+    }
+    //入队（从后端），始终返回true
+    public boolean offer(E e) {
+        return add(e);
+    }</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Deque（双端队列）操作</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //入队（从前端），始终返回true
+    public boolean offerFirst(E e) {
+        addFirst(e);
+        return true;
+    }
+    //入队（从后端），始终返回true
+    public boolean offerLast(E e) {
+        addLast(e);
+        return true;
+    }
+    //出队（从前端），获得第一个元素，不存在会返回null，不会删除元素（节点）
+    public E peekFirst() {
+        final Node&lt;E&gt; f = first;
+        return (f == null) ? null : f.item;
+     }
+     //出队（从后端），获得最后一个元素，不存在会返回null，不会删除元素（节点）
+    public E peekLast() {
+        final Node&lt;E&gt; l = last;
+        return (l == null) ? null : l.item;
+    }
+    //出队（从前端），获得第一个元素，不存在会返回null，会删除元素（节点）
+    public E pollFirst() {
+        final Node&lt;E&gt; f = first;
+        return (f == null) ? null : unlinkFirst(f);
+    }
+    //出队（从后端），获得最后一个元素，不存在会返回null，会删除元素（节点）
+    public E pollLast() {
+        final Node&lt;E&gt; l = last;
+        return (l == null) ? null : unlinkLast(l);
+    }
+    //入栈，从前面添加
+    public void push(E e) {
+        addFirst(e);
+    }
+    //出栈，返回栈顶元素，从前面移除（会删除）
+    public E pop() {
+        return removeFirst();
+    }
+    //删除列表中第一出现o的节点
+    public boolean removeFirstOccurrence(Object o) {
+        return remove(o);
+    }
+    //逆向搜索，删除第一次出现o的节点
+    public boolean removeLastOccurrence(Object o) {
+        if (o == null) {
+            for (Node&lt;E&gt; x = last; x != null; x = x.prev) {
+                if (x.item == null) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        } else {
+            for (Node&lt;E&gt; x = last; x != null; x = x.prev) {
+                if (o.equals(x.item)) {
+                    unlink(x);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }</code></pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre> 通用迭代器实现  继承自AbstractSequentialList的方法，AbstractSequentialList抽象类中
+ public Iterator&lt;E&gt; iterator() {
+       return listIterator();
+ }
+通用迭代器与ArrayList不同，ArrayList自己实现了Iterator，说明linkedlist的迭代器天生支持反向迭代。</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>ListIterator迭代器实现与ArrayList类似
+其中的ListItr继承Itr，实现了ListIterator接口，同时重写了hasPrevious()，nextIndex()， previousIndex()，previous()，set(E e)，add(E e)等方法，
+所以这也可以看出了Iterator和ListIterator的区别，就是ListIterator在Iterator的基础上增加了添加对象，修改对象，
+逆向遍历等方法。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    public ListIterator&lt;E&gt; listIterator(int index) {
+        checkPositionIndex(index);
+        return new ListItr(index);
+    }
+
+    private class ListItr implements ListIterator&lt;E&gt; {
+        private Node&lt;E&gt; lastReturned;
+        private Node&lt;E&gt; next;
+        private int nextIndex;
+        private int expectedModCount = modCount;
+
+        ListItr(int index) {
+            // assert isPositionIndex(index);
+            next = (index == size) ? null : node(index);
+            nextIndex = index;
+        }
+
+        public boolean hasNext() {
+            return nextIndex &lt; size;
+        }
+
+        public E next() {
+            checkForComodification();
+            if (!hasNext())
+                throw new NoSuchElementException();
+
+            lastReturned = next;
+            next = next.next;
+            nextIndex++;
+            return lastReturned.item;
+        }
+
+        public boolean hasPrevious() {
+            return nextIndex &gt; 0;
+        }
+
+        public E previous() {
+            checkForComodification();
+            if (!hasPrevious())
+                throw new NoSuchElementException();
+
+            lastReturned = next = (next == null) ? last : next.prev;
+            nextIndex--;
+            return lastReturned.item;
+        }
+
+        public int nextIndex() {
+            return nextIndex;
+        }
+
+        public int previousIndex() {
+            return nextIndex - 1;
+        }
+
+        public void remove() {
+            checkForComodification();
+            if (lastReturned == null)
+                throw new IllegalStateException();
+
+            Node&lt;E&gt; lastNext = lastReturned.next;
+            unlink(lastReturned);
+            if (next == lastReturned)
+                next = lastNext;
+            else
+                nextIndex--;
+            lastReturned = null;
+            expectedModCount++;
+        }
+
+        public void set(E e) {
+            if (lastReturned == null)
+                throw new IllegalStateException();
+            checkForComodification();
+            lastReturned.item = e;
+        }
+
+        public void add(E e) {
+            checkForComodification();
+            lastReturned = null;
+            if (next == null)
+                linkLast(e);
+            else
+                linkBefore(e, next);
+            nextIndex++;
+            expectedModCount++;
+        }
+
+        public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+            Objects.requireNonNull(action);
+            while (modCount == expectedModCount &amp;&amp; nextIndex &lt; size) {
+                action.accept(next.item);
+                lastReturned = next;
+                next = next.next;
+                nextIndex++;
+            }
+            checkForComodification();
+        }
+
+        final void checkForComodification() {
+            if (modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //节点的数据结构内部类，包含前后节点的引用和当前节点
+    private static class Node&lt;E&gt; {
+        E item;
+        Node&lt;E&gt; next;
+        Node&lt;E&gt; prev;
+
+        Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) {
+            this.item = element;
+            this.next = next;
+            this.prev = prev;
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //反向迭代器（实现Deque接口）
+    //Deque接口定义的方法，实现Iterator接口，用listIterator迭代器返回一个迭代在此双端队列逆向顺序的元素
+    public Iterator&lt;E&gt; descendingIterator() {
+        return new DescendingIterator();
+    }
+    //
+    private class DescendingIterator implements Iterator&lt;E&gt; {
+        private final ListItr itr = new ListItr(size());
+        public boolean hasNext() {
+            return itr.hasPrevious();
+        }
+        public E next() {
+            return itr.previous();
+        }
+        public void remove() {
+            itr.remove();
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    @SuppressWarnings("unchecked")
+    private LinkedList&lt;E&gt; superClone() {
+        try {
+            return (LinkedList&lt;E&gt;) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(e);
+        }
+    }
+    //与ArrayList一样都是调用super。clone()
+    //protected native Object clone() throws CloneNotSupportedException;
+    //被复制对象的所有变量都含有与原来的对象相同的值，而所有的对其他对象的引用仍然指向原来的对象。
+    public Object clone() {
+        LinkedList&lt;E&gt; clone = superClone();
+
+        // Put clone into "virgin" state
+        clone.first = clone.last = null;
+        clone.size = 0;
+        clone.modCount = 0;
+
+        // Initialize clone with our elements
+        for (Node&lt;E&gt; x = first; x != null; x = x.next)
+            clone.add(x.item);
+
+        return clone;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>转换成数组</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    public Object[] toArray() {
+        Object[] result = new Object[size];
+        int i = 0;
+        for (Node&lt;E&gt; x = first; x != null; x = x.next)
+            result[i++] = x.item;
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    //如果没有参数，就默认生成一个Object数组，如果给了T类型，就将节点内容放入a数组，
+    //如果a的长度小于链表，就使用反射生成一个链表大小的数组，这个时候由于类型是T，所以无法直接实例化。
+    public &lt;T&gt; T[] toArray(T[] a) {
+        if (a.length &lt; size)
+            a = (T[])java.lang.reflect.Array.newInstance(
+                                a.getClass().getComponentType(), size);
+        int i = 0;
+        Object[] result = a;
+        for (Node&lt;E&gt; x = first; x != null; x = x.next)
+            result[i++] = x.item;
+
+        if (a.length &gt; size)
+            a[size] = null;
+
+        return a;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果声明该方法，它将会被ObjectOutputStream调用而不是默认的序列化进程。如果你是第一次看见它，
+你会很惊奇尽管它们被外部类调用但事实上这是两个private的方法。并且它们既不存在于java.lang.Object，也没有在Serializable中声明。
+那么ObjectOutputStream如何使用它们的呢？这个吗，ObjectOutputStream使用了反射来寻找是否声明了这两个方法。
+因为ObjectOutputStream使用getPrivateMethod，所以这些方法不得不被声明为priate以至于供ObjectOutputStream来使用。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    private static final long serialVersionUID = 876323262645176354L;
+    //定义了自己的序列化方法，通过反射调用
+    private void writeObject(java.io.ObjectOutputStream s)
+        throws java.io.IOException {
+        // Write out any hidden serialization magic
+        s.defaultWriteObject();
+
+        // Write out size
+        s.writeInt(size);
+
+        // Write out all elements in the proper order.
+        for (Node&lt;E&gt; x = first; x != null; x = x.next)
+            s.writeObject(x.item);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void readObject(java.io.ObjectInputStream s)
+        throws java.io.IOException, ClassNotFoundException {
+        // Read in any hidden serialization magic
+        s.defaultReadObject();
+
+        // Read in size
+        int size = s.readInt();
+
+        // Read in all elements in the proper order.
+        for (int i = 0; i &lt; size; i++)
+            linkLast((E)s.readObject());
+    }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //以下关于1.8函数式编程
+    @Override
+    public Spliterator&lt;E&gt; spliterator() {
+        return new LLSpliterator&lt;E&gt;(this, -1, 0);
+    }
+
+    static final class LLSpliterator&lt;E&gt; implements Spliterator&lt;E&gt; {
+        static final int BATCH_UNIT = 1 &lt;&lt; 10;  // batch array size increment
+        static final int MAX_BATCH = 1 &lt;&lt; 25;  // max batch array size;
+        final LinkedList&lt;E&gt; list; // null OK unless traversed
+        Node&lt;E&gt; current;      // current node; null until initialized
+        int est;              // size estimate; -1 until first needed
+        int expectedModCount; // initialized when est set
+        int batch;            // batch size for splits
+
+        LLSpliterator(LinkedList&lt;E&gt; list, int est, int expectedModCount) {
+            this.list = list;
+            this.est = est;
+            this.expectedModCount = expectedModCount;
+        }
+
+        final int getEst() {
+            int s; // force initialization
+            final LinkedList&lt;E&gt; lst;
+            if ((s = est) &lt; 0) {
+                if ((lst = list) == null)
+                    s = est = 0;
+                else {
+                    expectedModCount = lst.modCount;
+                    current = lst.first;
+                    s = est = lst.size;
+                }
+            }
+            return s;
+        }
+
+        public long estimateSize() { return (long) getEst(); }
+
+        public Spliterator&lt;E&gt; trySplit() {
+            Node&lt;E&gt; p;
+            int s = getEst();
+            if (s &gt; 1 &amp;&amp; (p = current) != null) {
+                int n = batch + BATCH_UNIT;
+                if (n &gt; s)
+                    n = s;
+                if (n &gt; MAX_BATCH)
+                    n = MAX_BATCH;
+                Object[] a = new Object[n];
+                int j = 0;
+                do { a[j++] = p.item; } while ((p = p.next) != null &amp;&amp; j &lt; n);
+                current = p;
+                batch = j;
+                est = s - j;
+                return Spliterators.spliterator(a, 0, j, Spliterator.ORDERED);
+            }
+            return null;
+        }
+
+        public void forEachRemaining(Consumer&lt;? super E&gt; action) {
+            Node&lt;E&gt; p; int n;
+            if (action == null) throw new NullPointerException();
+            if ((n = getEst()) &gt; 0 &amp;&amp; (p = current) != null) {
+                current = null;
+                est = 0;
+                do {
+                    E e = p.item;
+                    p = p.next;
+                    action.accept(e);
+                } while (p != null &amp;&amp; --n &gt; 0);
+            }
+            if (list.modCount != expectedModCount)
+                throw new ConcurrentModificationException();
+        }
+
+        public boolean tryAdvance(Consumer&lt;? super E&gt; action) {
+            Node&lt;E&gt; p;
+            if (action == null) throw new NullPointerException();
+            if (getEst() &gt; 0 &amp;&amp; (p = current) != null) {
+                --est;
+                E e = p.item;
+                current = p.next;
+                action.accept(e);
+                if (list.modCount != expectedModCount)
+                    throw new ConcurrentModificationException();
+                return true;
+            }
+            return false;
+        }
+
+        public int characteristics() {
+            return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>LinkedList与ArrayList的区别：
+LinkedList与ArrayList在性能上各有优缺点，都有各自适用的地方，总结如下：</p>
+</div>
+<div class="paragraph">
+<p>ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。<br>
+LinkedList不支持高效的随机元素访问。<br>
+ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容量空间，<br>
+而LinkedList的空间花费则体现在它的每一个元素都需要消耗相当的空间（需要附加的空间来表明数据元素的逻辑关系），就存储密度来说，ArrayList是优于LinkedList的。 +　　
+当操作是在一列数据的后面添加数据而不是在前面或中间,并且需要随机地访问其中的元素时,使用ArrayList会提供比较好的性能，<br>
+当你的操作是在一列数据的前面或中间添加或删除数据,并且按照顺序访问其中的元素时,就应该使用LinkedList了。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-03-04 22:48:40 +0800
+</div>
+</div>
+</body>
+</html>
