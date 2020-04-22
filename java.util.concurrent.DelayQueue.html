@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>DelayQueue</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_delayqueue">1. DelayQueue</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_delayqueue"><a class="anchor" href="#_delayqueue"></a>1. DelayQueue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>DelayQueue</code> 对元素进行持有直到一个特定的延迟到期。注入其中的元素必须实现 <code>java.util.concurrent.Delayed</code> 接口，该接口定义:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package java.util.concurrent;
+
+/**
+ * A mix-in style interface for marking objects that should be
+ * acted upon after a given delay.
+ *
+ * &lt;p&gt;An implementation of this interface must define a
+ * {@code compareTo} method that provides an ordering consistent with
+ * its {@code getDelay} method.
+ *
+ * @since 1.5
+ * @author Doug Lea
+ */
+public interface Delayed extends Comparable&lt;Delayed&gt; {
+
+    /**
+     * Returns the remaining delay associated with this object, in the
+     * given time unit.
+     *
+     * @param unit the time unit
+     * @return the remaining delay; zero or negative values indicate
+     * that the delay has already elapsed
+     */
+    long getDelay(TimeUnit unit);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>示例如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.util.Objects;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-22 16:38
+ */
+public class DelayQueueTest {
+    @Test
+    public void test() throws InterruptedException {
+        DelayQueue&lt;IntDelay&gt; delayQueue = new DelayQueue&lt;&gt;();
+        for (int i = 0; i &lt; 10; i++) {
+            delayQueue.add(new IntDelay(i));
+        }
+        while (!delayQueue.isEmpty()) {
+            IntDelay delay = delayQueue.take();
+            if (Objects.nonNull(delay)) {
+                System.out.println(delay.num);
+            }
+        }
+    }
+
+    public static class IntDelay implements Delayed {
+
+        private int num;
+        private long deadline;
+
+        public IntDelay(int num) {
+            this.num = num;
+            deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(num);
+        }
+
+        @Override
+        public long getDelay(TimeUnit unit) {
+            return deadline - System.currentTimeMillis();
+        }
+
+        @Override
+        public int compareTo(Delayed o) {
+            IntDelay param = (IntDelay) o;
+            return Integer.compare(this.num, param.num);
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:50:51 +0800
+</div>
+</div>
+</body>
+</html>

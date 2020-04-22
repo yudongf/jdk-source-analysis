@@ -29,7 +29,18 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;import java.util.TreeMap;public class Pair implements Comparable&lt;Pair&gt; {
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testQuestion() {
+    TreeMap&lt;Pair, Pair&gt; data = new TreeMap&lt;&gt;();
+    Pair pair = new Pair(1, System.currentTimeMillis());
+
+    data.put(pair, pair);
+    Pair value = data.get(new Pair(1));
+    // 请问，这里会输出 true ？还是 false ？
+    System.out.println(pair.equals(value));
+}
+
+class Pair implements Comparable&lt;Pair&gt; {
     int key;
     long time;
 
@@ -49,8 +60,13 @@
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Pair pair = (Pair) o;
         return key == pair.key;
     }
@@ -59,15 +75,96 @@
     public int hashCode() {
         return Objects.hash(key);
     }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TreeMap</code> 底层是一个红黑树。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testSort() {
+    Comparator&lt;Person&gt; comparator = Comparator.comparingInt(a -&gt; a.age);
+    TreeMap&lt;Person, Person&gt; map = new TreeMap&lt;&gt;(comparator);
+    for (int i = 0; i &lt; 10; i++) {
+        if ((i &amp; 1) == 1) {
+            Person person = new Person(i);
+            map.put(person, person);
+        } else {
+            Person param = new Person(i / 2);
+            Person person = map.get(param);
+            if (Objects.nonNull(person)) {
+                person.age = new Random().nextInt();
+            }
+        }
+    }
+    //
+    map.forEach((k, v) -&gt; {
+        System.out.println(k);
+    });
+    System.out.println("-------------");
+    for (Person person : map.navigableKeySet()) {
+        System.out.println(person);
+    }
+    System.out.println("-------------");
+    for (Person person : map.descendingKeySet()) {
+        System.out.println(person);
+    }
 }
 
-class Main {
-    TreeMap&lt;Pair, Pair&gt; data = new TreeMap&lt;&gt;();
-    Pair pair = new Pair(1, System.currentTimeMillis());
+public static class Person {
+    long id;
+    int age;
 
-    data.put(pair, pair);
-    Pair value = data.get(new Pair(1));
-    System.out.println(pair.equals(value)); // 请问，这里会输出 true ？还是 false ？
+    public Person(long id) {
+        this(id, (int) id);
+    }
+
+    public Person(long id, int age) {
+        this.id = id;
+        this.age = age;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return id == person.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", age=" + age +
+                '}';
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>修改排序字段，打印时，依然可以保持有序性。这个实现是怎么回事？</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public class TreeMapTest {
+
+
+    @Test
+    public void testPut() {
+        TreeMap&lt;Integer, Integer&gt; treeMap = new TreeMap&lt;&gt;();
+        for (int i = 0; i &lt; 10; i++) {
+            treeMap.put(i, i * 100);
+        }
+    }
+
 }</code></pre>
 </div>
 </div>
@@ -76,7 +173,7 @@ class Main {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-22 16:35:14 +0800
+Last updated 2020-04-22 23:55:04 +0800
 </div>
 </div>
 </body>

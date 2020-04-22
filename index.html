@@ -20,7 +20,7 @@
 <div class="details">
 <span id="author" class="author">D瓜哥</span><br>
 <span id="email" class="email"><a href="https://www.diguage.com" class="bare">https://www.diguage.com</a></span><br>
-<span id="revdate">2020-04-22</span>
+<span id="revdate">2020-04-23</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -32,7 +32,7 @@
 <li><a href="#_list">4. List</a></li>
 <li><a href="#_abstractlist">5. AbstractList</a></li>
 <li><a href="#_abstractsequentiallist">6. AbstractSequentialList</a></li>
-<li><a href="#_arraylist_实现原理与源码分析">7. <code>ArrayList</code> 实现原理与源码分析</a></li>
+<li><a href="#_arraylist">7. <code>ArrayList</code></a></li>
 <li><a href="#_linkedlist">8. LinkedList</a></li>
 <li><a href="#_stack">9. Stack</a></li>
 <li><a href="#_vector">10. Vector</a></li>
@@ -49,49 +49,49 @@
 <li><a href="#_sortedmap">21. SortedMap</a></li>
 <li><a href="#_navigablemap">22. NavigableMap</a></li>
 <li><a href="#_abstractmap">23. AbstractMap</a></li>
-<li><a href="#_hashmap_源码解析">24. HashMap 源码解析</a></li>
-<li><a href="#_jdk1_8_hashmap源码解析二">25. JDK1.8 HashMap源码解析(二)</a></li>
-<li><a href="#_treemap">26. TreeMap</a></li>
-<li><a href="#_linkedhashmap">27. LinkedHashMap</a></li>
-<li><a href="#_dictionary">28. Dictionary</a></li>
-<li><a href="#_hashtable">29. Hashtable</a></li>
-<li><a href="#_enummap">30. EnumMap</a></li>
-<li><a href="#_weakhashmap">31. WeakHashMap</a></li>
-<li><a href="#_identityhashmap">32. IdentityHashMap</a></li>
-<li><a href="#_queue">33. Queue</a></li>
-<li><a href="#_deque">34. Deque</a></li>
-<li><a href="#_abstractqueue">35. AbstractQueue</a></li>
-<li><a href="#_arraydeque">36. ArrayDeque</a></li>
-<li><a href="#_priorityqueue">37. PriorityQueue</a></li>
-<li><a href="#_工具类_arrays">38. 工具类 <code>Arrays</code></a></li>
-<li><a href="#_工具类_collections">39. 工具类 <code>Collections</code></a></li>
-<li><a href="#_thread">40. Thread</a></li>
-<li><a href="#_locksupport">41. LockSupport</a></li>
-<li><a href="#_abstractqueuedsynchronizer">42. AbstractQueuedSynchronizer</a></li>
-<li><a href="#_reentrantlock">43. ReentrantLock</a></li>
-<li><a href="#_reentrantreadwritelock">44. ReentrantReadWriteLock</a></li>
-<li><a href="#_stampedlock">45. StampedLock</a></li>
-<li><a href="#_semaphore">46. Semaphore</a></li>
-<li><a href="#_countdownlatch">47. CountDownLatch</a></li>
-<li><a href="#_cyclicbarrier">48. CyclicBarrier</a></li>
-<li><a href="#_phaser">49. Phaser</a></li>
-<li><a href="#_exchanger">50. Exchanger</a></li>
-<li><a href="#_threadlocal">51. ThreadLocal</a></li>
-<li><a href="#_atomicinteger">52. AtomicInteger</a></li>
-<li><a href="#_longadder">53. LongAdder</a></li>
-<li><a href="#_juc_包基础类分析">54. JUC 包基础类分析</a></li>
-<li><a href="#_futuretask">55. FutureTask</a></li>
-<li><a href="#_completablefuture">56. CompletableFuture</a></li>
-<li><a href="#_threadpoolexecutor_源码分析">57. ThreadPoolExecutor 源码分析</a></li>
-<li><a href="#_forkjointask">58. ForkJoinTask</a></li>
-<li><a href="#_forkjoinpool">59. ForkJoinPool</a></li>
-<li><a href="#_concurrenthashmap">60. <code>ConcurrentHashMap</code></a></li>
-<li><a href="#_concurrentskiplistmap">61. <code>ConcurrentSkipListMap</code></a></li>
-<li><a href="#_copyonwritearraylist">62. CopyOnWriteArrayList</a></li>
-<li><a href="#_concurrentlinkedqueue">63. ConcurrentLinkedQueue</a></li>
-<li><a href="#_arrayblockingqueue">64. ArrayBlockingQueue</a></li>
-<li><a href="#_linkedblockingqueue">65. LinkedBlockingQueue</a></li>
-<li><a href="#_priorityblockingqueue">66. PriorityBlockingQueue</a></li>
+<li><a href="#_hashmap">24. HashMap</a></li>
+<li><a href="#_treemap">25. TreeMap</a></li>
+<li><a href="#_linkedhashmap">26. LinkedHashMap</a></li>
+<li><a href="#_dictionary">27. Dictionary</a></li>
+<li><a href="#_hashtable">28. Hashtable</a></li>
+<li><a href="#_enummap">29. EnumMap</a></li>
+<li><a href="#_weakhashmap">30. WeakHashMap</a></li>
+<li><a href="#_identityhashmap">31. IdentityHashMap</a></li>
+<li><a href="#_queue">32. Queue</a></li>
+<li><a href="#_deque">33. Deque</a></li>
+<li><a href="#_abstractqueue">34. AbstractQueue</a></li>
+<li><a href="#_arraydeque">35. ArrayDeque</a></li>
+<li><a href="#_priorityqueue">36. PriorityQueue</a></li>
+<li><a href="#_工具类_arrays">37. 工具类 <code>Arrays</code></a></li>
+<li><a href="#_工具类_collections">38. 工具类 <code>Collections</code></a></li>
+<li><a href="#_thread">39. Thread</a></li>
+<li><a href="#_locksupport">40. LockSupport</a></li>
+<li><a href="#_abstractqueuedsynchronizer">41. AbstractQueuedSynchronizer</a></li>
+<li><a href="#_reentrantlock">42. ReentrantLock</a></li>
+<li><a href="#_reentrantreadwritelock">43. ReentrantReadWriteLock</a></li>
+<li><a href="#_stampedlock">44. StampedLock</a></li>
+<li><a href="#_semaphore">45. Semaphore</a></li>
+<li><a href="#_countdownlatch">46. CountDownLatch</a></li>
+<li><a href="#_cyclicbarrier">47. CyclicBarrier</a></li>
+<li><a href="#_phaser">48. Phaser</a></li>
+<li><a href="#_exchanger">49. Exchanger</a></li>
+<li><a href="#_threadlocal">50. ThreadLocal</a></li>
+<li><a href="#_atomicinteger">51. AtomicInteger</a></li>
+<li><a href="#_longadder">52. LongAdder</a></li>
+<li><a href="#_juc_包基础类分析">53. JUC 包基础类分析</a></li>
+<li><a href="#_futuretask">54. FutureTask</a></li>
+<li><a href="#_completablefuture">55. CompletableFuture</a></li>
+<li><a href="#_threadpoolexecutor_源码分析">56. ThreadPoolExecutor 源码分析</a></li>
+<li><a href="#_forkjointask">57. ForkJoinTask</a></li>
+<li><a href="#_forkjoinpool">58. ForkJoinPool</a></li>
+<li><a href="#_concurrenthashmap">59. <code>ConcurrentHashMap</code></a></li>
+<li><a href="#_concurrentskiplistmap">60. <code>ConcurrentSkipListMap</code></a></li>
+<li><a href="#_copyonwritearraylist">61. CopyOnWriteArrayList</a></li>
+<li><a href="#_concurrentlinkedqueue">62. ConcurrentLinkedQueue</a></li>
+<li><a href="#_arrayblockingqueue">63. ArrayBlockingQueue</a></li>
+<li><a href="#_linkedblockingqueue">64. LinkedBlockingQueue</a></li>
+<li><a href="#_priorityblockingqueue">65. PriorityBlockingQueue</a></li>
+<li><a href="#_delayqueue">66. DelayQueue</a></li>
 <li><a href="#_classloader">67. ClassLoader</a></li>
 <li><a href="#_field">68. Field</a></li>
 <li><a href="#_proxy">69. Proxy</a></li>
@@ -479,6 +479,11 @@
 </td>
 </tr>
 </table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/java-collections-overview.png" alt="java collections overview">
+</div>
 </div>
 </div>
 </div>
@@ -1114,7 +1119,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_arraylist_实现原理与源码分析"><a class="anchor" href="#_arraylist_实现原理与源码分析"></a>7. <code>ArrayList</code> 实现原理与源码分析</h2>
+<h2 id="_arraylist"><a class="anchor" href="#_arraylist"></a>7. <code>ArrayList</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>对于每种抽象数据类型并不存在什么法则来告诉我们必须要有哪些操作，这是一个设计决策。--《数据结构与算法分析》</p>
@@ -5284,10 +5289,26 @@ ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hashmap_源码解析"><a class="anchor" href="#_hashmap_源码解析"></a>24. HashMap 源码解析</h2>
+<h2 id="_hashmap"><a class="anchor" href="#_hashmap"></a>24. HashMap</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_redis_中的字典"><a class="anchor" href="#_redis_中的字典"></a>24.1. Redis 中的字典</h3>
+<h3 id="_hashmap_问题集"><a class="anchor" href="#_hashmap_问题集"></a>24.1. HashMap 问题集</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如果判断是否到达容量阈值？</p>
+</li>
+<li>
+<p>为什么</p>
+</li>
+<li>
+<p>遍历查找时，如果保证可以让红黑树的节点也可以使用next方法来查找？</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_redis_中的字典"><a class="anchor" href="#_redis_中的字典"></a>24.2. Redis 中的字典</h3>
 <div class="paragraph">
 <p>Redis 底层中的字典就是一个典型的 Hash 实现。</p>
 </div>
@@ -5392,7 +5413,7 @@ ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容�
 <p>Redis 底层使用 MurmurHash2 算法来计算键的哈希值。</p>
 </div>
 <div class="sect3">
-<h4 id="_rehash_操作"><a class="anchor" href="#_rehash_操作"></a>24.1.1. Rehash 操作</h4>
+<h4 id="_rehash_操作"><a class="anchor" href="#_rehash_操作"></a>24.2.1. Rehash 操作</h4>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -5503,7 +5524,7 @@ OK
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_5"><a class="anchor" href="#_参考资料_5"></a>24.2. 参考资料</h3>
+<h3 id="_参考资料_5"><a class="anchor" href="#_参考资料_5"></a>24.3. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -5513,7 +5534,7 @@ OK
 </div>
 </div>
 <div class="sect2">
-<h3 id="_简介"><a class="anchor" href="#_简介"></a>24.3. 简介</h3>
+<h3 id="_简介"><a class="anchor" href="#_简介"></a>24.4. 简介</h3>
 <div class="paragraph">
 <p>HashMap是基于哈希表实现的，用来存储key-value形式的键值对，允许key和value都为null值；
 HashMap是非线程安全的，只是用于单线程环境下，多线程环境下可以采用concurrent并发包下的concurrentHashMap；
@@ -5521,7 +5542,7 @@ HashMap实现了Serializable接口，支持序列化，实现了Cloneable接口�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_签名"><a class="anchor" href="#_签名"></a>24.4. 签名</h3>
+<h3 id="_签名"><a class="anchor" href="#_签名"></a>24.5. 签名</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HashMap</span><span class="o">&lt;</span><span class="no">K</span><span class="o">,</span><span class="no">V</span><span class="o">&gt;</span>
@@ -5597,7 +5618,7 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_存储结构"><a class="anchor" href="#_存储结构"></a>24.5. 存储结构</h3>
+<h3 id="_存储结构"><a class="anchor" href="#_存储结构"></a>24.6. 存储结构</h3>
 <div class="paragraph">
 <p>HashMap是基于哈希表存储的，在JDK1.6，JDK1.7版本采用数组(桶位) + 链表实现存储元素和解决冲突，同一hash值的链表都存储在一个链表里。
 但是当位于一个桶中的元素较多，即hash值相等的元素较多时，通过key值依次查找的效率较低。但是到JDK1.8版本时HashMap采用位桶 + 链表 + 红黑树实现，
@@ -5605,7 +5626,7 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_实现原理"><a class="anchor" href="#_实现原理"></a>24.6. 实现原理</h3>
+<h3 id="_实现原理"><a class="anchor" href="#_实现原理"></a>24.7. 实现原理</h3>
 <div class="paragraph">
 <p>首先有一个元素是链表的数组，当添加一个元素（key-value）时，就首先计算元素key的hash值，以此确定元素在数组中的位置，但是可能存在同一hash值的元素
 已经被放在数组同一位置了（也就出现了Hash冲突），这时就添加到同一hash值的元素的后面，他们在数组的同一位置，但是形成了链表，同一个链表上的Hash值是
@@ -5622,9 +5643,9 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_源码剖析"><a class="anchor" href="#_源码剖析"></a>24.7. 源码剖析</h3>
+<h3 id="_源码剖析"><a class="anchor" href="#_源码剖析"></a>24.8. 源码剖析</h3>
 <div class="sect3">
-<h4 id="_重要属性"><a class="anchor" href="#_重要属性"></a>24.7.1. 重要属性</h4>
+<h4 id="_重要属性"><a class="anchor" href="#_重要属性"></a>24.8.1. 重要属性</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><span class="cm">/**
@@ -5711,7 +5732,7 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_数据结构"><a class="anchor" href="#_数据结构"></a>24.7.2. 数据结构</h4>
+<h4 id="_数据结构"><a class="anchor" href="#_数据结构"></a>24.8.2. 数据结构</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -5833,7 +5854,7 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_构造函数"><a class="anchor" href="#_构造函数"></a>24.7.3. 构造函数</h4>
+<h4 id="_构造函数"><a class="anchor" href="#_构造函数"></a>24.8.3. 构造函数</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -5989,7 +6010,7 @@ table数组的初始化，然后在重新按照装载因子计算threshold。</p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_hashmap存取机制"><a class="anchor" href="#_hashmap存取机制"></a>24.7.4. HashMap存取机制</h4>
+<h4 id="_hashmap存取机制"><a class="anchor" href="#_hashmap存取机制"></a>24.8.4. HashMap存取机制</h4>
 <div class="sect4">
 <h5 id="_1_添加元素"><a class="anchor" href="#_1_添加元素"></a>1.添加元素</h5>
 <div class="listingblock">
@@ -6397,7 +6418,7 @@ get方法相对put要简单的多，分析源码可以看出hash算法的精髓�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_小结"><a class="anchor" href="#_小结"></a>24.8. 小结</h3>
+<h3 id="_小结"><a class="anchor" href="#_小结"></a>24.9. 小结</h3>
 <div class="paragraph">
 <p>本文对JDK1.8 HashMap的原代码进行了简要的分析，主要目的是了解其内部的
 存储机制和实现原理，从而达到在编程中更高效的使用HashMap。<br></p>
@@ -6422,7 +6443,7 @@ get方法相对put要简单的多，分析源码可以看出hash算法的精髓�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考"><a class="anchor" href="#_参考"></a>24.9. 参考</h3>
+<h3 id="_参考"><a class="anchor" href="#_参考"></a>24.10. 参考</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -6443,17 +6464,15 @@ get方法相对put要简单的多，分析源码可以看出hash算法的精髓�
 </ol>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jdk1_8_hashmap源码解析二"><a class="anchor" href="#_jdk1_8_hashmap源码解析二"></a>25. JDK1.8 HashMap源码解析(二)</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_jdk_1_8_的实现"><a class="anchor" href="#_jdk_1_8_的实现"></a>24.11. JDK 1.8 的实现</h3>
 <div class="paragraph">
 <p><strong>继上一章介绍了HashMap的签名、数据结构以及存储原理之后，相信大家对HashMap有了更加深入的理解，在使用时也会得心应手。</strong><br>
 <strong>本章将继续介绍HashMap的使用，主要是分析HashMap的三种遍历方式。</strong></p>
 </div>
+</div>
 <div class="sect2">
-<h3 id="_hashmap遍历"><a class="anchor" href="#_hashmap遍历"></a>25.1. HashMap遍历</h3>
+<h3 id="_hashmap遍历"><a class="anchor" href="#_hashmap遍历"></a>24.12. HashMap遍历</h3>
 <hr>
 <div class="ulist">
 <ul>
@@ -6634,7 +6653,7 @@ get方法相对put要简单的多，分析源码可以看出hash算法的精髓�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_注意"><a class="anchor" href="#_注意"></a>25.2. 注意</h3>
+<h3 id="_注意"><a class="anchor" href="#_注意"></a>24.13. 注意</h3>
 <div class="paragraph">
 <p><strong>对于Map中的Key是包装类型时，从map总get元素时要特别注意，get元素的key也必须是对应的包装类型，否者不能获得到对应的value。
 因为get方法内部通过key查找对应的value时，key用的是equals方法比较，所以key的数据类型也必须相同。<br>
@@ -6648,9 +6667,8 @@ get方法相对put要简单的多，分析源码可以看出hash算法的精髓�
 <span class="nc">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>  <span class="c1">// value是null？还是java？</span></code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_小结_2"><a class="anchor" href="#_小结_2"></a>25.3. 小结</h3>
+<div class="sect3">
+<h4 id="_小结_2"><a class="anchor" href="#_小结_2"></a>24.13.1. 小结</h4>
 <div class="paragraph">
 <p>有关HashMap的遍历就介绍这写，遍历HashMap一共有三种方式，一般遍历key和遍历Entry用的比较多，而且遍历Entry要比遍历
 key效率要更快些。对于HashMap的源码暂时就分析这么多，由于本人还是一个菜鸟，水平有限，有些地方也许没有分析的透彻，希望
@@ -6658,39 +6676,86 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 的实现原理，这里先推荐一篇讲解红黑树的文章<a href="http://tech.meituan.com/redblack-tree.html">红黑树深入剖析及Java实现</a>。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考_2"><a class="anchor" href="#_参考_2"></a>25.4. 参考</h3>
-<div class="paragraph">
-<p><a href="http://blog.jrwang.me/2016/java-collections-hashmap/">Java 容器源码分析之 HashMap</a></p>
-</div>
 </div>
 <div class="sect2">
-<h3 id="_hashmap_问题集"><a class="anchor" href="#_hashmap_问题集"></a>25.5. HashMap 问题集</h3>
-<div class="olist arabic">
-<ol class="arabic">
+<h3 id="_参考_2"><a class="anchor" href="#_参考_2"></a>24.14. 参考</h3>
+<div class="ulist">
+<ul>
 <li>
-<p>如果判断是否到达容量阈值？</p>
+<p><a href="https://blog.jrwang.me/2016/java-collections-hashmap/">Java 容器源码分析之 HashMap - JR&#8217;s Blog</a></p>
 </li>
-<li>
-<p>为什么</p>
-</li>
-<li>
-<p>遍历查找时，如果保证可以让红黑树的节点也可以使用next方法来查找？</p>
-</li>
-</ol>
+</ul>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_treemap"><a class="anchor" href="#_treemap"></a>26. TreeMap</h2>
+<h2 id="_treemap"><a class="anchor" href="#_treemap"></a>25. TreeMap</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>先看一个问题：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="java"><span class="kn">import</span> <span class="nn">com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput</span><span class="o">;</span><span class="kn">import</span> <span class="nn">java.util.TreeMap</span><span class="o">;</span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Pair</span> <span class="kd">implements</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;</span> <span class="o">{</span>
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+</pre></td><td class="code"><pre><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testQuestion</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">,</span> <span class="nc">Pair</span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;&gt;();</span>
+    <span class="nc">Pair</span> <span class="n">pair</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Pair</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+
+    <span class="n">data</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">pair</span><span class="o">,</span> <span class="n">pair</span><span class="o">);</span>
+    <span class="nc">Pair</span> <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="k">new</span> <span class="nc">Pair</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
+    <span class="c1">// 请问，这里会输出 true ？还是 false ？</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pair</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">value</span><span class="o">));</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">Pair</span> <span class="kd">implements</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">&gt;</span> <span class="o">{</span>
     <span class="kt">int</span> <span class="n">key</span><span class="o">;</span>
     <span class="kt">long</span> <span class="n">time</span><span class="o">;</span>
 
@@ -6710,8 +6775,13 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 
     <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
         <span class="nc">Pair</span> <span class="n">pair</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Pair</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
         <span class="k">return</span> <span class="n">key</span> <span class="o">==</span> <span class="n">pair</span><span class="o">.</span><span class="na">key</span><span class="o">;</span>
     <span class="o">}</span>
@@ -6721,22 +6791,187 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
         <span class="k">return</span> <span class="nc">Objects</span><span class="o">.</span><span class="na">hash</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TreeMap</code> 底层是一个红黑树。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+</pre></td><td class="code"><pre><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSort</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Comparator</span><span class="o">&lt;</span><span class="nc">Person</span><span class="o">&gt;</span> <span class="n">comparator</span> <span class="o">=</span> <span class="nc">Comparator</span><span class="o">.</span><span class="na">comparingInt</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">a</span><span class="o">.</span><span class="na">age</span><span class="o">);</span>
+    <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Person</span><span class="o">,</span> <span class="nc">Person</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;&gt;(</span><span class="n">comparator</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">((</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Person</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+            <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">person</span><span class="o">,</span> <span class="n">person</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="nc">Person</span> <span class="n">param</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Person</span><span class="o">(</span><span class="n">i</span> <span class="o">/</span> <span class="mi">2</span><span class="o">);</span>
+            <span class="nc">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">param</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="nc">Objects</span><span class="o">.</span><span class="na">nonNull</span><span class="o">(</span><span class="n">person</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">person</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Random</span><span class="o">().</span><span class="na">nextInt</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="c1">//</span>
+    <span class="n">map</span><span class="o">.</span><span class="na">forEach</span><span class="o">((</span><span class="n">k</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">k</span><span class="o">);</span>
+    <span class="o">});</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"-------------"</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">Person</span> <span class="n">person</span> <span class="o">:</span> <span class="n">map</span><span class="o">.</span><span class="na">navigableKeySet</span><span class="o">())</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"-------------"</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">Person</span> <span class="n">person</span> <span class="o">:</span> <span class="n">map</span><span class="o">.</span><span class="na">descendingKeySet</span><span class="o">())</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
 
-<span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
-    <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Pair</span><span class="o">,</span> <span class="nc">Pair</span><span class="o">&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;&gt;();</span>
-    <span class="nc">Pair</span> <span class="n">pair</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Pair</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="o">{</span>
+    <span class="kt">long</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">age</span><span class="o">;</span>
 
-    <span class="n">data</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">pair</span><span class="o">,</span> <span class="n">pair</span><span class="o">);</span>
-    <span class="nc">Pair</span> <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="k">new</span> <span class="nc">Pair</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
-    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">pair</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">value</span><span class="o">));</span> <span class="c1">// 请问，这里会输出 true ？还是 false ？</span>
-<span class="o">}</span></code></pre>
+    <span class="kd">public</span> <span class="nf">Person</span><span class="o">(</span><span class="kt">long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">Person</span><span class="o">(</span><span class="kt">long</span> <span class="n">id</span><span class="o">,</span> <span class="kt">int</span> <span class="n">age</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">age</span> <span class="o">=</span> <span class="n">age</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span> <span class="o">==</span> <span class="n">o</span><span class="o">)</span> <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">getClass</span><span class="o">()</span> <span class="o">!=</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">())</span> <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="nc">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Person</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">id</span> <span class="o">==</span> <span class="n">person</span><span class="o">.</span><span class="na">id</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nc">Objects</span><span class="o">.</span><span class="na">hash</span><span class="o">(</span><span class="n">id</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">"Person{"</span> <span class="o">+</span>
+                <span class="s">"id="</span> <span class="o">+</span> <span class="n">id</span> <span class="o">+</span>
+                <span class="s">", age="</span> <span class="o">+</span> <span class="n">age</span> <span class="o">+</span>
+                <span class="sc">'}'</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>修改排序字段，打印时，依然可以保持有序性。这个实现是怎么回事？</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+</pre></td><td class="code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">TreeMapTest</span> <span class="o">{</span>
+
+
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testPut</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">TreeMap</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">treeMap</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">TreeMap</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">treeMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">100</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_linkedhashmap"><a class="anchor" href="#_linkedhashmap"></a>27. LinkedHashMap</h2>
+<h2 id="_linkedhashmap"><a class="anchor" href="#_linkedhashmap"></a>26. LinkedHashMap</h2>
 <div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="./images/LinkedHashMap.png" alt="LinkedHashMap">
+</div>
+</div>
 <div class="paragraph">
 <p>问题：</p>
 </div>
@@ -6750,13 +6985,13 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_dictionary"><a class="anchor" href="#_dictionary"></a>28. Dictionary</h2>
+<h2 id="_dictionary"><a class="anchor" href="#_dictionary"></a>27. Dictionary</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hashtable"><a class="anchor" href="#_hashtable"></a>29. Hashtable</h2>
+<h2 id="_hashtable"><a class="anchor" href="#_hashtable"></a>28. Hashtable</h2>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
@@ -6764,7 +6999,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_6"><a class="anchor" href="#_参考资料_6"></a>29.1. 参考资料</h3>
+<h3 id="_参考资料_6"><a class="anchor" href="#_参考资料_6"></a>28.1. 参考资料</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -6776,67 +7011,154 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_enummap"><a class="anchor" href="#_enummap"></a>30. EnumMap</h2>
+<h2 id="_enummap"><a class="anchor" href="#_enummap"></a>29. EnumMap</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_weakhashmap"><a class="anchor" href="#_weakhashmap"></a>31. WeakHashMap</h2>
+<h2 id="_weakhashmap"><a class="anchor" href="#_weakhashmap"></a>30. WeakHashMap</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_identityhashmap"><a class="anchor" href="#_identityhashmap"></a>32. IdentityHashMap</h2>
+<h2 id="_identityhashmap"><a class="anchor" href="#_identityhashmap"></a>31. IdentityHashMap</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_queue"><a class="anchor" href="#_queue"></a>33. Queue</h2>
+<h2 id="_queue"><a class="anchor" href="#_queue"></a>32. Queue</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deque"><a class="anchor" href="#_deque"></a>34. Deque</h2>
+<h2 id="_deque"><a class="anchor" href="#_deque"></a>33. Deque</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_abstractqueue"><a class="anchor" href="#_abstractqueue"></a>35. AbstractQueue</h2>
+<h2 id="_abstractqueue"><a class="anchor" href="#_abstractqueue"></a>34. AbstractQueue</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_arraydeque"><a class="anchor" href="#_arraydeque"></a>36. ArrayDeque</h2>
+<h2 id="_arraydeque"><a class="anchor" href="#_arraydeque"></a>35. ArrayDeque</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_priorityqueue"><a class="anchor" href="#_priorityqueue"></a>37. PriorityQueue</h2>
+<h2 id="_priorityqueue"><a class="anchor" href="#_priorityqueue"></a>36. PriorityQueue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>对于 <code>PriorityQueue</code> 来说，最重要的一点就是要清楚他是基于堆结构实现，可以用它来实现优先队列。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/PriorityQueue-offer.png" alt="PriorityQueue offer">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/PriorityQueue-poll.png" alt="PriorityQueue poll">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/PriorityQueue-remove2.png" alt="PriorityQueue remove2">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="code"><pre><span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">testSize</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">PriorityQueue</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PriorityQueue</span><span class="o">&lt;&gt;(</span><span class="mi">5</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="n">queue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">queue</span><span class="o">).</span><span class="na">hasSize</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="nd">@Test</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
+    <span class="kt">int</span> <span class="n">capacity</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+    <span class="nc">PriorityQueue</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">PriorityQueue</span><span class="o">&lt;&gt;(</span><span class="n">capacity</span><span class="o">);</span>
+    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+        <span class="n">queue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">queue</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">capacity</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">Integer</span> <span class="n">num</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">queue</span><span class="o">).</span><span class="na">hasSize</span><span class="o">(</span><span class="n">capacity</span><span class="o">);</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">queue</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">queue</span><span class="o">).</span><span class="na">doesNotContain</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>从上述例子中可以看出，<code>PriorityQueue</code> 的长度是回增长的。所以，如果需要定长的优先队列，则需要将多余数据"弹出"。</p>
+</div>
+<div class="sect2">
+<h3 id="_参考资料_7"><a class="anchor" href="#_参考资料_7"></a>36.1. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.pdai.tech/md/java/collection/java-collection-PriorityQueue.html">Collection - PriorityQueue源码解析 | Java 全栈知识体系</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_工具类_arrays"><a class="anchor" href="#_工具类_arrays"></a>37. 工具类 <code>Arrays</code></h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_工具类_arrays"><a class="anchor" href="#_工具类_arrays"></a>38. 工具类 <code>Arrays</code></h2>
+<h2 id="_工具类_collections"><a class="anchor" href="#_工具类_collections"></a>38. 工具类 <code>Collections</code></h2>
 <div class="sectionbody">
-
+<div class="imageblock">
+<div class="content">
+<img src="./images/java-concurrent-overview.png" alt="java concurrent overview">
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_工具类_collections"><a class="anchor" href="#_工具类_collections"></a>39. 工具类 <code>Collections</code></h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="_thread"><a class="anchor" href="#_thread"></a>40. Thread</h2>
+<h2 id="_thread"><a class="anchor" href="#_thread"></a>39. Thread</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>在JDK1.2之后，Java线程模型已经确定了基于操作系统原生线程模型实现。</p>
@@ -7640,7 +7962,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_7"><a class="anchor" href="#_参考资料_7"></a>40.1. 参考资料</h3>
+<h3 id="_参考资料_8"><a class="anchor" href="#_参考资料_8"></a>39.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -7658,7 +7980,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_locksupport"><a class="anchor" href="#_locksupport"></a>41. LockSupport</h2>
+<h2 id="_locksupport"><a class="anchor" href="#_locksupport"></a>40. LockSupport</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -7825,7 +8147,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_abstractqueuedsynchronizer"><a class="anchor" href="#_abstractqueuedsynchronizer"></a>42. AbstractQueuedSynchronizer</h2>
+<h2 id="_abstractqueuedsynchronizer"><a class="anchor" href="#_abstractqueuedsynchronizer"></a>41. AbstractQueuedSynchronizer</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Doug Lea</p>
@@ -7834,7 +8156,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p>在 Java 5 之后，JDK 内置了大量的并发工具类。粗略去看这些工具类的源码，你会发现，大多数都在内部继承了 <code>AbstractQueuedSynchronizer</code>。由此可见，<code>AbstractQueuedSynchronizer</code> 的核心地位。想搞清楚这些并发工具类的原理，<code>AbstractQueuedSynchronizer</code> 的源码可以说是不可不看。</p>
 </div>
 <div class="sect2">
-<h3 id="_clh_lock_queue_介绍"><a class="anchor" href="#_clh_lock_queue_介绍"></a>42.1. CLH lock queue 介绍</h3>
+<h3 id="_clh_lock_queue_介绍"><a class="anchor" href="#_clh_lock_queue_介绍"></a>41.1. CLH lock queue 介绍</h3>
 <div class="imageblock">
 <div class="content">
 <img src="./images/AbstractQueuedSynchronizer-CLH-queue.png" alt="AbstractQueuedSynchronizer CLH queue">
@@ -7854,7 +8176,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_核心点"><a class="anchor" href="#_核心点"></a>42.2. 核心点</h3>
+<h3 id="_核心点"><a class="anchor" href="#_核心点"></a>41.2. 核心点</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -8347,7 +8669,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_node_详解"><a class="anchor" href="#_node_详解"></a>42.3. <code>Node</code> 详解</h3>
+<h3 id="_node_详解"><a class="anchor" href="#_node_详解"></a>41.3. <code>Node</code> 详解</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -8381,7 +8703,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_node_中一些常量定义"><a class="anchor" href="#_node_中一些常量定义"></a>42.3.1. <code>Node</code> 中一些常量定义</h4>
+<h4 id="_node_中一些常量定义"><a class="anchor" href="#_node_中一些常量定义"></a>41.3.1. <code>Node</code> 中一些常量定义</h4>
 <div class="paragraph">
 <p>区分共享锁还是独占式锁的常量，是如何被使用的？独占锁为何没有初始化？</p>
 </div>
@@ -8445,25 +8767,25 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_独占模式"><a class="anchor" href="#_独占模式"></a>42.4. 独占模式</h3>
+<h3 id="_独占模式"><a class="anchor" href="#_独占模式"></a>41.4. 独占模式</h3>
 <div class="paragraph">
 <p>独占模式的同步器的一个显著特点就是：头节点的第一个有效(非取消)的后继节点，总是尝试获取资源，一旦获取资源成功就会解除阻塞并且晋升为头节点，原来所在节点会移除出同步等待队列，原来的队列长度就会减少1，然后头结点的第一个有效的后继节点继续开始竞争资源。</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_共享模式"><a class="anchor" href="#_共享模式"></a>42.5. 共享模式</h3>
+<h3 id="_共享模式"><a class="anchor" href="#_共享模式"></a>41.5. 共享模式</h3>
 <div class="paragraph">
 <p>共享模式的同步器的一个显著特点就是：头节点的第一个有效(非取消)的后继节点，总是尝试获取资源，一旦获取资源成功就会解除阻塞并且晋升为头节点，原来所在节点会移除出同步等待队列，原来的队列长度就会减少1，重新设置头节点的过程会传播唤醒的状态，简单来说就是唤醒一个有效的后继节点，只要一个节点可以晋升为头节点，它的后继节点就能被唤醒。节点的唤醒顺序遵循类似于FIFO的原则，通俗说就是先阻塞或者阻塞时间最长则先被唤醒。</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_conditionobject"><a class="anchor" href="#_conditionobject"></a>42.6. <code>ConditionObject</code></h3>
+<h3 id="_conditionobject"><a class="anchor" href="#_conditionobject"></a>41.6. <code>ConditionObject</code></h3>
 <div class="paragraph">
 <p>关于这段代码的研究，可以参看 <a href="#"><code>java.util.concurrent.ArrayBlockingQueue</code></a>。<code>ArrayBlockingQueue</code> 在实现 <code>poll(long, java.util.concurrent.TimeUnit)</code> 方法时，使用了 <code>Condition notEmpty</code> 对象来调用 <code>ConditionObject.awaitNanos(long)</code> 方法。</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_8"><a class="anchor" href="#_参考资料_8"></a>42.7. 参考资料</h3>
+<h3 id="_参考资料_9"><a class="anchor" href="#_参考资料_9"></a>41.7. 参考资料</h3>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -8535,13 +8857,13 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_reentrantlock"><a class="anchor" href="#_reentrantlock"></a>43. ReentrantLock</h2>
+<h2 id="_reentrantlock"><a class="anchor" href="#_reentrantlock"></a>42. ReentrantLock</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>ReentrantLock</code> 是重入锁，也是排他锁。</p>
 </div>
 <div class="sect2">
-<h3 id="_谈谈_synchronized_和_reentrantlock_的区别"><a class="anchor" href="#_谈谈_synchronized_和_reentrantlock_的区别"></a>43.1. 谈谈 synchronized 和 ReentrantLock 的区别</h3>
+<h3 id="_谈谈_synchronized_和_reentrantlock_的区别"><a class="anchor" href="#_谈谈_synchronized_和_reentrantlock_的区别"></a>42.1. 谈谈 synchronized 和 ReentrantLock 的区别</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -8934,7 +9256,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_reentrantreadwritelock"><a class="anchor" href="#_reentrantreadwritelock"></a>44. ReentrantReadWriteLock</h2>
+<h2 id="_reentrantreadwritelock"><a class="anchor" href="#_reentrantreadwritelock"></a>43. ReentrantReadWriteLock</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -9082,7 +9404,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_stampedlock"><a class="anchor" href="#_stampedlock"></a>45. StampedLock</h2>
+<h2 id="_stampedlock"><a class="anchor" href="#_stampedlock"></a>44. StampedLock</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -9226,7 +9548,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_semaphore"><a class="anchor" href="#_semaphore"></a>46. Semaphore</h2>
+<h2 id="_semaphore"><a class="anchor" href="#_semaphore"></a>45. Semaphore</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>信号量</p>
@@ -9335,7 +9657,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_countdownlatch"><a class="anchor" href="#_countdownlatch"></a>47. CountDownLatch</h2>
+<h2 id="_countdownlatch"><a class="anchor" href="#_countdownlatch"></a>46. CountDownLatch</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>"Count Down" 在英语中意为倒计数，一个典型场景就是火箭🚀发射时的倒计时。它允许一个或多个线程等待其他线程完成操作。</p>
@@ -9540,7 +9862,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p>管中窥豹，从这里也可以看出 <code>CountDownLatch</code> 中的等待控制几乎都是依赖 <code>AbstractQueuedSynchronizer</code> 来实现的。</p>
 </div>
 <div class="sect2">
-<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>47.1. <code>countDown()</code></h3>
+<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>46.1. <code>countDown()</code></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
@@ -9587,7 +9909,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_await"><a class="anchor" href="#_await"></a>47.2. <code>await()</code></h3>
+<h3 id="_await"><a class="anchor" href="#_await"></a>46.2. <code>await()</code></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
@@ -9676,7 +9998,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_9"><a class="anchor" href="#_参考资料_9"></a>47.3. 参考资料</h3>
+<h3 id="_参考资料_10"><a class="anchor" href="#_参考资料_10"></a>46.3. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -9691,7 +10013,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cyclicbarrier"><a class="anchor" href="#_cyclicbarrier"></a>48. CyclicBarrier</h2>
+<h2 id="_cyclicbarrier"><a class="anchor" href="#_cyclicbarrier"></a>47. CyclicBarrier</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -9805,19 +10127,19 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_phaser"><a class="anchor" href="#_phaser"></a>49. Phaser</h2>
+<h2 id="_phaser"><a class="anchor" href="#_phaser"></a>48. Phaser</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_exchanger"><a class="anchor" href="#_exchanger"></a>50. Exchanger</h2>
+<h2 id="_exchanger"><a class="anchor" href="#_exchanger"></a>49. Exchanger</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_threadlocal"><a class="anchor" href="#_threadlocal"></a>51. ThreadLocal</h2>
+<h2 id="_threadlocal"><a class="anchor" href="#_threadlocal"></a>50. ThreadLocal</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>原以为神秘兮兮的 <code>ThreadLocal</code> 是何方神圣？没想到，点开代码，竟然如此简单明了，直接上代码：</p>
@@ -10135,7 +10457,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p>哈希冲突了怎么解决？</p>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_10"><a class="anchor" href="#_参考资料_10"></a>51.1. 参考资料</h3>
+<h3 id="_参考资料_11"><a class="anchor" href="#_参考资料_11"></a>50.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -10154,7 +10476,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_atomicinteger"><a class="anchor" href="#_atomicinteger"></a>52. AtomicInteger</h2>
+<h2 id="_atomicinteger"><a class="anchor" href="#_atomicinteger"></a>51. AtomicInteger</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>AtomicInteger</code> 类主要利用 CAS (compare and swap) + volatile 和 native 方法来保证原子操作，从而避免 <code>synchronized</code> 的高开销，执行效率大为提升。</p>
@@ -10162,7 +10484,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_longadder"><a class="anchor" href="#_longadder"></a>53. LongAdder</h2>
+<h2 id="_longadder"><a class="anchor" href="#_longadder"></a>52. LongAdder</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -10254,7 +10576,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_juc_包基础类分析"><a class="anchor" href="#_juc_包基础类分析"></a>54. JUC 包基础类分析</h2>
+<h2 id="_juc_包基础类分析"><a class="anchor" href="#_juc_包基础类分析"></a>53. JUC 包基础类分析</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>JUC 包中有一些提交比较小的类，这类类单列出来重量太小，不够篇幅。</p>
@@ -10262,10 +10584,10 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_futuretask"><a class="anchor" href="#_futuretask"></a>55. FutureTask</h2>
+<h2 id="_futuretask"><a class="anchor" href="#_futuretask"></a>54. FutureTask</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_类图_4"><a class="anchor" href="#_类图_4"></a>55.1. 类图</h3>
+<h3 id="_类图_4"><a class="anchor" href="#_类图_4"></a>54.1. 类图</h3>
 <div class="paragraph">
 <p>先来看一下 <code>ArrayList</code> 的类图：</p>
 </div>
@@ -10435,7 +10757,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_11"><a class="anchor" href="#_参考资料_11"></a>55.2. 参考资料</h3>
+<h3 id="_参考资料_12"><a class="anchor" href="#_参考资料_12"></a>54.2. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -10447,7 +10769,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_completablefuture"><a class="anchor" href="#_completablefuture"></a>56. CompletableFuture</h2>
+<h2 id="_completablefuture"><a class="anchor" href="#_completablefuture"></a>55. CompletableFuture</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Java 中的 Promise。</p>
@@ -10573,7 +10895,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_12"><a class="anchor" href="#_参考资料_12"></a>56.1. 参考资料</h3>
+<h3 id="_参考资料_13"><a class="anchor" href="#_参考资料_13"></a>55.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -10585,7 +10907,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_threadpoolexecutor_源码分析"><a class="anchor" href="#_threadpoolexecutor_源码分析"></a>57. ThreadPoolExecutor 源码分析</h2>
+<h2 id="_threadpoolexecutor_源码分析"><a class="anchor" href="#_threadpoolexecutor_源码分析"></a>56. ThreadPoolExecutor 源码分析</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -10824,7 +11146,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_大纲"><a class="anchor" href="#_大纲"></a>57.1. 大纲</h3>
+<h3 id="_大纲"><a class="anchor" href="#_大纲"></a>56.1. 大纲</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -10876,7 +11198,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_核心点_2"><a class="anchor" href="#_核心点_2"></a>57.2. 核心点</h3>
+<h3 id="_核心点_2"><a class="anchor" href="#_核心点_2"></a>56.2. 核心点</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -10930,7 +11252,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_问题_2"><a class="anchor" href="#_问题_2"></a>57.3. 问题</h3>
+<h3 id="_问题_2"><a class="anchor" href="#_问题_2"></a>56.3. 问题</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -10957,7 +11279,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </ol>
 </div>
 <div class="sect3">
-<h4 id="_tomcat_改进"><a class="anchor" href="#_tomcat_改进"></a>57.3.1. Tomcat 改进</h4>
+<h4 id="_tomcat_改进"><a class="anchor" href="#_tomcat_改进"></a>56.3.1. Tomcat 改进</h4>
 <div class="paragraph">
 <p>可不可以自己封装一个Queue，在插入时增加以下逻辑呢？</p>
 </div>
@@ -11025,7 +11347,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_需要注意的点"><a class="anchor" href="#_需要注意的点"></a>57.4. 需要注意的点</h3>
+<h3 id="_需要注意的点"><a class="anchor" href="#_需要注意的点"></a>56.4. 需要注意的点</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -11068,7 +11390,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_收获"><a class="anchor" href="#_收获"></a>57.5. 收获</h3>
+<h3 id="_收获"><a class="anchor" href="#_收获"></a>56.5. 收获</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -11386,13 +11708,13 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_思考题"><a class="anchor" href="#_思考题"></a>57.6. 思考题</h3>
+<h3 id="_思考题"><a class="anchor" href="#_思考题"></a>56.6. 思考题</h3>
 <div class="paragraph">
 <p>自己实现一个线程池。</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_13"><a class="anchor" href="#_参考资料_13"></a>57.7. 参考资料</h3>
+<h3 id="_参考资料_14"><a class="anchor" href="#_参考资料_14"></a>56.7. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -11483,10 +11805,10 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_forkjointask"><a class="anchor" href="#_forkjointask"></a>58. ForkJoinTask</h2>
+<h2 id="_forkjointask"><a class="anchor" href="#_forkjointask"></a>57. ForkJoinTask</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_类图_5"><a class="anchor" href="#_类图_5"></a>58.1. 类图</h3>
+<h3 id="_类图_5"><a class="anchor" href="#_类图_5"></a>57.1. 类图</h3>
 <div class="paragraph">
 <p>先来看一下 <code>ForkJoinTask</code> 的类图：</p>
 </div>
@@ -11499,7 +11821,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_forkjoinpool"><a class="anchor" href="#_forkjoinpool"></a>59. ForkJoinPool</h2>
+<h2 id="_forkjoinpool"><a class="anchor" href="#_forkjoinpool"></a>58. ForkJoinPool</h2>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
@@ -11684,7 +12006,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_14"><a class="anchor" href="#_参考资料_14"></a>59.1. 参考资料</h3>
+<h3 id="_参考资料_15"><a class="anchor" href="#_参考资料_15"></a>58.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -11711,7 +12033,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_concurrenthashmap"><a class="anchor" href="#_concurrenthashmap"></a>60. <code>ConcurrentHashMap</code></h2>
+<h2 id="_concurrenthashmap"><a class="anchor" href="#_concurrenthashmap"></a>59. <code>ConcurrentHashMap</code></h2>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
@@ -11724,7 +12046,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_15"><a class="anchor" href="#_参考资料_15"></a>60.1. 参考资料</h3>
+<h3 id="_参考资料_16"><a class="anchor" href="#_参考资料_16"></a>59.1. 参考资料</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -11748,7 +12070,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_concurrentskiplistmap"><a class="anchor" href="#_concurrentskiplistmap"></a>61. <code>ConcurrentSkipListMap</code></h2>
+<h2 id="_concurrentskiplistmap"><a class="anchor" href="#_concurrentskiplistmap"></a>60. <code>ConcurrentSkipListMap</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>没想到 JDK 中，居然有跳跃表的实现！</p>
@@ -11761,7 +12083,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_copyonwritearraylist"><a class="anchor" href="#_copyonwritearraylist"></a>62. CopyOnWriteArrayList</h2>
+<h2 id="_copyonwritearraylist"><a class="anchor" href="#_copyonwritearraylist"></a>61. CopyOnWriteArrayList</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="#"><code>ReentrantReadWriteLock</code></a> 读写锁的思想非常类似，也就是读读共享、写写互斥、读写互斥、写读互斥。JDK 中提供了 <code>CopyOnWriteArrayList</code> 类比相比于在读写锁的思想又更进一步。为了将读取的性能发挥到极致，<code>CopyOnWriteArrayList</code> 读取是完全不用加锁的，并且更厉害的是：写入也不会阻塞读取操作。只有写入和写入之间需要进行同步等待。这样一来，读操作的性能就会大幅度提升。</p>
@@ -11928,7 +12250,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p>从 <code>CopyOnWriteArrayList</code> 的名字就能看出 <code>CopyOnWriteArrayList</code> 是满足 <code>CopyOnWrite</code> 的 <code>ArrayList</code>，所谓 <code>CopyOnWrite</code> 也就是说：在计算机，如果你想要对一块内存进行修改时，我们不在原有内存块中进行写操作，而是将内存拷贝一份，在新的内存中进行写操作，写完之后呢，就将指向原来内存指针指向新的内存，原来的内存就可以被回收掉了。</p>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_16"><a class="anchor" href="#_参考资料_16"></a>62.1. 参考资料</h3>
+<h3 id="_参考资料_17"><a class="anchor" href="#_参考资料_17"></a>61.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -11940,15 +12262,15 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect1">
-<h2 id="_concurrentlinkedqueue"><a class="anchor" href="#_concurrentlinkedqueue"></a>63. ConcurrentLinkedQueue</h2>
+<h2 id="_concurrentlinkedqueue"><a class="anchor" href="#_concurrentlinkedqueue"></a>62. ConcurrentLinkedQueue</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>ConcurrentLinkedQueue</code> 主要使用 CAS 非阻塞算法来实现线程安全。</p>
+<p><code>ConcurrentLinkedQueue</code> 主要使用 CAS 非阻塞算法来实现线程安全。这是一个非阻塞队列。对比来看，<code>LinkedBlockingQueue</code> 是一个可以阻塞的队列。</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_arrayblockingqueue"><a class="anchor" href="#_arrayblockingqueue"></a>64. ArrayBlockingQueue</h2>
+<h2 id="_arrayblockingqueue"><a class="anchor" href="#_arrayblockingqueue"></a>63. ArrayBlockingQueue</h2>
 <div class="sectionbody">
 <div class="imageblock text-center">
 <div class="content">
@@ -11956,7 +12278,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_方法组"><a class="anchor" href="#_方法组"></a>64.1. 方法组</h3>
+<h3 id="_方法组"><a class="anchor" href="#_方法组"></a>63.1. 方法组</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 8%;">
@@ -12302,21 +12624,27 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_17"><a class="anchor" href="#_参考资料_17"></a>64.2. 参考资料</h3>
-<div class="paragraph">
-<p>*</p>
+<h3 id="_参考资料_18"><a class="anchor" href="#_参考资料_18"></a>63.2. 参考资料</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.pdai.tech/md/java/thread/java-thread-x-juc-collection-BlockingQueue.html">JUC集合: BlockingQueue详解 | Java 全栈知识体系</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_linkedblockingqueue"><a class="anchor" href="#_linkedblockingqueue"></a>65. LinkedBlockingQueue</h2>
+<h2 id="_linkedblockingqueue"><a class="anchor" href="#_linkedblockingqueue"></a>64. LinkedBlockingQueue</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p><code>LinkedBlockingQueue</code> 底层是一个单向链表结构。如果需要的话，这一链式结构可以选择一个上限。如果没有定义上限，将使用 <code>Integer.MAX_VALUE</code> 作为上限。</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_priorityblockingqueue"><a class="anchor" href="#_priorityblockingqueue"></a>66. PriorityBlockingQueue</h2>
+<h2 id="_priorityblockingqueue"><a class="anchor" href="#_priorityblockingqueue"></a>65. PriorityBlockingQueue</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>PriorityBlockingQueue</code> 是一个支持优先级的无界阻塞队列。默认情况下元素采用自然顺序进行排序，也可以通过自定义类实现 <code>compareTo()</code> 方法来指定元素排序规则，或者初始化时通过构造器参数 <code>Comparator</code> 来指定排序规则。</p>
@@ -12325,13 +12653,186 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p><code>PriorityBlockingQueue</code> 并发控制采用的是 <code>ReentrantLock</code>，队列为无界队列（<code>ArrayBlockingQueue</code> 是有界队列，<code>LinkedBlockingQueue</code> 也可以通过在构造函数中传入 <code>capacity</code> 指定队列最大的容量，但是 <code>PriorityBlockingQueue</code> 只能指定初始的队列大小，后面插入元素的时候，如果空间不够的话会自动扩容）。</p>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_18"><a class="anchor" href="#_参考资料_18"></a>66.1. 参考资料</h3>
+<h3 id="_参考资料_19"><a class="anchor" href="#_参考资料_19"></a>65.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p><a href="https://www.javadoop.com/post/java-concurrent-queue">解读 java 并发队列 BlockingQueue_Javadoop</a></p>
 </li>
 </ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_delayqueue"><a class="anchor" href="#_delayqueue"></a>66. DelayQueue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>DelayQueue</code> 对元素进行持有直到一个特定的延迟到期。注入其中的元素必须实现 <code>java.util.concurrent.Delayed</code> 接口，该接口定义:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">java.util.concurrent</span><span class="o">;</span>
+
+<span class="cm">/**
+ * A mix-in style interface for marking objects that should be
+ * acted upon after a given delay.
+ *
+ * &lt;p&gt;An implementation of this interface must define a
+ * {@code compareTo} method that provides an ordering consistent with
+ * its {@code getDelay} method.
+ *
+ * @since 1.5
+ * @author Doug Lea
+ */</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Delayed</span> <span class="kd">extends</span> <span class="nc">Comparable</span><span class="o">&lt;</span><span class="nc">Delayed</span><span class="o">&gt;</span> <span class="o">{</span>
+
+    <span class="cm">/**
+     * Returns the remaining delay associated with this object, in the
+     * given time unit.
+     *
+     * @param unit the time unit
+     * @return the remaining delay; zero or negative values indicate
+     * that the delay has already elapsed
+     */</span>
+    <span class="kt">long</span> <span class="nf">getDelay</span><span class="o">(</span><span class="nc">TimeUnit</span> <span class="n">unit</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>示例如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+</pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman.concurrent</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.Objects</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.DelayQueue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Delayed</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+
+<span class="cm">/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-22 16:38
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DelayQueueTest</span> <span class="o">{</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+        <span class="nc">DelayQueue</span><span class="o">&lt;</span><span class="nc">IntDelay</span><span class="o">&gt;</span> <span class="n">delayQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DelayQueue</span><span class="o">&lt;&gt;();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">delayQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">IntDelay</span><span class="o">(</span><span class="n">i</span><span class="o">));</span>
+        <span class="o">}</span>
+        <span class="k">while</span> <span class="o">(!</span><span class="n">delayQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+            <span class="nc">IntDelay</span> <span class="n">delay</span> <span class="o">=</span> <span class="n">delayQueue</span><span class="o">.</span><span class="na">take</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="nc">Objects</span><span class="o">.</span><span class="na">nonNull</span><span class="o">(</span><span class="n">delay</span><span class="o">))</span> <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">delay</span><span class="o">.</span><span class="na">num</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">IntDelay</span> <span class="kd">implements</span> <span class="nc">Delayed</span> <span class="o">{</span>
+
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">num</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">deadline</span><span class="o">;</span>
+
+        <span class="kd">public</span> <span class="nf">IntDelay</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">num</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+            <span class="n">deadline</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">toMillis</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getDelay</span><span class="o">(</span><span class="nc">TimeUnit</span> <span class="n">unit</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">deadline</span> <span class="o">-</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+        <span class="o">}</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="nc">Delayed</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+            <span class="nc">IntDelay</span> <span class="n">param</span> <span class="o">=</span> <span class="o">(</span><span class="nc">IntDelay</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+            <span class="k">return</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">compare</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">num</span><span class="o">,</span> <span class="n">param</span><span class="o">.</span><span class="na">num</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 </div>
@@ -12750,7 +13251,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_19"><a class="anchor" href="#_参考资料_19"></a>67.1. 参考资料</h3>
+<h3 id="_参考资料_20"><a class="anchor" href="#_参考资料_20"></a>67.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -12812,7 +13313,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p>属性反射操作 <code>Field</code> 的 <code>setXX</code> 和 <code>getXX</code> 方法最终委托到 <code>jdk.internal.misc.Unsafe</code> 的 <code>putXX</code> 和 <code>getXX</code> 方法，而属性的内存偏移地址是通过 <code>jdk.internal.misc.Unsafe</code> 的 <code>staticFieldBase()</code>、<code>staticFieldOffset</code> 和 <code>objectFieldOffset</code> 几个方法计算的。</p>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_20"><a class="anchor" href="#_参考资料_20"></a>68.1. 参考资料</h3>
+<h3 id="_参考资料_21"><a class="anchor" href="#_参考资料_21"></a>68.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -13429,7 +13930,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_21"><a class="anchor" href="#_参考资料_21"></a>69.3. 参考资料</h3>
+<h3 id="_参考资料_22"><a class="anchor" href="#_参考资料_22"></a>69.3. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -13671,7 +14172,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_22"><a class="anchor" href="#_参考资料_22"></a>70.1. 参考资料</h3>
+<h3 id="_参考资料_23"><a class="anchor" href="#_参考资料_23"></a>70.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -13831,7 +14332,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </ol>
 </div>
 <div class="sect2">
-<h3 id="_参考资料_23"><a class="anchor" href="#_参考资料_23"></a>71.1. 参考资料</h3>
+<h3 id="_参考资料_24"><a class="anchor" href="#_参考资料_24"></a>71.1. 参考资料</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -14593,7 +15094,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-22 16:35:14 +0800
+Last updated 2020-04-23 00:02:12 +0800
 </div>
 </div>
 <link rel="stylesheet" href="assets/css/rouge-monokai.css">
