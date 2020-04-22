@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Field</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_field">1. Field</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_field"><a class="anchor" href="#_field"></a>1. Field</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>属性操作方法 <code>Field#set(Object obj, Object value)</code> 和 <code>Field#get(Object obj)</code> 底层都是委托到 <code>jdk.internal.reflect.FieldAccessor</code> 实现。</p>
+</div>
+<div class="paragraph">
+<p><code>FieldAccessor</code> 接口有很多的实现，<code>FieldAccessor</code> 接口实例是通过 <code>jdk.internal.reflect.ReflectionFactory</code> 这个工厂构造的：</p>
+</div>
+<div class="listingblock">
+<div class="title">jdk.internal.reflect.ReflectionFactory</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public FieldAccessor newFieldAccessor(Field field, boolean override) {
+    checkInitted();
+
+    Field root = langReflectAccess.getRoot(field);
+    if (root != null) {
+        // FieldAccessor will use the root unless the modifiers have
+        // been overrridden
+        if (root.getModifiers() == field.getModifiers() || !override) {
+            field = root;
+        }
+    }
+    return UnsafeFieldAccessorFactory.newFieldAccessor(field, override);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最终委托到 <code>UnsafeFieldAccessorFactory#newFieldAccessor()</code>。</p>
+</div>
+<div class="paragraph">
+<p><code>UnsafeObjectFieldAccessorImpl</code> 中除了 <code>get(Object obj)</code> 和 <code>set(Object obj, Object value)</code> 方法，其他方法都是直接抛出 <code>IllegalArgumentException</code>。而 <code>get(Object obj)</code> 和 <code>set(Object obj, Object value)</code> 底层分别依赖于 <code>jdk.internal.misc.Unsafe</code> 的 <code>putObject(obj, fieldOffset, value)</code> 和 <code>getObject(obj, fieldOffset)</code> 方法。而属性的内存偏移地址是在 <code>UnsafeObjectFieldAccessorImpl</code> 的父类 <code>UnsafeFieldAccessorImpl</code> 的构造函数中计算出来的。</p>
+</div>
+<div class="paragraph">
+<p>属性反射操作 <code>Field</code> 的 <code>setXX</code> 和 <code>getXX</code> 方法最终委托到 <code>jdk.internal.misc.Unsafe</code> 的 <code>putXX</code> 和 <code>getXX</code> 方法，而属性的内存偏移地址是通过 <code>jdk.internal.misc.Unsafe</code> 的 <code>staticFieldBase()</code>、<code>staticFieldOffset</code> 和 <code>objectFieldOffset</code> 几个方法计算的。</p>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.1. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://www.throwable.club/2018/12/16/java-reflection-implementance/">深入分析Java反射(七)-简述反射调用的底层实现 - Throwable&#8217;s Blog</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>StampedLock</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_stampedlock">1. StampedLock</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_stampedlock"><a class="anchor" href="#_stampedlock"></a>1. StampedLock</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.StampedLock;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-16 23:15
+ */
+public class StampedLockTest {
+    @Test
+    public void test() {
+        StampedLock lock = new StampedLock();
+        Point point = new Point(lock);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        for (int i = 0; i &lt; 1000; i++) {
+            executorService.execute(() -&gt; {
+                ThreadLocalRandom random = ThreadLocalRandom.current();
+                point.move(random.nextDouble(100), random.nextDouble(100));
+                System.out.println("move point...");
+            });
+
+            executorService.execute(() -&gt; {
+                double distance = point.distanceFromOrigin();
+                System.out.println("current distance = " + distance);
+            });
+        }
+    }
+
+    static class Point {
+        private volatile double x, y;
+        private final StampedLock lock;
+
+        public Point(StampedLock lock) {
+            this.lock = lock;
+        }
+
+        void move(double deltaX, double deltaxY) {
+            long stamp = lock.writeLock();
+            try {
+                x += deltaX;
+                y += deltaxY;
+            } finally {
+                lock.unlock(stamp);
+            }
+        }
+
+        double distanceFromOrigin() {
+            long stamp = lock.tryOptimisticRead();
+            double currentX = x, currentY = y;
+            if (!lock.validate(stamp)) {
+                stamp = lock.readLock();
+                try {
+                    currentX = x;
+                    currentY = y;
+                } finally {
+                    lock.unlock(stamp);
+                }
+            }
+            return Math.sqrt(currentX * currentX + currentY * currentY);
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

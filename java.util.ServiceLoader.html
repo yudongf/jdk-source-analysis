@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>ServiceLoader</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_serviceloader">1. <code>ServiceLoader</code></a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_serviceloader"><a class="anchor" href="#_serviceloader"></a>1. <code>ServiceLoader</code></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-08 10:47
+ */
+public interface ServiceLoaderSay {
+    void say();
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-08 10:48
+ */
+public class ServiceLoaderSayHello implements ServiceLoaderSay {
+    @Override
+    public void say() {
+        System.out.println("Hello, https://www.diguage.com/");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-08 10:48
+ */
+public class ServiceLoaderSayGoodbye implements ServiceLoaderSay {
+    @Override
+    public void say() {
+        System.out.println("Goodbye, https://www.diguage.com/");
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+
+import org.junit.Test;
+
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-08 10:40
+ */
+public class ServiceLoaderTest {
+    @Test
+    public void test() {
+        ServiceLoader&lt;ServiceLoaderSay&gt; loader
+                = ServiceLoader.load(ServiceLoaderSay.class);
+        Iterator&lt;ServiceLoaderSay&gt; iterator = loader.iterator();
+        while (iterator.hasNext()) {
+            ServiceLoaderSay say = iterator.next();
+            say.say();
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>经过测试，有几点需要注意：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>只支持 <code>public</code> 的类。D瓜哥测试，这是因为内部需要创建对象，其他访问控制不能在 <code>ServiceLoader</code> 类中创建对象。</p>
+</li>
+<li>
+<p>不支持 <code>Outter.Inner</code> 这样的内部类 ，即使是 <code>public static class</code>。</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.1. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://www.throwable.club/2018/11/30/java-service-loader/">浅析JDK中ServiceLoader的源码 - Throwable&#8217;s Blog</a>&#8201;&#8212;&#8201;这里的代码是基于 JDK 8 的，和 JDK 11 的代码已经相差很大。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

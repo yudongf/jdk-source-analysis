@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>CyclicBarrier</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_cyclicbarrier">1. CyclicBarrier</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_cyclicbarrier"><a class="anchor" href="#_cyclicbarrier"></a>1. CyclicBarrier</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.util.Random;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-16 17:24
+ */
+public class CyclicBarrierTest {
+    @Test
+    public void test() {
+        CyclicBarrier barrier = new CyclicBarrier(5,
+                () -&gt; System.out.println("集合完毕，出发……"));
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for (int i = 0; i &lt; 5; i++) {
+            executorService.execute(new Task(barrier, "Task-" + (i + 1)));
+        }
+        executorService.shutdown();
+        while (!executorService.isTerminated()) {
+        }
+        System.out.println("Finished.");
+    }
+
+    static class Task implements Runnable {
+        private final CyclicBarrier barrier;
+        private final String name;
+
+        public Task(CyclicBarrier barrier, String name) {
+            this.barrier = barrier;
+            this.name = name;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println(name + " start...");
+                barrier.await();
+                Thread.sleep(new Random().nextInt(1000));
+                System.out.println(name + " running...");
+                barrier.await();
+            } catch (InterruptedException | BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

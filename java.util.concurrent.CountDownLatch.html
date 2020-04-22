@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>CountDownLatch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_countdownlatch">1. CountDownLatch</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_countdownlatch"><a class="anchor" href="#_countdownlatch"></a>1. CountDownLatch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>"Count Down" 在英语中意为倒计数，一个典型场景就是火箭🚀发射时的倒计时。它允许一个或多个线程等待其他线程完成操作。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.time.LocalDateTime;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-16 17:23
+ */
+public class CountDownLatchTest {
+    private int count = 2;
+
+    @Test
+    public void test() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(count);
+        ExecutorService executorService = Executors.newFixedThreadPool(count);
+        for (int i = 0; i &lt; count; i++) {
+            executorService.execute(new Task(latch));
+        }
+        latch.await();
+        System.out.println("Fire...");
+        executorService.shutdown();
+        while (executorService.isTerminated()) {
+        }
+        System.out.println("All task were done.");
+        LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(5));
+        System.out.println("Terminal at " + LocalDateTime.now());
+    }
+
+    static class Task implements Runnable {
+        private final CountDownLatch latch;
+
+        public Task(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        @Override
+        public void run() {
+            try {
+                int time = new Random().nextInt(5000);
+                latch.countDown();
+                System.out.println(Thread.currentThread().getId() + " time = " + LocalDateTime.now());
+                Thread.sleep(time);
+                System.out.println(Thread.currentThread().getId() + " sleep = " + time + ": check finished.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下面，我们开始看 <code>CountDownLatch</code> 源码：</p>
+</div>
+<div class="paragraph">
+<p><code>CountDownLatch</code> 类中存在一个内部类 <code>Sync</code>，继承自 <code>AbstractQueuedSynchronizer</code>，代码如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Synchronization control For CountDownLatch.
+ * Uses AQS state to represent count.
+ */
+private static final class Sync extends AbstractQueuedSynchronizer {
+    private static final long serialVersionUID = 4982264981922014374L;
+
+    Sync(int count) {
+        setState(count);
+    }
+
+    int getCount() {
+        return getState();
+    }
+
+    protected int tryAcquireShared(int acquires) {
+        return (getState() == 0) ? 1 : -1;
+    }
+
+    protected boolean tryReleaseShared(int releases) {
+        // Decrement count; signal when transition to zero
+        for (;;) {
+            int c = getState();
+            if (c == 0)
+                return false;
+            int nextc = c - 1;
+            if (compareAndSetState(c, nextc))
+                return nextc == 0;
+        }
+    }
+}
+
+private final Sync sync;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>管中窥豹，从这里也可以看出 <code>CountDownLatch</code> 中的等待控制几乎都是依赖 <code>AbstractQueuedSynchronizer</code> 来实现的。</p>
+</div>
+<div class="sect2">
+<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>1.1. <code>countDown()</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Decrements the count of the latch, releasing all waiting threads if
+ * the count reaches zero.
+ *
+ * &lt;p&gt;If the current count is greater than zero then it is decremented.
+ * If the new count is zero then all waiting threads are re-enabled for
+ * thread scheduling purposes.
+ *
+ * &lt;p&gt;If the current count equals zero then nothing happens.
+ */
+public void countDown() {
+    sync.releaseShared(1);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>countDown()</code> 方法直接减少锁存器计数，直到零，则释放所有等待的线程。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-countDown-1.png" alt="CountDownLatch countDown 1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-countDown-2.png" alt="CountDownLatch countDown 2">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_await"><a class="anchor" href="#_await"></a>1.2. <code>await()</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Causes the current thread to wait until the latch has counted down to
+ * zero, unless the thread is {@linkplain Thread#interrupt interrupted}.
+ *
+ * &lt;p&gt;If the current count is zero then this method returns immediately.
+ *
+ * &lt;p&gt;If the current count is greater than zero then the current
+ * thread becomes disabled for thread scheduling purposes and lies
+ * dormant until one of two things happen:
+ * &lt;ul&gt;
+ * &lt;li&gt;The count reaches zero due to invocations of the
+ * {@link #countDown} method; or
+ * &lt;li&gt;Some other thread {@linkplain Thread#interrupt interrupts}
+ * the current thread.
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;If the current thread:
+ * &lt;ul&gt;
+ * &lt;li&gt;has its interrupted status set on entry to this method; or
+ * &lt;li&gt;is {@linkplain Thread#interrupt interrupted} while waiting,
+ * &lt;/ul&gt;
+ * then {@link InterruptedException} is thrown and the current thread's
+ * interrupted status is cleared.
+ *
+ * @throws InterruptedException if the current thread is interrupted
+ *         while waiting
+ */
+public void await() throws InterruptedException {
+    sync.acquireSharedInterruptibly(1);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对 <code>await()</code> 的处理直接委托给了 <code>sync</code> 的 <code>acquireSharedInterruptibly(1)</code> 方法，当然这个方法是从 <code>AbstractQueuedSynchronizer</code> 继承而来的。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-await-park.png" alt="CountDownLatch await park">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-await-unpark.png" alt="CountDownLatch await unpark">
+</div>
+</div>
+<div class="qlist qanda">
+<ol>
+<li>
+<p><em><code>CountDownLatch</code> 为什么使用共享锁？</em></p>
+<p>答：前面我们分析 <code>ReentrantReadWriteLock</code> 的时候学习过AQS的共享锁模式，比如当前锁是由一个线程获取为互斥锁，那么这时候所有需要获取共享锁的线程都要进入AQS队列中进行排队，当这个互斥锁释放的时候，会一个接着一个地唤醒这些连续的排队的等待获取共享锁的线程，注意，这里的用语是“一个接着一个地唤醒”，也就是说这些等待获取共享锁的线程不是一次性唤醒的。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.3. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.cnblogs.com/leesf456/p/5406191.html">【JUC】JDK1.8源码分析之CountDownLatch（五） - leesf - 博客园</a></p>
+</li>
+<li>
+<p><a href="https://juejin.im/post/5d0660f2518825092c7170dd">死磕 java同步系列之CountDownLatch源码解析 - 掘金</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

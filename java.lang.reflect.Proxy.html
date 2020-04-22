@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Proxy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_proxy">1. Proxy</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_proxy"><a class="anchor" href="#_proxy"></a>1. Proxy</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.reflect;
+
+import org.junit.Test;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-02 09:37
+ */
+public class ProxyTest {
+    public static class LogProxy implements InvocationHandler {
+        private Object realObject;
+
+        public LogProxy(Object realObject) {
+            this.realObject = realObject;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args)
+                throws Throwable {
+            System.out.println("Proxy: " + proxy.getClass().getName());
+            System.out.println("start to invoke: "
+                    + realObject.getClass().getName() + "#" + method.getName()
+                    + " args =" + Arrays.toString(args));
+            return method.invoke(realObject, args);
+        }
+    }
+
+    public static interface UserGetService {
+        String getById(Integer id);
+    }
+
+    static interface UserPostService {
+        String postUser(String name);
+    }
+
+    public static class UserGetServiceImpl implements UserGetService, UserPostService {
+        @Override
+        public String getById(Integer id) {
+            return "D瓜哥-" + id;
+        }
+
+        @Override
+        public String postUser(String name) {
+            return "119-" + name;
+        }
+    }
+
+    public static void main(String[] args) {
+        // 注意：这里不能使用 JUnit 来运行，JUnit 也是通过代理启动的，
+        // 先于我们的测试运行，导致设置无效。
+        System.getProperties()
+                .put("jdk.proxy.ProxyGenerator.saveGeneratedFiles", "true");
+
+        UserGetServiceImpl userService = new UserGetServiceImpl();
+        ClassLoader classLoader = UserGetService.class.getClassLoader();
+        Class&lt;?&gt;[] interfaces = UserGetServiceImpl.class.getInterfaces();
+        Object proxy = Proxy.newProxyInstance(classLoader,
+                interfaces, new LogProxy(userService));
+        System.out.println("UserName = "
+                + ((UserGetService) proxy).getById(119));
+
+        System.out.println("UserCode = "
+                + ((UserPostService) proxy).postUser("diguage"));
+
+        Object proxy2 = Proxy.newProxyInstance(classLoader,
+                interfaces, new LogProxy(userService));
+        System.out.println("UserName = "
+                + ((UserGetService) proxy2).getById(119));
+
+        System.out.println("UserCode = "
+                + ((UserPostService) proxy2).postUser("diguage"));
+    }
+
+    @Test
+    public void testGetCallerMethodName() {
+        System.out.println(getCallerMethod());
+
+        String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+        System.out.println(methodName);
+    }
+
+    public String getCallerMethod() {
+        String methodName = Thread.currentThread()
+                .getStackTrace()[2] // 注意下标值
+                .getMethodName();
+        return methodName;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Proxy-newProxyInstance-sequence-diagram.png" alt="Proxy newProxyInstance sequence diagram">
+</div>
+</div>
+<div class="paragraph">
+<p>跟着代码整体走下来，所谓的"动态代理"，其实是在 <code>java.lang.reflect.ProxyGenerator.generateProxyClass(java.lang.String, java.lang.Class&lt;?&gt;[], int)</code> 中生成了一个实现了接口的代理类。生成字节码的逻辑封装在了 <code>java.lang.reflect.ProxyGenerator.generateClassFile</code> 中，按照字节码规范中规定的格式（魔数、版本号、常量池、访问标识符、当前类索引、父类索引、接口索引、字段表、方法表、附加属性），一点一点追加内容。</p>
+</div>
+<div class="paragraph">
+<p>生成出来的类，继承了 <code>java.lang.reflect.Proxy</code>，同时实现了参数中传递的接口。在生成的类中，</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>包含一个参数为 <code>InvocationHandler</code> 的构造函数，用于保存代理业务的实现；</p>
+</li>
+<li>
+<p>每一个方法都用一个静态 <code>Method</code> 来表示；</p>
+</li>
+<li>
+<p>除了接口中的方法，还会生成 <code>boolean equals(Object obj)</code>，<code>int hashCode()</code> 和 <code>String toString()</code> 三个方法。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>调用时，通过 <code>InvocationHandler</code> 对象的 <code>Object invoke(Object proxy, Method method, Object[] args)</code> 方法来调起代理和目标对象的方法。其中，这里的 <code>Object proxy</code> 就是生成的类本身的对象；<code>Method method</code> 就是上述生成的静态 <code>Method</code> 对象；<code>Object[] args</code> 就是实际调用的参数。</p>
+</div>
+<div class="listingblock">
+<div class="title">反编译的示例类</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.sun.proxy;
+
+import com.diguage.proxy.UserService;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.UndeclaredThrowableException;
+
+public final class $Proxy0 extends Proxy implements UserService {
+    private static Method m0;
+    private static Method m1;
+    private static Method m2;
+    private static Method m3;
+
+    public $Proxy0(InvocationHandler var1) throws  {
+        super(var1);
+    }
+
+    public final int hashCode() throws  {
+        try {
+            return (Integer)super.h.invoke(this, m0, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+
+    public final boolean equals(Object var1) throws  {
+        try {
+            return (Boolean)super.h.invoke(this, m1, new Object[]{var1});
+        } catch (RuntimeException | Error var3) {
+            throw var3;
+        } catch (Throwable var4) {
+            throw new UndeclaredThrowableException(var4);
+        }
+    }
+
+    public final String toString() throws  {
+        try {
+            return (String)super.h.invoke(this, m2, (Object[])null);
+        } catch (RuntimeException | Error var2) {
+            throw var2;
+        } catch (Throwable var3) {
+            throw new UndeclaredThrowableException(var3);
+        }
+    }
+
+    public final String getById(Integer var1) throws  {
+        try {
+            return (String)super.h.invoke(this, m3, new Object[]{var1});
+        } catch (RuntimeException | Error var3) {
+            throw var3;
+        } catch (Throwable var4) {
+            throw new UndeclaredThrowableException(var4);
+        }
+    }
+
+    static {
+        try {
+            m0 = Class.forName("java.lang.Object").getMethod("hashCode");<i class="conum" data-value="1"></i><b>(1)</b>
+            m1 = Class.forName("java.lang.Object").getMethod("equals",
+                     Class.forName("java.lang.Object"));
+            m2 = Class.forName("java.lang.Object").getMethod("toString");
+            m3 = Class.forName("com.diguage.proxy.UserService")
+                     .getMethod("getById", Class.forName("java.lang.Integer"));
+        } catch (NoSuchMethodException var2) {
+            throw new NoSuchMethodError(var2.getMessage());
+        } catch (ClassNotFoundException var3) {
+            throw new NoClassDefFoundError(var3.getMessage());
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>为了排版，做了小调整。</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>还有两点值得注意：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>运行代理时，如果想要保存生成的代理类字节码，需要系统属性 <code>jdk.proxy.ProxyGenerator.saveGeneratedFiles</code> 设置为 <code>true</code>。这个属性被解析后赋值给了 <code>java.lang.reflect.ProxyGenerator.saveGeneratedFiles</code> 字段，这个字段是 <code>final</code> 的。所以，需要在运行代码之初就要设置这个属性。所以，最好使用 <code>main</code> 方法来运行测试。否则，有可能设置失效。</p>
+</li>
+<li>
+<p>如果代码是在 Maven 项目中运行，如果接口都是 <code>public</code> 修饰，生成的类会被保存在 <code>${project.basedir}/com/sun/proxy/</code> 目录下；如果有接口是包私有的，则生成的类为接口所在的包。如果目录不存在，则会自动创建。</p>
+</li>
+<li>
+<p>最多可以有 <code>65535</code> 个接口；有两个解释：</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>代码中有明确限制：在 <code>java.lang.reflect.Proxy.ProxyBuilder.ProxyBuilder(java.lang.ClassLoader, java.util.List&lt;java.lang.Class&lt;?&gt;&gt;)</code> 中有 <code>interfaces.size() &gt; 65535</code> 的判断语句。</p>
+</li>
+<li>
+<p>字节码中，对于接口数量是用一个 <code>u2</code> 变量表示的，该变量的最大值是 <code>2<sup>16</sup> - 1 = 65535</code>。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>注解底层也是基于动态代理实现的。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.reflect;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Arrays;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-08 23:34
+ */
+public class ProxyAnnoTest {
+    @Diguage
+    public static class AnnoTest {
+    }
+
+    @Diguage("https://github.com/diguage")
+    public static class AnnoTest2 {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @Target(ElementType.TYPE)
+    static @interface Diguage {
+        String value() default "https://www.diguage.com";
+
+        String name() default "D瓜哥";
+    }
+
+    public static void main(String[] args) {
+        System.getProperties()
+                .put("jdk.proxy.ProxyGenerator.saveGeneratedFiles", "true");
+
+        Class&lt;AnnoTest&gt; clazz = AnnoTest.class;
+        Diguage annotation = clazz.getAnnotation(Diguage.class);
+        System.out.println(annotation + " : " + annotation.hashCode());
+        System.out.println("Name: " + annotation.name());
+        System.out.println("Value: " + annotation.value());
+
+        Class&lt;? extends Diguage&gt; annoClass = annotation.getClass();
+
+
+        System.out.println("\n----Class----");
+        String className = annoClass.getName();
+
+        System.out.println("\n----SuperClass----");
+        System.out.println(annoClass.getSuperclass().getName());
+
+        System.out.println("\n----Interfaces----");
+        System.out.println(Arrays.toString(annoClass.getInterfaces()));
+
+        System.out.println("\n----Methods----");
+        System.out.println(Arrays.toString(annoClass.getDeclaredMethods())
+                .replaceAll(", p", ",\n p"));
+
+        System.out.println("\n\n==============");
+        Diguage anno2 = AnnoTest2.class.getAnnotation(Diguage.class);
+        System.out.println(anno2 + " : " + anno2.hashCode());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>每个注解都是一个接口声明，然后基于这个接口使用动态代理生成一个代理类。而被标注的注解，就是一个代理类的实例对象。</p>
+</div>
+<div class="paragraph">
+<p>代理类中的 <code>InvocationHandler</code> 则是 <code>AnnotationInvocationHandler</code> 实例，实例变量 <code>Map&lt;String, Object&gt; memberValues</code> 保存着注解中成员属性的名称和值的映射，注解成员属性的名称实际上就对应着接口中抽象方法的名称。</p>
+</div>
+<div class="paragraph">
+<p>总结</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>用反射 + 字节码生成技术来生成字节码，然后加载出来代理对象。</p>
+</li>
+<li>
+<p>从java的角度来看这本语言,就是一个动态性语言,一切的动态性来源于类的加载方式,
+在程序运行期间,可以很大程度上修改class</p>
+</li>
+<li>
+<p><code>newProxyInstance(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h)</code> 实际上从生成的 Class 文件和这个传递参数来看 jdk Proxy 仅仅对于接口进行代理, 即生成实现了接口的临时类对象.</p>
+</li>
+<li>
+<p>由于生成的类，继承了 <code>java.lang.reflect.Proxy</code> 类，而 Java 是单继承的。所以，动态代理只能代理生成接口，不能代理类。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>既然都生成代理类了，为什么不直接继承代理类呢？这样就可以对代理类所有的方法进行增强了。</p>
+</div>
+<div class="sect2">
+<h3 id="_思考题"><a class="anchor" href="#_思考题"></a>1.1. 思考题</h3>
+<div class="paragraph">
+<p>如何自己写代码来实现代码生成、加载类的动态代理？</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如何生成代理类？-- 可以考虑直接生成 Java 代码，然后调用 <code>JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();</code> 获取编译器来编译 Java 代码。</p>
+</li>
+<li>
+<p>如何加载类？-- 可以使用 <code>java.net.URLClassLoader</code> 来加载字节码文件。</p>
+</li>
+<li>
+<p>如何抽象代理动作？</p>
+</li>
+<li>
+<p>如何在方法内获取参数列表？</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cglib"><a class="anchor" href="#_cglib"></a>1.2. CGLIB</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>通过生成子类的方式来产生代理，某些情况比动态代理运行速度要快一些。</p>
+</li>
+<li>
+<p>不能代理 <code>final</code> 修饰的类。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.3. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.cnblogs.com/gonjan-blog/p/6685611.html">java动态代理实现与原理详细分析 - Gonjian - 博客园</a></p>
+</li>
+<li>
+<p><a href="https://www.fancylight.top/2019/05/22/java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/#%E4%BB%A3%E7%90%86%E7%B1%BB%E6%96%87%E4%BB%B6">java动态代理 | 博客</a></p>
+</li>
+<li>
+<p><a href="https://tech.meituan.com/2019/09/05/java-bytecode-enhancement.html">字节码增强技术探索 - 美团技术团队</a></p>
+</li>
+<li>
+<p><a href="https://www.geeksforgeeks.org/get-name-of-current-method-being-executed-in-java/">Get name of current method being executed in Java - GeeksforGeeks</a></p>
+</li>
+<li>
+<p><a href="http://www.throwable.club/2018/12/08/java-reflection-dynamic-proxy/">深入分析Java反射(四)-动态代理 - Throwable&#8217;s Blog</a></p>
+</li>
+<li>
+<p><a href="http://www.throwable.club/2018/12/16/cglib-dynamic-proxy-analyze/">CGLIB动态代理原理分析 - Throwable&#8217;s Blog</a></p>
+</li>
+<li>
+<p><a href="http://www.throwable.club/2020/03/16/annotation-implementation/">JDK中注解的底层实现 - Throwable&#8217;s Blog</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>ServerSocket</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_serversocket">1. ServerSocket</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_serversocket"><a class="anchor" href="#_serversocket"></a>1. ServerSocket</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在纠结了 N 久之后，终于动手写程序完成了 Socket 全双工实验。实验证实，Socket 在接受的同时，还可以发送报文。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/simplex-half-duplex-full-duplex.jpg" alt="simplex half duplex full duplex">
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.net;
+
+import org.junit.Test;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.locks.LockSupport;
+
+/**
+ * Socket 全双工演示示例
+ *
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-25 23:03
+ */
+public class SocketFullDuplexTest {
+    private int port = 11233;
+
+    @Test
+    public void testServer() throws IOException {
+        ServerSocket serverSocket = new ServerSocket(port);
+        Socket socket = serverSocket.accept();
+        InputStream inputStream = socket.getInputStream();
+
+        new Thread(() -&gt; {
+            InputStreamReader reader = new InputStreamReader(new BufferedInputStream(inputStream));
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            try {
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    System.out.println(line);
+                    Thread.sleep(100);
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+        OutputStream outputStream = socket.getOutputStream();
+        new Thread(() -&gt; {
+            try {
+                for (int i = 0; i &lt; Integer.MAX_VALUE; i++) {
+                    String msg = "S-" + i + "\n";
+                    System.out.println("msg = " + msg);
+                    outputStream.write(msg.getBytes(StandardCharsets.UTF_8));
+                    outputStream.flush();
+                    Thread.sleep(100);
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+        LockSupport.park();
+    }
+
+    @Test
+    public void testClient() throws IOException {
+        Socket socket = new Socket("localhost", port);
+
+        InputStream inputStream = socket.getInputStream();
+        new Thread(() -&gt; {
+            InputStreamReader reader = new InputStreamReader(new BufferedInputStream(inputStream));
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            try {
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    System.out.println(line);
+                    Thread.sleep(100);
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+        OutputStream outputStream = socket.getOutputStream();
+        new Thread(() -&gt; {
+            try {
+                for (int i = 0; i &lt; Integer.MAX_VALUE; i++) {
+                    String msg = "C-" + i + "\n";
+                    System.out.println("msg = " + msg);
+                    outputStream.write(msg.getBytes(StandardCharsets.UTF_8));
+                    outputStream.flush();
+                    Thread.sleep(100);
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+        LockSupport.park();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.1. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="http://hafizahabdullah.blogspot.com/2013/08/fp303-cn-simplex-half-duplex-and-full.html">P2E for Students: FP303 CN: Simplex, Half-Duplex and Full-Duplex</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

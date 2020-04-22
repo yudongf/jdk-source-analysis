@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>LockSupport</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_locksupport">1. LockSupport</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_locksupport"><a class="anchor" href="#_locksupport"></a>1. LockSupport</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.util.concurrent.locks.LockSupport;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-16 19:16
+ */
+public class LockSupportTest {
+    @Test
+    public void test() throws InterruptedException {
+        Thread t1 = new Thread(new Task("t1"));
+        Thread t2 = new Thread(new Task("t2"));
+        t1.start();
+        Thread.sleep(1000);
+        t2.start();
+        LockSupport.unpark(t1);
+        LockSupport.unpark(t2);
+        t1.join();
+        t2.join();
+        System.out.println("finish...");
+    }
+
+    static class Task implements Runnable {
+        private String name;
+
+        public Task(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public void run() {
+            synchronized (LockSupportTest.class) {
+                System.out.println("in " + name);
+                LockSupport.park();
+            }
+        }
+    }
+
+    @Test
+    public void testParkAndUnpark() throws InterruptedException {
+        System.out.println("--m1------");
+        Thread thread = new Thread(() -&gt; {
+            System.out.println("--t1------");
+            LockSupport.park();
+            System.out.println("--t2------");
+        });
+        thread.start();
+        Thread.sleep(5000);
+        LockSupport.unpark(thread);
+        System.out.println("--m2------");
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>synchronized</code> 关键字在方法上使用时，在方法修饰符上增加了一个标志位 <code>flags: (0x0021) ACC_PUBLIC, ACC_SYNCHRONIZED</code>。而用在代码块时，则是生成了 <code>monitorenter</code> 和 <code>monitorexit</code> 指令。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-04-08 19:26
+ */
+public class SynchronizedTest {
+    public synchronized void lockMethod() {
+        System.out.println("lock method");
+    }
+
+    public void lockObject() {
+        synchronized (this) {
+            System.out.println("lock object");
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以利用 jclasslib Bytecode viewer 工具，或者 <code>javap -c -v XXX.class</code> 来查看。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

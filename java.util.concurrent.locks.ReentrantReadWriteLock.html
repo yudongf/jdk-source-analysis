@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>ReentrantReadWriteLock</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_reentrantreadwritelock">1. ReentrantReadWriteLock</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_reentrantreadwritelock"><a class="anchor" href="#_reentrantreadwritelock"></a>1. ReentrantReadWriteLock</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-16 17:07
+ */
+public class ReentrantReadWriteLockTest {
+    private volatile int value;
+
+    public int handleRead(Lock lock) throws InterruptedException {
+        try {
+            lock.lock();
+            Thread.sleep(1000);
+            System.out.println(Thread.currentThread().getId() + " : read done!");
+            return value;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void handleWrite(Lock lock, int value) throws InterruptedException {
+        try {
+            lock.lock();
+            Thread.sleep(1000);
+            this.value = value;
+            System.out.println(Thread.currentThread().getId() + " : write done!");
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Test
+    public void test() throws InterruptedException {
+        ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock readLock = readWriteLock.readLock();
+        ReentrantReadWriteLock.WriteLock writeLock = readWriteLock.writeLock();
+
+        Runnable readTask = () -&gt; {
+            try {
+                handleRead(readLock);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Runnable writeTask = () -&gt; {
+            try {
+                handleWrite(writeLock, new Random().nextInt());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        for (int i = 1; i &lt;= 20; i++) {
+            if (i % 10 == 5) {
+                new Thread(writeTask).start();
+            } else {
+                new Thread(readTask).start();
+            }
+        }
+        Thread.sleep(20 * 1000);
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>

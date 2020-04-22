@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>CompletableFuture</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_completablefuture">1. CompletableFuture</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_completablefuture"><a class="anchor" href="#_completablefuture"></a>1. CompletableFuture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Java 中的 Promise。</p>
+</div>
+<div class="paragraph">
+<p>问题：在一大堆任务中，如何获取第一个完成的返回值？</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-03-19 16:04
+ */
+public class CompletableFutureTest {
+    @Test
+    public void test() throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        FutureTask&lt;Integer&gt; futureTask = new FutureTask&lt;&gt;(new Task());
+
+        executorService.submit(futureTask);
+        System.out.println("FutureTask...");
+        System.out.println(futureTask.get());
+        System.out.println("FutureTask done.");
+
+        List&lt;Future&lt;Integer&gt;&gt; futures = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; 20; i++) {
+            futures.add(executorService.submit(new Task()));
+        }
+        executorService.shutdown();
+        while (!executorService.isTerminated()) {
+        }
+
+        for (Future&lt;Integer&gt; future : futures) {
+            if (future.isDone()) {
+                System.out.println(future.get());
+            }
+        }
+        CompletableFuture.runAsync(() -&gt; System.out.println(""));
+        System.out.println("All tasks were done.");
+    }
+
+    public static class Task implements Callable&lt;Integer&gt; {
+        @Override
+        public Integer call() throws Exception {
+            int second = 0;
+            try {
+                ThreadLocalRandom random = ThreadLocalRandom.current();
+                second = random.nextInt(10000);
+                Thread.sleep(second);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return second;
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.1. 参考资料</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://www.baeldung.com/java-completablefuture">Guide To CompletableFuture | Baeldung</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2020-04-22 16:35:14 +0800
+</div>
+</div>
+</body>
+</html>
