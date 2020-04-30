@@ -81,11 +81,57 @@ class Pair implements Comparable&lt;Pair&gt; {
 <div class="paragraph">
 <p><code>TreeMap</code> 底层是一个红黑树。</p>
 </div>
+<div class="paragraph">
+<p>先定义一个测试实体类：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">public static class Person {
+    long id;
+    int sortFactor;
+
+    public Person(long id) {
+        this(id, (int) id);
+    }
+
+    public Person(long id, int sortFactor) {
+        this.id = id;
+        this.sortFactor = sortFactor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Person person = (Person) o;
+        return id == person.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", age=" + sortFactor +
+                '}';
+    }
+}</code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">@Test
 public void testSort() {
-    Comparator&lt;Person&gt; comparator = Comparator.comparingInt(a -&gt; a.age);
+    Comparator&lt;Person&gt; comparator
+            = Comparator.comparingInt(a -&gt; a.sortFactor);
     TreeMap&lt;Person, Person&gt; map = new TreeMap&lt;&gt;(comparator);
     for (int i = 0; i &lt; 10; i++) {
         if ((i &amp; 1) == 1) {
@@ -95,7 +141,7 @@ public void testSort() {
             Person param = new Person(i / 2);
             Person person = map.get(param);
             if (Objects.nonNull(person)) {
-                person.age = new Random().nextInt();
+                person.sortFactor = new Random().nextInt();
             }
         }
     }
@@ -111,60 +157,49 @@ public void testSort() {
     for (Person person : map.descendingKeySet()) {
         System.out.println(person);
     }
-}
-
-public static class Person {
-    long id;
-    int age;
-
-    public Person(long id) {
-        this(id, (int) id);
-    }
-
-    public Person(long id, int age) {
-        this.id = id;
-        this.age = age;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return id == person.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", age=" + age +
-                '}';
-    }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>修改排序字段，打印时，依然可以保持有序性。这个实现是怎么回事？</p>
+<p>修改排序字段，打印时，依然可以保持有序性。<em>这个实现是怎么回事？</em></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public class TreeMapTest {
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testDuplicateSortFactor() {
+    Comparator&lt;Person&gt; comparator
+            = Comparator.comparingInt(a -&gt; a.sortFactor);
+    TreeMap&lt;Person, Person&gt; treeMap = new TreeMap&lt;&gt;(comparator);
+    Person p1 = new Person(1, 0);
+    Person p2 = new Person(2, 0);
+    assert !p1.equals(p2);
+    System.out.println(p1.equals(p2));
 
-
-    @Test
-    public void testPut() {
-        TreeMap&lt;Integer, Integer&gt; treeMap = new TreeMap&lt;&gt;();
-        for (int i = 0; i &lt; 10; i++) {
-            treeMap.put(i, i * 100);
-        }
+    for (int i = 0; i &lt; 10; i++) {
+        Person person = new Person(i, 0);
+        treeMap.put(person, person);
     }
 
+    assert (treeMap.size() == 1);
+    treeMap.forEach((k, v) -&gt; {
+        System.out.println("-----------------------");
+        System.out.printf("kid= %-4d kfactor= %-8d%n", k.id, k.sortFactor);
+        System.out.printf("vid= %-4d vfactor= %-8d%n", v.id, v.sortFactor);
+    });
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>由此看出，<code>TreeMap</code> 不能接受排序因子相同的值。如果存在，则后来者把前者的 <code>Value</code> 覆盖掉。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Test
+public void testPut() {
+    TreeMap&lt;Integer, Integer&gt; treeMap = new TreeMap&lt;&gt;();
+    for (int i = 0; i &lt; 10; i++) {
+        treeMap.put(i, i * 100);
+    }
 }</code></pre>
 </div>
 </div>
@@ -173,7 +208,7 @@ public static class Person {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-22 23:55:04 +0800
+Last updated 2020-04-23 09:34:13 +0800
 </div>
 </div>
 </body>

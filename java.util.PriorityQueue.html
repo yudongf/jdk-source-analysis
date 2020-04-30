@@ -67,6 +67,9 @@ public void test() {
     assertThat(queue).hasSize(capacity);
     assertThat(queue).contains(9);
     assertThat(queue).doesNotContain(0);
+    Integer num = queue.poll();
+    // 可见，默认就是最小堆。
+    assertThat(num).isEqualTo(5);
 }</code></pre>
 </div>
 </div>
@@ -88,7 +91,7 @@ public void test() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-22 23:30:27 +0800
+Last updated 2020-04-23 00:18:55 +0800
 </div>
 </div>
 </body>
