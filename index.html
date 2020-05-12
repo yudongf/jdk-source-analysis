@@ -7232,6 +7232,37 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <img src="./images/java-concurrent-overview.png" alt="java concurrent overview">
 </div>
 </div>
+<div class="sect2">
+<h3 id="_happy_before_原则"><a class="anchor" href="#_happy_before_原则"></a>40.1. Happy-Before 原则</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Single Thread Rule 单一线程原则</p>
+</li>
+<li>
+<p>Monitor Lock Rule 管程锁定规则</p>
+</li>
+<li>
+<p>Volatile Variable Rule <code>volatile</code> 变量规则</p>
+</li>
+<li>
+<p>Thread Start Rule 线程启动规则</p>
+</li>
+<li>
+<p>Thread Join Rule 线程加入规则</p>
+</li>
+<li>
+<p>Thread Interruption Rule 线程中断规则</p>
+</li>
+<li>
+<p>Finalizer Rule 对象终结规则</p>
+</li>
+<li>
+<p>Transitivity 传递性</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -7584,7 +7615,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="paragraph">
-<p><code>join()</code> 方法的本质是让调用线程 <code>wait()</code> 方法在当前线程对象实例上。</p>
+<p><code>join()</code> 方法的本质是当前线程对象实例调用线程 <code>wait()</code> 方法。</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7921,13 +7952,107 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 331
 332
 333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
 </pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman.concurrent</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.time.LocalDateTime</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.DelayQueue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Delayed</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.LockSupport</span><span class="o">;</span>
 
@@ -8023,6 +8148,78 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
         <span class="n">thread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
     <span class="o">}</span>
 
+    <span class="c1">// TODO</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testInterruptStatus1</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+        <span class="kd">class</span> <span class="nc">InterruptTask</span> <span class="kd">implements</span> <span class="nc">Runnable</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                <span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+                <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">i</span><span class="o">++;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="nc">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Thread</span><span class="o">(</span><span class="k">new</span> <span class="nc">InterruptTask</span><span class="o">());</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"thread.isInterrupted() = "</span> <span class="o">+</span> <span class="n">thread</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">());</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"thread.isInterrupted() = "</span> <span class="o">+</span> <span class="n">thread</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">());</span>
+        <span class="nc">LockSupport</span><span class="o">.</span><span class="na">parkNanos</span><span class="o">(</span><span class="nc">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">toNanos</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span>
+    <span class="o">}</span>
+
+    <span class="c1">// TODO</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testInterruptStatus2</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+        <span class="kd">class</span> <span class="nc">IntDelay</span> <span class="kd">implements</span> <span class="nc">Delayed</span> <span class="o">{</span>
+
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">num</span><span class="o">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">deadline</span><span class="o">;</span>
+
+            <span class="kd">public</span> <span class="nf">IntDelay</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">num</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+                <span class="n">deadline</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="nc">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">toMillis</span><span class="o">(</span><span class="n">num</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">getDelay</span><span class="o">(</span><span class="nc">TimeUnit</span> <span class="n">unit</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">return</span> <span class="n">deadline</span> <span class="o">-</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compareTo</span><span class="o">(</span><span class="nc">Delayed</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">IntDelay</span> <span class="n">param</span> <span class="o">=</span> <span class="o">(</span><span class="nc">IntDelay</span><span class="o">)</span> <span class="n">o</span><span class="o">;</span>
+                <span class="k">return</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">compare</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">num</span><span class="o">,</span> <span class="n">param</span><span class="o">.</span><span class="na">num</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="kd">class</span> <span class="nc">InterruptTask</span> <span class="kd">implements</span> <span class="nc">Runnable</span> <span class="o">{</span>
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                <span class="nc">Thread</span> <span class="n">current</span> <span class="o">=</span> <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
+                <span class="nc">DelayQueue</span><span class="o">&lt;</span><span class="nc">IntDelay</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">DelayQueue</span><span class="o">&lt;&gt;();</span>
+                <span class="n">queue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">IntDelay</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Wait  "</span> <span class="o">+</span> <span class="nc">LocalDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">());</span>
+                    <span class="n">queue</span><span class="o">.</span><span class="na">take</span><span class="o">();</span>
+                    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Taken "</span> <span class="o">+</span> <span class="nc">LocalDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">());</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"current.isInterrupted() = "</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">());</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"current.isInterrupted() = "</span> <span class="o">+</span> <span class="n">current</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">());</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="nc">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Thread</span><span class="o">(</span><span class="k">new</span> <span class="nc">InterruptTask</span><span class="o">());</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">500</span><span class="o">);</span>
+        <span class="n">thread</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"thread.isInterrupted() = "</span> <span class="o">+</span> <span class="n">thread</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">());</span>
+        <span class="nc">LockSupport</span><span class="o">.</span><span class="na">parkNanos</span><span class="o">(</span><span class="nc">TimeUnit</span><span class="o">.</span><span class="na">SECONDS</span><span class="o">.</span><span class="na">toNanos</span><span class="o">(</span><span class="mi">2</span><span class="o">));</span>
+    <span class="o">}</span>
+
     <span class="nd">@Test</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testWaitLock</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
         <span class="c1">// 测试 wait 是否释放锁</span>
@@ -8107,13 +8304,27 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 
     <span class="nd">@Test</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testYield</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+        <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Integer</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+        <span class="nc">Integer</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="nc">Integer</span> <span class="n">key2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">;</span>
         <span class="nc">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
             <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
                 <span class="nc">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
+                <span class="nc">Integer</span> <span class="n">num</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="o">++</span><span class="n">num</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+        <span class="nc">Thread</span> <span class="n">thread2</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">Integer</span> <span class="n">num</span> <span class="o">=</span> <span class="n">map</span><span class="o">.</span><span class="na">getOrDefault</span><span class="o">(</span><span class="n">key2</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+                <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key2</span><span class="o">,</span> <span class="o">++</span><span class="n">num</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">});</span>
         <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+        <span class="n">thread2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+        <span class="c1">// 如果 Thread.yield() 没有让出 CPU，则两个值相差不多；否则相差很大。</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">toString</span><span class="o">().</span><span class="na">replace</span><span class="o">(</span><span class="s">","</span><span class="o">,</span> <span class="s">"\n"</span><span class="o">));</span>
         <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">thread</span><span class="o">.</span><span class="na">getState</span><span class="o">());</span>
     <span class="o">}</span>
 
@@ -9092,6 +9303,242 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <div class="paragraph">
 <p>独占模式的同步器的一个显著特点就是：头节点的第一个有效(非取消)的后继节点，总是尝试获取资源，一旦获取资源成功就会解除阻塞并且晋升为头节点，原来所在节点会移除出同步等待队列，原来的队列长度就会减少1，然后头结点的第一个有效的后继节点继续开始竞争资源。</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno">  1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+ 10
+ 11
+ 12
+ 13
+ 14
+ 15
+ 16
+ 17
+ 18
+ 19
+ 20
+ 21
+ 22
+ 23
+ 24
+ 25
+ 26
+ 27
+ 28
+ 29
+ 30
+ 31
+ 32
+ 33
+ 34
+ 35
+ 36
+ 37
+ 38
+ 39
+ 40
+ 41
+ 42
+ 43
+ 44
+ 45
+ 46
+ 47
+ 48
+ 49
+ 50
+ 51
+ 52
+ 53
+ 54
+ 55
+ 56
+ 57
+ 58
+ 59
+ 60
+ 61
+ 62
+ 63
+ 64
+ 65
+ 66
+ 67
+ 68
+ 69
+ 70
+ 71
+ 72
+ 73
+ 74
+ 75
+ 76
+ 77
+ 78
+ 79
+ 80
+ 81
+ 82
+ 83
+ 84
+ 85
+ 86
+ 87
+ 88
+ 89
+ 90
+ 91
+ 92
+ 93
+ 94
+ 95
+ 96
+ 97
+ 98
+ 99
+100
+101
+102
+103
+</pre></td><td class="code"><pre><span class="cm">/**
+ * Checks and updates status for a node that failed to acquire.
+ * Returns true if thread should block. This is the main signal
+ * control in all acquire loops.  Requires that pred == node.prev.
+ *
+ * @param pred node's predecessor holding status
+ * @param node the node
+ * @return {@code true} if thread should block
+ */</span>
+<span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">shouldParkAfterFailedAcquire</span><span class="o">(</span><span class="nc">Node</span> <span class="n">pred</span><span class="o">,</span> <span class="nc">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 如果前一个节点已经在排队，则新加入的节点就应该 park</span>
+    <span class="kt">int</span> <span class="n">ws</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="na">waitStatus</span><span class="o">;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">==</span> <span class="nc">Node</span><span class="o">.</span><span class="na">SIGNAL</span><span class="o">)</span>
+        <span class="cm">/*
+         * This node has already set status asking a release
+         * to signal it, so it can safely park.
+         */</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="c1">// 如果前一个节点已经取消，则删除取消节点</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">ws</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+        <span class="cm">/*
+         * Predecessor was cancelled. Skip over predecessors and
+         * indicate retry.
+         */</span>
+        <span class="c1">// 跳过已经取消的节点</span>
+        <span class="k">do</span> <span class="o">{</span>
+            <span class="n">node</span><span class="o">.</span><span class="na">prev</span> <span class="o">=</span> <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="na">prev</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">while</span> <span class="o">(</span><span class="n">pred</span><span class="o">.</span><span class="na">waitStatus</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="c1">// 加入队列</span>
+        <span class="n">pred</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="n">node</span><span class="o">;</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="cm">/*
+         * waitStatus must be 0 or PROPAGATE.  Indicate that we
+         * need a signal, but don't park yet.  Caller will need to
+         * retry to make sure it cannot acquire before parking.
+         */</span>
+        <span class="c1">// 如果前一个节点没有取消，则尝试将前一个节点设置为 Node.SIGNAL</span>
+        <span class="n">pred</span><span class="o">.</span><span class="na">compareAndSetWaitStatus</span><span class="o">(</span><span class="n">ws</span><span class="o">,</span> <span class="nc">Node</span><span class="o">.</span><span class="na">SIGNAL</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="o">}</span>
+
+<span class="cm">/**
+ * Convenience method to interrupt current thread.
+ */</span>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">selfInterrupt</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">interrupt</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="cm">/**
+ * Convenience method to park and then check if interrupted.
+ *
+ * @return {@code true} if interrupted
+ */</span>
+<span class="kd">private</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">parkAndCheckInterrupt</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+    <span class="k">return</span> <span class="nc">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">();</span>
+<span class="o">}</span>
+
+<span class="cm">/*
+ * Various flavors of acquire, varying in exclusive/shared and
+ * control modes.  Each is mostly the same, but annoyingly
+ * different.  Only a little bit of factoring is possible due to
+ * interactions of exception mechanics (including ensuring that we
+ * cancel if tryAcquire throws exception) and other control, at
+ * least not without hurting performance too much.
+ */</span>
+
+<span class="cm">/**
+ * Acquires in exclusive uninterruptible mode for thread already in
+ * queue. Used by condition wait methods as well as acquire.
+ *
+ * @param node the node
+ * @param arg the acquire argument
+ * @return {@code true} if interrupted while waiting
+ */</span>
+<span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">acquireQueued</span><span class="o">(</span><span class="kd">final</span> <span class="nc">Node</span> <span class="n">node</span><span class="o">,</span> <span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kt">boolean</span> <span class="n">interrupted</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
+            <span class="kd">final</span> <span class="nc">Node</span> <span class="n">p</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">predecessor</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">p</span> <span class="o">==</span> <span class="n">head</span> <span class="o">&amp;&amp;</span> <span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">setHead</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+                <span class="n">p</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span> <span class="c1">// help GC</span>
+                <span class="k">return</span> <span class="n">interrupted</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// 此时 node 节点已经通过 addWaiter 方法加入到队列中</span>
+            <span class="c1">// 1、如果前一个节点是 SIGNAL，则返回 true，park 该线程</span>
+            <span class="c1">// 2.1 如果前一个节点取消，则通过遍历将之前的连续的取消节点全部删除，</span>
+            <span class="c1">//     返回 false，再次自旋尝试获取锁</span>
+            <span class="c1">// 2.2 如果前一个节点没有取消，则将前一个节点尝试修改为 SIGNAL。</span>
+            <span class="c1">//     那么下一次循环时，走第一个判断，返回 true，park 该线程。</span>
+            <span class="c1">//     或者前驱节点已经弹出队列，则该线程尝试获取锁。</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">shouldParkAfterFailedAcquire</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">node</span><span class="o">))</span>
+                <span class="n">interrupted</span> <span class="o">|=</span> <span class="n">parkAndCheckInterrupt</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Throwable</span> <span class="n">t</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cancelAcquire</span><span class="o">(</span><span class="n">node</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">interrupted</span><span class="o">)</span>
+            <span class="n">selfInterrupt</span><span class="o">();</span>
+        <span class="k">throw</span> <span class="n">t</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以画一下流程图：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>以 <code>ReentrantLock</code> 为例，在独占模式下，获取锁的过程</p>
+</li>
+<li>
+<p>以 <code>ReentrantLock</code> 为例，在独占模式下，释放锁的过程</p>
+</li>
+<li>
+<p>使用 <code>Condition</code> 对象，<code>await()</code> 的过程</p>
+</li>
+<li>
+<p>使用 <code>Condition</code> 对象，<code>signal()</code> 的过程</p>
+</li>
+<li>
+<p>以 <code>Semaphore</code> 为例，在共享模式下，获取锁的过程</p>
+</li>
+<li>
+<p>以 <code>Semaphore</code> 为例，在共享模式下，释放锁的过程</p>
+</li>
+</ol>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_共享模式"><a class="anchor" href="#_共享模式"></a>43.5. 共享模式</h3>
@@ -9573,6 +10020,56 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="code"><pre><span class="cm">/**
+ * Acquires in exclusive mode, aborting if interrupted.
+ * Implemented by first checking interrupt status, then invoking
+ * at least once {@link #tryAcquire}, returning on
+ * success.  Otherwise the thread is queued, possibly repeatedly
+ * blocking and unblocking, invoking {@link #tryAcquire}
+ * until success or the thread is interrupted.  This method can be
+ * used to implement method {@link Lock#lockInterruptibly}.
+ *
+ * @param arg the acquire argument.  This value is conveyed to
+ *        {@link #tryAcquire} but is otherwise uninterpreted and
+ *        can represent anything you like.
+ * @throws InterruptedException if the current thread is interrupted
+ */</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">acquireInterruptibly</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span>
+        <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="nc">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">InterruptedException</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">tryAcquire</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span>
+        <span class="n">doAcquireInterruptibly</span><span class="o">(</span><span class="n">arg</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>先判断是否有中断，有则响应。从这里就可以看出，在加锁之前也可以被中断。</p>
+</div>
 </div>
 </div>
 </div>
@@ -9924,6 +10421,38 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 46
 47
 48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
 </pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman.concurrent</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.Test</span><span class="o">;</span>
@@ -9931,6 +10460,8 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.concurrent.Semaphore</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.LockSupport</span><span class="o">;</span>
 
 <span class="cm">/**
  * @author D瓜哥, https://www.diguage.com/
@@ -9971,6 +10502,36 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
         <span class="o">}</span>
     <span class="o">}</span>
 
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">testReentrant</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// 将 Semaphore 的参数分别设置成 1 和 5 运行看结果</span>
+        <span class="c1">// 递归调用的次数跟 Semaphore 的参数一致</span>
+        <span class="c1">// 说明，如果 Semaphore 参数为 1 时，它不支持重入。</span>
+        <span class="nc">Semaphore</span> <span class="n">semaphore</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Semaphore</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+        <span class="kd">class</span> <span class="nc">Task</span> <span class="kd">implements</span> <span class="nc">Runnable</span> <span class="o">{</span>
+            <span class="kd">private</span> <span class="kd">final</span> <span class="nc">Semaphore</span> <span class="n">semaphore</span><span class="o">;</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+            <span class="kd">public</span> <span class="nf">Task</span><span class="o">(</span><span class="nc">Semaphore</span> <span class="n">semaphore</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">semaphore</span> <span class="o">=</span> <span class="n">semaphore</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="nd">@Override</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="n">semaphore</span><span class="o">.</span><span class="na">acquire</span><span class="o">();</span>
+                    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">len</span><span class="o">++);</span>
+                    <span class="n">run</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+                    <span class="n">semaphore</span><span class="o">.</span><span class="na">release</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="k">new</span> <span class="nc">Task</span><span class="o">(</span><span class="n">semaphore</span><span class="o">)).</span><span class="na">start</span><span class="o">();</span>
+        <span class="nc">LockSupport</span><span class="o">.</span><span class="na">parkNanos</span><span class="o">(</span><span class="nc">TimeUnit</span><span class="o">.</span><span class="na">MINUTES</span><span class="o">.</span><span class="na">toNanos</span><span class="o">(</span><span class="mi">1</span><span class="o">));</span>
+    <span class="o">}</span>
 <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre>
 </div>
@@ -10183,54 +10744,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <p>管中窥豹，从这里也可以看出 <code>CountDownLatch</code> 中的等待控制几乎都是依赖 <code>AbstractQueuedSynchronizer</code> 来实现的。</p>
 </div>
 <div class="sect2">
-<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>48.1. <code>countDown()</code></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-</pre></td><td class="code"><pre><span class="cm">/**
- * Decrements the count of the latch, releasing all waiting threads if
- * the count reaches zero.
- *
- * &lt;p&gt;If the current count is greater than zero then it is decremented.
- * If the new count is zero then all waiting threads are re-enabled for
- * thread scheduling purposes.
- *
- * &lt;p&gt;If the current count equals zero then nothing happens.
- */</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">countDown</span><span class="o">()</span> <span class="o">{</span>
-    <span class="n">sync</span><span class="o">.</span><span class="na">releaseShared</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></td></tr></tbody></table></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>countDown()</code> 方法直接减少锁存器计数，直到零，则释放所有等待的线程。</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/CountDownLatch-countDown-1.png" alt="CountDownLatch countDown 1">
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/CountDownLatch-countDown-2.png" alt="CountDownLatch countDown 2">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_await"><a class="anchor" href="#_await"></a>48.2. <code>await()</code></h3>
+<h3 id="_await"><a class="anchor" href="#_await"></a>48.1. <code>await()</code></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
@@ -10297,7 +10811,56 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 <div class="paragraph">
-<p>对 <code>await()</code> 的处理直接委托给了 <code>sync</code> 的 <code>acquireSharedInterruptibly(1)</code> 方法，当然这个方法是从 <code>AbstractQueuedSynchronizer</code> 继承而来的。</p>
+<p>对 <code>await()</code> 的处理直接委托给了 <code>sync</code> 的 <code>acquireSharedInterruptibly(1)</code> 方法，当然这个方法是从 <code>AbstractQueuedSynchronizer</code> 继承而来的。来看一下这个方法：</p>
+</div>
+<div class="listingblock">
+<div class="title">AbstractQueuedSynchronizer</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="code"><pre><span class="cm">/**
+ * Acquires in shared mode, aborting if interrupted.  Implemented
+ * by first checking interrupt status, then invoking at least once
+ * {@link #tryAcquireShared}, returning on success.  Otherwise the
+ * thread is queued, possibly repeatedly blocking and unblocking,
+ * invoking {@link #tryAcquireShared} until success or the thread
+ * is interrupted.
+ * @param arg the acquire argument.
+ * This value is conveyed to {@link #tryAcquireShared} but is
+ * otherwise uninterpreted and can represent anything
+ * you like.
+ * @throws InterruptedException if the current thread is interrupted
+ */</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">acquireSharedInterruptibly</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span>
+        <span class="kd">throws</span> <span class="nc">InterruptedException</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="nc">Thread</span><span class="o">.</span><span class="na">interrupted</span><span class="o">())</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">InterruptedException</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">tryAcquireShared</span><span class="o">(</span><span class="n">arg</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+        <span class="n">doAcquireSharedInterruptibly</span><span class="o">(</span><span class="n">arg</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>结合上面提到的 <code>Sync</code> 中的 <code>tryAcquireShared(int acquires)</code> 方法，可以看出，当 <code>getState()</code> 不为零时，就会导致 <code>tryAcquireShared(arg)</code> 结果返回小于零，进而调用 <code>doAcquireSharedInterruptibly(arg)</code>，将线程进入排队，然后挂起线程。</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -10307,6 +10870,94 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 <div class="imageblock">
 <div class="content">
 <img src="./images/CountDownLatch-await-unpark.png" alt="CountDownLatch await unpark">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>48.2. <code>countDown()</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+</pre></td><td class="code"><pre><span class="cm">/**
+ * Decrements the count of the latch, releasing all waiting threads if
+ * the count reaches zero.
+ *
+ * &lt;p&gt;If the current count is greater than zero then it is decremented.
+ * If the new count is zero then all waiting threads are re-enabled for
+ * thread scheduling purposes.
+ *
+ * &lt;p&gt;If the current count equals zero then nothing happens.
+ */</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">countDown</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">sync</span><span class="o">.</span><span class="na">releaseShared</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里的 <code>releaseShared(1)</code> 方法是从 <code>AbstractQueuedSynchronizer</code> 继承过来的，来看一下这个方法的实现：</p>
+</div>
+<div class="listingblock">
+<div class="title">AbstractQueuedSynchronizer</div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="code"><pre><span class="cm">/**
+ * Releases in shared mode.  Implemented by unblocking one or more
+ * threads if {@link #tryReleaseShared} returns true.
+ *
+ * @param arg the release argument.  This value is conveyed to
+ *        {@link #tryReleaseShared} but is otherwise uninterpreted
+ *        and can represent anything you like.
+ * @return the value returned from {@link #tryReleaseShared}
+ */</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kt">boolean</span> <span class="nf">releaseShared</span><span class="o">(</span><span class="kt">int</span> <span class="n">arg</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">tryReleaseShared</span><span class="o">(</span><span class="n">arg</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">doReleaseShared</span><span class="o">();</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>结合上面提到的 <code>Sync</code> 中的 <code>tryReleaseShared(int releases)</code> 方法，我们可以看出：<code>countDown()</code> 方法直接减少锁存器计数，如果不为零，则无所作为；减少到零，则释放所有上述通过 <code>await()</code> 方法挂起的所有等待线程。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-countDown-1.png" alt="CountDownLatch countDown 1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-countDown-2.png" alt="CountDownLatch countDown 2">
 </div>
 </div>
 <div class="qlist qanda">
@@ -15418,7 +16069,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:15:53 +0800
+Last updated 2020-04-30 10:46:16 +0800
 </div>
 </div>
 <link rel="stylesheet" href="assets/css/rouge-monokai.css">

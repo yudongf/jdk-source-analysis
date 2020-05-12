@@ -245,13 +245,41 @@ public class ReentrantLockTest {
 }</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Acquires in exclusive mode, aborting if interrupted.
+ * Implemented by first checking interrupt status, then invoking
+ * at least once {@link #tryAcquire}, returning on
+ * success.  Otherwise the thread is queued, possibly repeatedly
+ * blocking and unblocking, invoking {@link #tryAcquire}
+ * until success or the thread is interrupted.  This method can be
+ * used to implement method {@link Lock#lockInterruptibly}.
+ *
+ * @param arg the acquire argument.  This value is conveyed to
+ *        {@link #tryAcquire} but is otherwise uninterpreted and
+ *        can represent anything you like.
+ * @throws InterruptedException if the current thread is interrupted
+ */
+public final void acquireInterruptibly(int arg)
+        throws InterruptedException {
+    if (Thread.interrupted())
+        throw new InterruptedException();
+    if (!tryAcquire(arg))
+        doAcquireInterruptibly(arg);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>先判断是否有中断，有则响应。从这里就可以看出，在加锁之前也可以被中断。</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-23 00:18:55 +0800
+Last updated 2020-05-05 16:46:55 +0800
 </div>
 </div>
 </body>

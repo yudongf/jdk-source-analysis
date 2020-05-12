@@ -135,40 +135,7 @@ private final Sync sync;</code></pre>
 <p>管中窥豹，从这里也可以看出 <code>CountDownLatch</code> 中的等待控制几乎都是依赖 <code>AbstractQueuedSynchronizer</code> 来实现的。</p>
 </div>
 <div class="sect2">
-<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>1.1. <code>countDown()</code></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">/**
- * Decrements the count of the latch, releasing all waiting threads if
- * the count reaches zero.
- *
- * &lt;p&gt;If the current count is greater than zero then it is decremented.
- * If the new count is zero then all waiting threads are re-enabled for
- * thread scheduling purposes.
- *
- * &lt;p&gt;If the current count equals zero then nothing happens.
- */
-public void countDown() {
-    sync.releaseShared(1);
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>countDown()</code> 方法直接减少锁存器计数，直到零，则释放所有等待的线程。</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/CountDownLatch-countDown-1.png" alt="CountDownLatch countDown 1">
-</div>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="./images/CountDownLatch-countDown-2.png" alt="CountDownLatch countDown 2">
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_await"><a class="anchor" href="#_await"></a>1.2. <code>await()</code></h3>
+<h3 id="_await"><a class="anchor" href="#_await"></a>1.1. <code>await()</code></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">/**
@@ -204,7 +171,35 @@ public void await() throws InterruptedException {
 </div>
 </div>
 <div class="paragraph">
-<p>对 <code>await()</code> 的处理直接委托给了 <code>sync</code> 的 <code>acquireSharedInterruptibly(1)</code> 方法，当然这个方法是从 <code>AbstractQueuedSynchronizer</code> 继承而来的。</p>
+<p>对 <code>await()</code> 的处理直接委托给了 <code>sync</code> 的 <code>acquireSharedInterruptibly(1)</code> 方法，当然这个方法是从 <code>AbstractQueuedSynchronizer</code> 继承而来的。来看一下这个方法：</p>
+</div>
+<div class="listingblock">
+<div class="title">AbstractQueuedSynchronizer</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Acquires in shared mode, aborting if interrupted.  Implemented
+ * by first checking interrupt status, then invoking at least once
+ * {@link #tryAcquireShared}, returning on success.  Otherwise the
+ * thread is queued, possibly repeatedly blocking and unblocking,
+ * invoking {@link #tryAcquireShared} until success or the thread
+ * is interrupted.
+ * @param arg the acquire argument.
+ * This value is conveyed to {@link #tryAcquireShared} but is
+ * otherwise uninterpreted and can represent anything
+ * you like.
+ * @throws InterruptedException if the current thread is interrupted
+ */
+public final void acquireSharedInterruptibly(int arg)
+        throws InterruptedException {
+    if (Thread.interrupted())
+        throw new InterruptedException();
+    if (tryAcquireShared(arg) &lt; 0)
+        doAcquireSharedInterruptibly(arg);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>结合上面提到的 <code>Sync</code> 中的 <code>tryAcquireShared(int acquires)</code> 方法，可以看出，当 <code>getState()</code> 不为零时，就会导致 <code>tryAcquireShared(arg)</code> 结果返回小于零，进而调用 <code>doAcquireSharedInterruptibly(arg)</code>，将线程进入排队，然后挂起线程。</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -214,6 +209,63 @@ public void await() throws InterruptedException {
 <div class="imageblock">
 <div class="content">
 <img src="./images/CountDownLatch-await-unpark.png" alt="CountDownLatch await unpark">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_countdown"><a class="anchor" href="#_countdown"></a>1.2. <code>countDown()</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Decrements the count of the latch, releasing all waiting threads if
+ * the count reaches zero.
+ *
+ * &lt;p&gt;If the current count is greater than zero then it is decremented.
+ * If the new count is zero then all waiting threads are re-enabled for
+ * thread scheduling purposes.
+ *
+ * &lt;p&gt;If the current count equals zero then nothing happens.
+ */
+public void countDown() {
+    sync.releaseShared(1);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里的 <code>releaseShared(1)</code> 方法是从 <code>AbstractQueuedSynchronizer</code> 继承过来的，来看一下这个方法的实现：</p>
+</div>
+<div class="listingblock">
+<div class="title">AbstractQueuedSynchronizer</div>
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Releases in shared mode.  Implemented by unblocking one or more
+ * threads if {@link #tryReleaseShared} returns true.
+ *
+ * @param arg the release argument.  This value is conveyed to
+ *        {@link #tryReleaseShared} but is otherwise uninterpreted
+ *        and can represent anything you like.
+ * @return the value returned from {@link #tryReleaseShared}
+ */
+public final boolean releaseShared(int arg) {
+    if (tryReleaseShared(arg)) {
+        doReleaseShared();
+        return true;
+    }
+    return false;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>结合上面提到的 <code>Sync</code> 中的 <code>tryReleaseShared(int releases)</code> 方法，我们可以看出：<code>countDown()</code> 方法直接减少锁存器计数，如果不为零，则无所作为；减少到零，则释放所有上述通过 <code>await()</code> 方法挂起的所有等待线程。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-countDown-1.png" alt="CountDownLatch countDown 1">
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/CountDownLatch-countDown-2.png" alt="CountDownLatch countDown 2">
 </div>
 </div>
 <div class="qlist qanda">
@@ -243,7 +295,7 @@ public void await() throws InterruptedException {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-23 00:18:55 +0800
+Last updated 2020-05-12 11:58:55 +0800
 </div>
 </div>
 </body>
