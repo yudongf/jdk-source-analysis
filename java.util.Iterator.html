@@ -13,19 +13,25 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>迭代器 Iterator、 Enumeration、 Spliterator 与 Iterable</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_迭代器_iterator_enumeration_spliterator_与_iterable">1. 迭代器 Iterator、 Enumeration、 Spliterator 与 Iterable</a></li>
+<li><a href="#_涉及代码">1. 涉及代码</a></li>
+<li><a href="#_迭代器模式">2. 迭代器模式</a></li>
+<li><a href="#_iterator">3. <code>Iterator</code></a></li>
+<li><a href="#_iterable">4. <code>Iterable</code></a></li>
+<li><a href="#_工厂方法模式">5. 工厂方法模式</a></li>
+<li><a href="#_spliterator">6. <code>Spliterator</code></a></li>
+<li><a href="#ListIterator">7. <code>ListIterator</code></a></li>
+<li><a href="#_参考资料">8. 参考资料</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_迭代器_iterator_enumeration_spliterator_与_iterable"><a class="anchor" href="#_迭代器_iterator_enumeration_spliterator_与_iterable"></a>1. 迭代器 Iterator、 Enumeration、 Spliterator 与 Iterable</h2>
+<h2 id="_涉及代码"><a class="anchor" href="#_涉及代码"></a>1. 涉及代码</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_涉及代码"><a class="anchor" href="#_涉及代码"></a>1.1. 涉及代码</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -49,8 +55,10 @@
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_迭代器模式"><a class="anchor" href="#_迭代器模式"></a>1.2. 迭代器模式</h3>
+</div>
+<div class="sect1">
+<h2 id="_迭代器模式"><a class="anchor" href="#_迭代器模式"></a>2. 迭代器模式</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>在进行代码分析之前，D瓜哥想先来讲解一下设计模式。然后结合 Java 中 <code>Iterator</code> 和 <code>Iteratable</code> ，具体分析一下迭代器在 Java 中的实现。</p>
 </div>
@@ -75,7 +83,7 @@
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./diag-385192af6c09bbf6ba3775ed995deb6d.svg" alt="diag 385192af6c09bbf6ba3775ed995deb6d" width="100%" height="542">
+<img src="./diag-385192af6c09bbf6ba3775ed995deb6d.svg" alt="diag 385192af6c09bbf6ba3775ed995deb6d" width="100%" height="232">
 </div>
 </div>
 <div class="paragraph">
@@ -94,15 +102,17 @@
 <p>请问： Java 中是如何应用迭代器模式呢？</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_iterator"><a class="anchor" href="#_iterator"></a>1.3. <code>Iterator</code></h3>
+</div>
+<div class="sect1">
+<h2 id="_iterator"><a class="anchor" href="#_iterator"></a>3. <code>Iterator</code></h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>从上面的设计模式可以看出，迭代器模式就是为了遍历不同的聚集结构提供诸如开始、下一个、是否结束、当前元素等常见操作的统一接口。来看看 Java 集合类是如何提炼接口的。</p>
 </div>
 <div class="listingblock">
 <div class="title">java.util.Iterator</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public interface Iterator&lt;E&gt; {
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">public interface Iterator&lt;E&gt; {
 
     boolean hasNext();
 
@@ -132,7 +142,7 @@
 <div class="listingblock">
 <div class="title">java.util.Enumeration</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public interface Enumeration&lt;E&gt; {
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">public interface Enumeration&lt;E&gt; {
 
     boolean hasMoreElements();
 
@@ -163,15 +173,17 @@
 <p>请问：既然有迭代器接口定义了，那么 Java 又是如何生成迭代器实例呢？</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_iterable"><a class="anchor" href="#_iterable"></a>1.4. <code>Iterable</code></h3>
+</div>
+<div class="sect1">
+<h2 id="_iterable"><a class="anchor" href="#_iterable"></a>4. <code>Iterable</code></h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>既然迭代器可以抽象成一个公共的接口，那么生成迭代器实例的这个操作，也可以抽象成一个接口。 Java 也确实是这样做的：</p>
 </div>
 <div class="listingblock">
 <div class="title">java.lang.Iterable</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public interface Iterable&lt;T&gt; {
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">public interface Iterable&lt;T&gt; {
 
     Iterator&lt;T&gt; iterator();
 
@@ -204,8 +216,10 @@
 <p>在思考实现原理的过程中，D瓜哥突然想到，<code>java.lang.Iterable</code> 就是一个工厂方法模式的应用。来分析一下：</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_工厂方法模式"><a class="anchor" href="#_工厂方法模式"></a>1.5. 工厂方法模式</h3>
+</div>
+<div class="sect1">
+<h2 id="_工厂方法模式"><a class="anchor" href="#_工厂方法模式"></a>5. 工厂方法模式</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>先来看看工厂方法模式的定义：</p>
 </div>
@@ -230,7 +244,7 @@
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./diag-b91e0a8e1dbd3f3053e51b7170fa5378.svg" alt="diag b91e0a8e1dbd3f3053e51b7170fa5378" width="100%" height="397">
+<img src="./diag-b91e0a8e1dbd3f3053e51b7170fa5378.svg" alt="diag b91e0a8e1dbd3f3053e51b7170fa5378" width="100%" height="232">
 </div>
 </div>
 <div class="ulist">
@@ -256,12 +270,16 @@
 <p>细心的童鞋，可能发现还有个类似迭代器的类 <code>Spliterator</code>。这是个什么类？为啥要增加相关的接口呢？</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_spliterator"><a class="anchor" href="#_spliterator"></a>1.6. <code>Spliterator</code></h3>
+</div>
+<div class="sect1">
+<h2 id="_spliterator"><a class="anchor" href="#_spliterator"></a>6. <code>Spliterator</code></h2>
+<div class="sectionbody">
 
 </div>
-<div class="sect2">
-<h3 id="ListIterator"><a class="anchor" href="#ListIterator"></a>1.7. <code>ListIterator</code></h3>
+</div>
+<div class="sect1">
+<h2 id="ListIterator"><a class="anchor" href="#ListIterator"></a>7. <code>ListIterator</code></h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><code>java.util.Iterator</code> 是针对整个集合类抽象出来的通用迭代器。但是，可以思考一下，对于 <code>java.util.List</code> 是不是可以有更契合的迭代器？</p>
 </div>
@@ -270,7 +288,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public interface ListIterator&lt;E&gt; extends Iterator&lt;E&gt; {
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">public interface ListIterator&lt;E&gt; extends Iterator&lt;E&gt; {
     // Query Operations
 
     boolean hasNext();
@@ -303,8 +321,10 @@
 <p>因为增加了 <code>hasPrevious()</code> 和 <code>previous()</code>，那么 <code>ListIterator</code> 就有了双向遍历的能力：既可以像传统迭代器那样，从前向后遍历；又可以逆向，从后想前遍历。这样在某些场景下就会特别方便。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.8. 参考资料</h3>
+</div>
+<div class="sect1">
+<h2 id="_参考资料"><a class="anchor" href="#_参考资料"></a>8. 参考资料</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -315,10 +335,9 @@
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

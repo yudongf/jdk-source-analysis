@@ -13,39 +13,55 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>LinkedList</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_linkedlist">1. LinkedList</a></li>
+<li><a href="#_类图">1. 类图</a></li>
+<li><a href="#_初始化">2. 初始化</a></li>
+<li><a href="#_分析工具">3. 分析工具</a></li>
+<li><a href="#_添加元素">4. 添加元素</a></li>
+<li><a href="#_redis_的_list">5. Redis 的 List</a></li>
+<li><a href="#_redis_的_ziplist">6. Redis 的 ziplist</a></li>
+<li><a href="#_redis_中的_quicklist">7. Redis 中的 quicklist</a></li>
+<li><a href="#_参考资料">8. 参考资料</a></li>
+<li><a href="#_类的继承关系">9. 类的继承关系</a></li>
+<li><a href="#_类的属性">10. 类的属性</a></li>
+<li><a href="#_类的构造器">11. 类的构造器</a></li>
+<li><a href="#_类的方法">12. 类的方法</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_linkedlist"><a class="anchor" href="#_linkedlist"></a>1. LinkedList</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>LinkedList</code> 底层使用的是 双向链表 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环。注意双向链表和双向循环链表的区别。）</p>
 </div>
-<div class="sect2">
-<h3 id="_类图"><a class="anchor" href="#_类图"></a>1.1. 类图</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_类图"><a class="anchor" href="#_类图"></a>1. 类图</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>先来看一下 <code>LinkedList</code> 的类图：</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
-<img src="./diag-0a1a36b1bfc746ed88c5db48ad5ce645.svg" alt="diag 0a1a36b1bfc746ed88c5db48ad5ce645" width="100%" height="607">
+<img src="./diag-0a1a36b1bfc746ed88c5db48ad5ce645.svg" alt="diag 0a1a36b1bfc746ed88c5db48ad5ce645" width="100%" height="211">
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_初始化"><a class="anchor" href="#_初始化"></a>1.2. 初始化</h3>
+</div>
+<div class="sect1">
+<h2 id="_初始化"><a class="anchor" href="#_初始化"></a>2. 初始化</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>先看看 <code>LinkedList</code> 中内部属性和构造函数：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">transient int size = 0;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">transient int size = 0;
 
 /**
  * Pointer to first node.
@@ -113,14 +129,16 @@ D瓜哥觉得使用初始化的头尾节点更方便代码书写，少了很多�
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_分析工具"><a class="anchor" href="#_分析工具"></a>1.3. 分析工具</h3>
+</div>
+<div class="sect1">
+<h2 id="_分析工具"><a class="anchor" href="#_分析工具"></a>3. 分析工具</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>使用反射来获取内部属性，然后做进一步分析。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -168,21 +186,23 @@ public class LinkedListBaseTest {
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_添加元素"><a class="anchor" href="#_添加元素"></a>1.4. 添加元素</h3>
+</div>
+<div class="sect1">
+<h2 id="_添加元素"><a class="anchor" href="#_添加元素"></a>4. 添加元素</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>测试代码：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Test
-public void testAddAtTail() {
-    LinkedList&lt;Integer&gt; list = new LinkedList&lt;&gt;();
-    for (int i = 0; i &lt; 16; i++) {
-        xray(list);
-        list.add(i);
-    }
-}</code></pre>
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+    public void testAddAtTail() {
+        LinkedList&lt;Integer&gt; list = new LinkedList&lt;&gt;();
+        for (int i = 0; i &lt; 16; i++) {
+            xray(list);
+            list.add(i);
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -190,7 +210,7 @@ public void testAddAtTail() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">/**
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
  * Links e as last element.
  */
 void linkLast(E e) {
@@ -224,14 +244,14 @@ public boolean add(E e) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Test
-public void testAddAtHeader() {
-    LinkedList&lt;Integer&gt; list = new LinkedList&lt;&gt;();
-    for (int i = 0; i &lt; 16; i++) {
-        xray(list);
-        list.addFirst(i);
-    }
-}</code></pre>
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+    public void testAddAtHeader() {
+        LinkedList&lt;Integer&gt; list = new LinkedList&lt;&gt;();
+        for (int i = 0; i &lt; 16; i++) {
+            xray(list);
+            list.addFirst(i);
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -239,7 +259,7 @@ public void testAddAtHeader() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">/**
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
  * Links e as first element.
  */
 private void linkFirst(E e) {
@@ -268,8 +288,10 @@ public void addFirst(E e) {
 <p>从这里就能看出，<code>LinkedList</code> 在 <code>add(e)</code>、<code>addLast(e)</code> 或者 <code>addFirst(e)</code> 时，都是对链表的首尾进行操作，会比较高效。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_redis_的_list"><a class="anchor" href="#_redis_的_list"></a>1.5. Redis 的 List</h3>
+</div>
+<div class="sect1">
+<h2 id="_redis_的_list"><a class="anchor" href="#_redis_的_list"></a>5. Redis 的 List</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Redis 底层也有很多地方使用到链表，并且也是双向链表。</p>
 </div>
@@ -317,8 +339,10 @@ typedef struct list {
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_redis_的_ziplist"><a class="anchor" href="#_redis_的_ziplist"></a>1.6. Redis 的 ziplist</h3>
+</div>
+<div class="sect1">
+<h2 id="_redis_的_ziplist"><a class="anchor" href="#_redis_的_ziplist"></a>6. Redis 的 ziplist</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Redis 官方在 ziplist.c 文件的注释中对 ziplist 进行了定义：</p>
 </div>
@@ -532,8 +556,10 @@ NOTE: all fields are stored in little endian, if not specified otherwise.</code>
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_redis_中的_quicklist"><a class="anchor" href="#_redis_中的_quicklist"></a>1.7. Redis 中的 quicklist</h3>
+</div>
+<div class="sect1">
+<h2 id="_redis_中的_quicklist"><a class="anchor" href="#_redis_中的_quicklist"></a>7. Redis 中的 quicklist</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Redis 对外暴露的 list 数据类型，它底层实现所依赖的内部数据结构就是 quicklist。</p>
 </div>
@@ -753,8 +779,10 @@ list
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.8. 参考资料</h3>
+</div>
+<div class="sect1">
+<h2 id="_参考资料"><a class="anchor" href="#_参考资料"></a>8. 参考资料</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -814,8 +842,10 @@ import java.util.function.Consumer;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_类的继承关系"><a class="anchor" href="#_类的继承关系"></a>1.9. 类的继承关系</h3>
+</div>
+<div class="sect1">
+<h2 id="_类的继承关系"><a class="anchor" href="#_类的继承关系"></a>9. 类的继承关系</h2>
+<div class="sectionbody">
 <div class="imageblock">
 <div class="content">
 <img src="./images/DiagramForLinkedList.png" alt="DiagramForLinkedList">
@@ -834,8 +864,10 @@ import java.util.function.Consumer;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_类的属性"><a class="anchor" href="#_类的属性"></a>1.10. 类的属性</h3>
+</div>
+<div class="sect1">
+<h2 id="_类的属性"><a class="anchor" href="#_类的属性"></a>10. 类的属性</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">    //存储元素个数
@@ -849,8 +881,10 @@ import java.util.function.Consumer;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_类的构造器"><a class="anchor" href="#_类的构造器"></a>1.11. 类的构造器</h3>
+</div>
+<div class="sect1">
+<h2 id="_类的构造器"><a class="anchor" href="#_类的构造器"></a>11. 类的构造器</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">    //无参构造器
@@ -867,8 +901,10 @@ import java.util.function.Consumer;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_类的方法"><a class="anchor" href="#_类的方法"></a>1.12. 类的方法</h3>
+</div>
+<div class="sect1">
+<h2 id="_类的方法"><a class="anchor" href="#_类的方法"></a>12. 类的方法</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>主要的方法的基础是link和unlink方法组,Node&lt;E&gt; node(int index)定位方法（均不是public）</p>
 </div>
@@ -1703,10 +1739,9 @@ ArrayList的空间浪费主要体现在在list列表的结尾预留一定的容�
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

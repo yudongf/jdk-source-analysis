@@ -13,24 +13,28 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>ArrayBlockingQueue</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_arrayblockingqueue">1. ArrayBlockingQueue</a></li>
+<li><a href="#_方法组">1. 方法组</a></li>
+<li><a href="#_参考资料">2. 参考资料</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_arrayblockingqueue"><a class="anchor" href="#_arrayblockingqueue"></a>1. ArrayBlockingQueue</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="imageblock text-center">
 <div class="content">
 <img src="./images/BlockingQueue.png" alt="BlockingQueue">
 </div>
 </div>
-<div class="sect2">
-<h3 id="_方法组"><a class="anchor" href="#_方法组"></a>1.1. 方法组</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_方法组"><a class="anchor" href="#_方法组"></a>1. 方法组</h2>
+<div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 8%;">
@@ -100,7 +104,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">/**
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
  * Inserts element at current put position, advances, and signals.
  * Call only when holding lock.
  */
@@ -193,7 +197,7 @@ public E poll() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
 
 import org.junit.Test;
 
@@ -243,8 +247,10 @@ public class ArrayBlockingQueueTest {
 <p><code>poll(long, java.util.concurrent.TimeUnit)</code> 方法，其实就是使用 <code>Condition notEmpty</code> 对象来调用 <code>ConditionObject.awaitNanos(long)</code> 方法，在其中再调用了 <a href="java.util.concurrent.locks.LockSupport.html"><code>LockSupport.parkNanos(java.lang.Object, long)</code></a> 方法来实现"休眠等待"。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.2. 参考资料</h3>
+</div>
+<div class="sect1">
+<h2 id="_参考资料"><a class="anchor" href="#_参考资料"></a>2. 参考资料</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -255,10 +261,9 @@ public class ArrayBlockingQueueTest {
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

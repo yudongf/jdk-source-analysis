@@ -13,22 +13,25 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>ReentrantLock</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_reentrantlock">1. ReentrantLock</a></li>
+<li><a href="#_谈谈_synchronized_和_reentrantlock_的区别">1. 谈谈 synchronized 和 ReentrantLock 的区别</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_reentrantlock"><a class="anchor" href="#_reentrantlock"></a>1. ReentrantLock</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><code>ReentrantLock</code> 是重入锁，也是排他锁。</p>
 </div>
-<div class="sect2">
-<h3 id="_谈谈_synchronized_和_reentrantlock_的区别"><a class="anchor" href="#_谈谈_synchronized_和_reentrantlock_的区别"></a>1.1. 谈谈 synchronized 和 ReentrantLock 的区别</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_谈谈_synchronized_和_reentrantlock_的区别"><a class="anchor" href="#_谈谈_synchronized_和_reentrantlock_的区别"></a>1. 谈谈 synchronized 和 ReentrantLock 的区别</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -72,7 +75,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
 
 import org.junit.Test;
 
@@ -247,27 +250,27 @@ public class ReentrantLockTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">/**
- * Acquires in exclusive mode, aborting if interrupted.
- * Implemented by first checking interrupt status, then invoking
- * at least once {@link #tryAcquire}, returning on
- * success.  Otherwise the thread is queued, possibly repeatedly
- * blocking and unblocking, invoking {@link #tryAcquire}
- * until success or the thread is interrupted.  This method can be
- * used to implement method {@link Lock#lockInterruptibly}.
- *
- * @param arg the acquire argument.  This value is conveyed to
- *        {@link #tryAcquire} but is otherwise uninterpreted and
- *        can represent anything you like.
- * @throws InterruptedException if the current thread is interrupted
- */
-public final void acquireInterruptibly(int arg)
-        throws InterruptedException {
-    if (Thread.interrupted())
-        throw new InterruptedException();
-    if (!tryAcquire(arg))
-        doAcquireInterruptibly(arg);
-}</code></pre>
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    /**
+     * Acquires in exclusive mode, aborting if interrupted.
+     * Implemented by first checking interrupt status, then invoking
+     * at least once {@link #tryAcquire}, returning on
+     * success.  Otherwise the thread is queued, possibly repeatedly
+     * blocking and unblocking, invoking {@link #tryAcquire}
+     * until success or the thread is interrupted.  This method can be
+     * used to implement method {@link Lock#lockInterruptibly}.
+     *
+     * @param arg the acquire argument.  This value is conveyed to
+     *        {@link #tryAcquire} but is otherwise uninterpreted and
+     *        can represent anything you like.
+     * @throws InterruptedException if the current thread is interrupted
+     */
+    public final void acquireInterruptibly(int arg)
+            throws InterruptedException {
+        if (Thread.interrupted())
+            throw new InterruptedException();
+        if (!tryAcquire(arg))
+            doAcquireInterruptibly(arg);
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -276,10 +279,9 @@ public final void acquireInterruptibly(int arg)
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-05-05 16:46:55 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

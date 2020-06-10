@@ -11,71 +11,65 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
 </head>
-<body class="book toc2 toc-left">
+<body class="book">
 <div id="header">
-<div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#_treemap">1. TreeMap</a></li>
-</ul>
-</div>
+<h1>TreeMap</h1>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_treemap"><a class="anchor" href="#_treemap"></a>1. TreeMap</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>先看一个问题：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Test
-public void testQuestion() {
-    TreeMap&lt;Pair, Pair&gt; data = new TreeMap&lt;&gt;();
-    Pair pair = new Pair(1, System.currentTimeMillis());
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+    public void testQuestion() {
+        TreeMap&lt;Pair, Pair&gt; data = new TreeMap&lt;&gt;();
+        Pair pair = new Pair(1, System.currentTimeMillis());
 
-    data.put(pair, pair);
-    Pair value = data.get(new Pair(1));
-    // 请问，这里会输出 true ？还是 false ？
-    System.out.println(pair.equals(value));
-}
-
-class Pair implements Comparable&lt;Pair&gt; {
-    int key;
-    long time;
-
-    public Pair(int key) {
-        this.key = key;
+        data.put(pair, pair);
+        Pair value = data.get(new Pair(1));
+        // 请问，这里会输出 true ？还是 false ？
+        System.out.println(pair.equals(value));
     }
 
-    public Pair(int key, long time) {
-        this.key = key;
-        this.time = time;
-    }
+    class Pair implements Comparable&lt;Pair&gt; {
+        int key;
+        long time;
 
-    @Override
-    public int compareTo(Pair o) {
-        return Long.compare(this.time, o.time);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+        public Pair(int key) {
+            this.key = key;
         }
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Pair(int key, long time) {
+            this.key = key;
+            this.time = time;
         }
-        Pair pair = (Pair) o;
-        return key == pair.key;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(key);
-    }
-}</code></pre>
+        @Override
+        public int compareTo(Pair o) {
+            return Long.compare(this.time, o.time);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Pair pair = (Pair) o;
+            return key == pair.key;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key);
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -86,78 +80,78 @@ class Pair implements Comparable&lt;Pair&gt; {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public static class Person {
-    long id;
-    int sortFactor;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    public static class Person {
+        long id;
+        int sortFactor;
 
-    public Person(long id) {
-        this(id, (int) id);
-    }
-
-    public Person(long id, int sortFactor) {
-        this.id = id;
-        this.sortFactor = sortFactor;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+        public Person(long id) {
+            this(id, (int) id);
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+
+        public Person(long id, int sortFactor) {
+            this.id = id;
+            this.sortFactor = sortFactor;
         }
-        Person person = (Person) o;
-        return id == person.id;
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+            Person person = (Person) o;
+            return id == person.id;
+        }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", age=" + sortFactor +
-                '}';
-    }
-}</code></pre>
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
+
+        @Override
+        public String toString() {
+            return "Person{" +
+                    "id=" + id +
+                    ", age=" + sortFactor +
+                    '}';
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Test
-public void testSort() {
-    Comparator&lt;Person&gt; comparator
-            = Comparator.comparingInt(a -&gt; a.sortFactor);
-    TreeMap&lt;Person, Person&gt; map = new TreeMap&lt;&gt;(comparator);
-    for (int i = 0; i &lt; 10; i++) {
-        if ((i &amp; 1) == 1) {
-            Person person = new Person(i);
-            map.put(person, person);
-        } else {
-            Person param = new Person(i / 2);
-            Person person = map.get(param);
-            if (Objects.nonNull(person)) {
-                person.sortFactor = new Random().nextInt();
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+    public void testSort() {
+        Comparator&lt;Person&gt; comparator
+                = Comparator.comparingInt(a -&gt; a.sortFactor);
+        TreeMap&lt;Person, Person&gt; map = new TreeMap&lt;&gt;(comparator);
+        for (int i = 0; i &lt; 10; i++) {
+            if ((i &amp; 1) == 1) {
+                Person person = new Person(i);
+                map.put(person, person);
+            } else {
+                Person param = new Person(i / 2);
+                Person person = map.get(param);
+                if (Objects.nonNull(person)) {
+                    person.sortFactor = new Random().nextInt();
+                }
             }
         }
-    }
-    //
-    map.forEach((k, v) -&gt; {
-        System.out.println(k);
-    });
-    System.out.println("-------------");
-    for (Person person : map.navigableKeySet()) {
-        System.out.println(person);
-    }
-    System.out.println("-------------");
-    for (Person person : map.descendingKeySet()) {
-        System.out.println(person);
-    }
-}</code></pre>
+        //
+        map.forEach((k, v) -&gt; {
+            System.out.println(k);
+        });
+        System.out.println("-------------");
+        for (Person person : map.navigableKeySet()) {
+            System.out.println(person);
+        }
+        System.out.println("-------------");
+        for (Person person : map.descendingKeySet()) {
+            System.out.println(person);
+        }
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -165,28 +159,28 @@ public void testSort() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Test
-public void testDuplicateSortFactor() {
-    Comparator&lt;Person&gt; comparator
-            = Comparator.comparingInt(a -&gt; a.sortFactor);
-    TreeMap&lt;Person, Person&gt; treeMap = new TreeMap&lt;&gt;(comparator);
-    Person p1 = new Person(1, 0);
-    Person p2 = new Person(2, 0);
-    assert !p1.equals(p2);
-    System.out.println(p1.equals(p2));
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+    public void testDuplicateSortFactor() {
+        Comparator&lt;Person&gt; comparator
+                = Comparator.comparingInt(a -&gt; a.sortFactor);
+        TreeMap&lt;Person, Person&gt; treeMap = new TreeMap&lt;&gt;(comparator);
+        Person p1 = new Person(1, 0);
+        Person p2 = new Person(2, 0);
+        assert !p1.equals(p2);
+        System.out.println(p1.equals(p2));
 
-    for (int i = 0; i &lt; 10; i++) {
-        Person person = new Person(i, 0);
-        treeMap.put(person, person);
-    }
+        for (int i = 0; i &lt; 10; i++) {
+            Person person = new Person(i, 0);
+            treeMap.put(person, person);
+        }
 
-    assert (treeMap.size() == 1);
-    treeMap.forEach((k, v) -&gt; {
-        System.out.println("-----------------------");
-        System.out.printf("kid= %-4d kfactor= %-8d%n", k.id, k.sortFactor);
-        System.out.printf("vid= %-4d vfactor= %-8d%n", v.id, v.sortFactor);
-    });
-}</code></pre>
+        assert (treeMap.size() == 1);
+        treeMap.forEach((k, v) -&gt; {
+            System.out.println("-----------------------");
+            System.out.printf("kid= %-4d kfactor= %-8d%n", k.id, k.sortFactor);
+            System.out.printf("vid= %-4d vfactor= %-8d%n", v.id, v.sortFactor);
+        });
+    }</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -194,13 +188,13 @@ public void testDuplicateSortFactor() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@Test
-public void testPut() {
-    TreeMap&lt;Integer, Integer&gt; treeMap = new TreeMap&lt;&gt;();
-    for (int i = 0; i &lt; 10; i++) {
-        treeMap.put(i, i * 100);
-    }
-}</code></pre>
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+    public void testPut() {
+        TreeMap&lt;Integer, Integer&gt; treeMap = new TreeMap&lt;&gt;();
+        for (int i = 0; i &lt; 10; i++) {
+            treeMap.put(i, i * 100);
+        }
+    }</code></pre>
 </div>
 </div>
 </div>
@@ -208,7 +202,7 @@ public void testPut() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

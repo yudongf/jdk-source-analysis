@@ -13,23 +13,23 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>CopyOnWriteArrayList</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_copyonwritearraylist">1. CopyOnWriteArrayList</a></li>
+<li><a href="#_参考资料">1. 参考资料</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_copyonwritearraylist"><a class="anchor" href="#_copyonwritearraylist"></a>1. CopyOnWriteArrayList</h2>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="java.util.concurrent.locks.ReentrantReadWriteLock.html"><code>ReentrantReadWriteLock</code></a> 读写锁的思想非常类似，也就是读读共享、写写互斥、读写互斥、写读互斥。JDK 中提供了 <code>CopyOnWriteArrayList</code> 类比相比于在读写锁的思想又更进一步。为了将读取的性能发挥到极致，<code>CopyOnWriteArrayList</code> 读取是完全不用加锁的，并且更厉害的是：写入也不会阻塞读取操作。只有写入和写入之间需要进行同步等待。这样一来，读操作的性能就会大幅度提升。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">/** The array, accessed only via getArray/setArray. */
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">/** The array, accessed only via getArray/setArray. */
 private transient volatile Object[] array;
 
 /**
@@ -112,8 +112,11 @@ public E remove(int index) {
 <div class="paragraph">
 <p>从 <code>CopyOnWriteArrayList</code> 的名字就能看出 <code>CopyOnWriteArrayList</code> 是满足 <code>CopyOnWrite</code> 的 <code>ArrayList</code>，所谓 <code>CopyOnWrite</code> 也就是说：在计算机，如果你想要对一块内存进行修改时，我们不在原有内存块中进行写操作，而是将内存拷贝一份，在新的内存中进行写操作，写完之后呢，就将指向原来内存指针指向新的内存，原来的内存就可以被回收掉了。</p>
 </div>
-<div class="sect2">
-<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.1. 参考资料</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1. 参考资料</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -124,10 +127,9 @@ public E remove(int index) {
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

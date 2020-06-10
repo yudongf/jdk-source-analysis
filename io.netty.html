@@ -13,25 +13,33 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>Netty</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_netty">1. Netty</a></li>
+<li><a href="#_jdk_原生_socket_编程">1. JDK 原生 Socket 编程</a></li>
+<li><a href="#_server_startup">2. Server startup</a></li>
+<li><a href="#_nioeventloop">3. <code>NioEventLoop</code></a></li>
 </ul>
 </div>
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_netty"><a class="anchor" href="#_netty"></a>1. Netty</h2>
+<div id="preamble">
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_jdk_原生_socket_编程"><a class="anchor" href="#_jdk_原生_socket_编程"></a>1.1. JDK 原生 Socket 编程</h3>
+<div class="paragraph">
+<p>Netty 和 <code>ServerSocketChannel</code> 可以互相操作吗？</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jdk_原生_socket_编程"><a class="anchor" href="#_jdk_原生_socket_编程"></a>1. JDK 原生 Socket 编程</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>使用 JDK 原生的 Socket API 进行网络编程：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.netty;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty;
 
 import org.junit.Test;
 
@@ -47,7 +55,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * @author D瓜哥, https://www.diguage.com/
  * @since 2020-04-21 14:31
  */
-public class Test02 {
+public class ServerSocketTest {
     public static final String HOST = "127.0.0.1";
     public static final int PORT = 11911;
 
@@ -161,13 +169,17 @@ public class Test02 {
 </ul>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_server_startup"><a class="anchor" href="#_server_startup"></a>1.2. Server startup</h3>
+</div>
+<div class="sect1">
+<h2 id="_server_startup"><a class="anchor" href="#_server_startup"></a>2. Server startup</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">package com.diguage.truman.netty;
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty;
 
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -175,11 +187,17 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.concurrent.locks.LockSupport;
 
 /**
@@ -208,6 +226,13 @@ public class Test03 {
                         }
                     });
             ChannelFuture f = b.bind(PORT).sync();
+            f.addListener(future -&gt; {
+                if (future.isSuccess()) {
+                    System.out.println(LocalDateTime.now() + ": 端口[" + PORT + "]绑定成功！");
+                } else {
+                    System.out.println(LocalDateTime.now() + ": 端口[" + PORT + "]绑定失败！");
+                }
+            });
             f.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
@@ -234,10 +259,44 @@ public class Test03 {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-            super.channelRead(ctx, msg);
+//            ((ByteBuf) msg).release();
+//            ReferenceCountUtil.release(msg);
+            ctx.write(msg);
+            ctx.flush();
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            cause.printStackTrace();
+            ctx.close();
         }
     }
 
+    @Test
+    public void testClient() throws InterruptedException {
+        NioEventLoopGroup executors = new NioEventLoopGroup();
+        try {
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(executors)
+                    .channel(NioSocketChannel.class)
+                    .remoteAddress(new InetSocketAddress("localhost", PORT))
+                    .handler(new ChannelInitializer&lt;SocketChannel&gt;() {
+                        @Override
+                        protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new ClientHandler());
+                        }
+                    });
+        } finally {
+            executors.shutdownGracefully().sync();
+        }
+    }
+
+    public static class ClientHandler extends ChannelInboundHandlerAdapter {
+        @Override
+        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+            System.out.println("Handl");
+        }
+    }
 }</code></pre>
 </div>
 </div>
@@ -422,8 +481,10 @@ public class Test03 {
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_nioeventloop"><a class="anchor" href="#_nioeventloop"></a>1.3. <code>NioEventLoop</code></h3>
+</div>
+<div class="sect1">
+<h2 id="_nioeventloop"><a class="anchor" href="#_nioeventloop"></a>3. <code>NioEventLoop</code></h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -450,8 +511,8 @@ public class Test03 {
 </li>
 </ol>
 </div>
-<div class="sect3">
-<h4 id="_nioeventloop_创建"><a class="anchor" href="#_nioeventloop_创建"></a>1.3.1. <code>NioEventLoop</code> 创建</h4>
+<div class="sect2">
+<h3 id="_nioeventloop_创建"><a class="anchor" href="#_nioeventloop_创建"></a>3.1. <code>NioEventLoop</code> 创建</h3>
 <div class="paragraph">
 <p><code>NioEventLoop</code> 默认是在调用 <code>NioEventLoopGroup()</code> 时被创建，默认是 2 倍的 CPU 数量（由常量 <code>MultithreadEventLoopGroup.DEFAULT_EVENT_LOOP_THREADS</code> 来定义）。</p>
 </div>
@@ -490,8 +551,8 @@ public class Test03 {
 </ol>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_nioeventloop_启动"><a class="anchor" href="#_nioeventloop_启动"></a>1.3.2. <code>NioEventLoop</code> 启动</h4>
+<div class="sect2">
+<h3 id="_nioeventloop_启动"><a class="anchor" href="#_nioeventloop_启动"></a>3.2. <code>NioEventLoop</code> 启动</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -506,8 +567,8 @@ public class Test03 {
 <p>在 <code>AbstractBootstrap.doBind0</code> 方法中，调用 <code>SingleThreadEventExecutor.execute(java.lang.Runnable)</code> 开始启动，再调用 <code>SingleThreadEventExecutor.execute(java.lang.Runnable, boolean)</code>，最后通过 <code>SingleThreadEventExecutor.startThread</code> 方法来启动。实际启动工作，最后委托给了 <code>SingleThreadEventExecutor.doStartThread</code> 方法来执行，这个方法中，调用 <code>SingleThreadEventExecutor.this.run();</code> 来启动 <code>NioEventLoop</code>。</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_nioeventloop_执行逻辑"><a class="anchor" href="#_nioeventloop_执行逻辑"></a>1.3.3. <code>NioEventLoop</code> 执行逻辑</h4>
+<div class="sect2">
+<h3 id="_nioeventloop_执行逻辑"><a class="anchor" href="#_nioeventloop_执行逻辑"></a>3.3. <code>NioEventLoop</code> 执行逻辑</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -576,10 +637,9 @@ public class Test03 {
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>

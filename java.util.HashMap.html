@@ -13,19 +13,31 @@
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
+<h1>HashMap</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_hashmap">1. HashMap</a></li>
+<li><a href="#_hashmap_问题集">1. HashMap 问题集</a></li>
+<li><a href="#_redis_中的字典">2. Redis 中的字典</a></li>
+<li><a href="#_参考资料">3. 参考资料</a></li>
+<li><a href="#_简介">4. 简介</a></li>
+<li><a href="#_签名">5. 签名</a></li>
+<li><a href="#_存储结构">6. 存储结构</a></li>
+<li><a href="#_实现原理">7. 实现原理</a></li>
+<li><a href="#_源码剖析">8. 源码剖析</a></li>
+<li><a href="#_小结">9. 小结</a></li>
+<li><a href="#_参考">10. 参考</a></li>
+<li><a href="#_jdk_1_8_的实现">11. JDK 1.8 的实现</a></li>
+<li><a href="#_hashmap遍历">12. HashMap遍历</a></li>
+<li><a href="#_注意">13. 注意</a></li>
+<li><a href="#_参考_2">14. 参考</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_hashmap"><a class="anchor" href="#_hashmap"></a>1. HashMap</h2>
+<h2 id="_hashmap_问题集"><a class="anchor" href="#_hashmap_问题集"></a>1. HashMap 问题集</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_hashmap_问题集"><a class="anchor" href="#_hashmap_问题集"></a>1.1. HashMap 问题集</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -40,8 +52,10 @@
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_redis_中的字典"><a class="anchor" href="#_redis_中的字典"></a>1.2. Redis 中的字典</h3>
+</div>
+<div class="sect1">
+<h2 id="_redis_中的字典"><a class="anchor" href="#_redis_中的字典"></a>2. Redis 中的字典</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Redis 底层中的字典就是一个典型的 Hash 实现。</p>
 </div>
@@ -108,8 +122,8 @@ typedef struct dict {
 <div class="paragraph">
 <p>Redis 底层使用 MurmurHash2 算法来计算键的哈希值。</p>
 </div>
-<div class="sect3">
-<h4 id="_rehash_操作"><a class="anchor" href="#_rehash_操作"></a>1.2.1. Rehash 操作</h4>
+<div class="sect2">
+<h3 id="_rehash_操作"><a class="anchor" href="#_rehash_操作"></a>2.1. Rehash 操作</h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -206,8 +220,10 @@ OK
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考资料"><a class="anchor" href="#_参考资料"></a>1.3. 参考资料</h3>
+</div>
+<div class="sect1">
+<h2 id="_参考资料"><a class="anchor" href="#_参考资料"></a>3. 参考资料</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -216,16 +232,20 @@ OK
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_简介"><a class="anchor" href="#_简介"></a>1.4. 简介</h3>
+</div>
+<div class="sect1">
+<h2 id="_简介"><a class="anchor" href="#_简介"></a>4. 简介</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>HashMap是基于哈希表实现的，用来存储key-value形式的键值对，允许key和value都为null值；
 HashMap是非线程安全的，只是用于单线程环境下，多线程环境下可以采用concurrent并发包下的concurrentHashMap；
 HashMap实现了Serializable接口，支持序列化，实现了Cloneable接口，能被克隆。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_签名"><a class="anchor" href="#_签名"></a>1.5. 签名</h3>
+</div>
+<div class="sect1">
+<h2 id="_签名"><a class="anchor" href="#_签名"></a>5. 签名</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public class HashMap&lt;K,V&gt;
@@ -300,16 +320,20 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 <p>通过上面的比较，我们知道了HashMap是Java的Map家族中一个普通成员，鉴于它可以满足大多数场景的使用条件，所以是使用频度最高的一个。下文我们主要结合源码，从存储结构、常用方法分析、扩容等方面了解一下HashMap的工作原理。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_存储结构"><a class="anchor" href="#_存储结构"></a>1.6. 存储结构</h3>
+</div>
+<div class="sect1">
+<h2 id="_存储结构"><a class="anchor" href="#_存储结构"></a>6. 存储结构</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>HashMap是基于哈希表存储的，在JDK1.6，JDK1.7版本采用数组(桶位) + 链表实现存储元素和解决冲突，同一hash值的链表都存储在一个链表里。
 但是当位于一个桶中的元素较多，即hash值相等的元素较多时，通过key值依次查找的效率较低。但是到JDK1.8版本时HashMap采用位桶 + 链表 + 红黑树实现，
 当链表长度超过阈值（8）时，将链表转换为红黑树，这样大大减少了查找时间。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_实现原理"><a class="anchor" href="#_实现原理"></a>1.7. 实现原理</h3>
+</div>
+<div class="sect1">
+<h2 id="_实现原理"><a class="anchor" href="#_实现原理"></a>7. 实现原理</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>首先有一个元素是链表的数组，当添加一个元素（key-value）时，就首先计算元素key的hash值，以此确定元素在数组中的位置，但是可能存在同一hash值的元素
 已经被放在数组同一位置了（也就出现了Hash冲突），这时就添加到同一hash值的元素的后面，他们在数组的同一位置，但是形成了链表，同一个链表上的Hash值是
@@ -325,10 +349,12 @@ Hashtable不建议在新代码中使用，不需要线程安全的场合可以�
 </div>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_源码剖析"><a class="anchor" href="#_源码剖析"></a>8. 源码剖析</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_源码剖析"><a class="anchor" href="#_源码剖析"></a>1.8. 源码剖析</h3>
-<div class="sect3">
-<h4 id="_重要属性"><a class="anchor" href="#_重要属性"></a>1.8.1. 重要属性</h4>
+<h3 id="_重要属性"><a class="anchor" href="#_重要属性"></a>8.1. 重要属性</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">/**
@@ -414,8 +440,8 @@ transient Node&lt;K,V&gt;[] table;</code></pre>
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_数据结构"><a class="anchor" href="#_数据结构"></a>1.8.2. 数据结构</h4>
+<div class="sect2">
+<h3 id="_数据结构"><a class="anchor" href="#_数据结构"></a>8.2. 数据结构</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -536,8 +562,8 @@ static class Node&lt;K,V&gt; implements Map.Entry&lt;K,V&gt; {
 </div>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_构造函数"><a class="anchor" href="#_构造函数"></a>1.8.3. 构造函数</h4>
+<div class="sect2">
+<h3 id="_构造函数"><a class="anchor" href="#_构造函数"></a>8.3. 构造函数</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -692,10 +718,10 @@ final void putMapEntries(Map&lt;? extends K, ? extends V&gt; m, boolean evict) {
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_hashmap存取机制"><a class="anchor" href="#_hashmap存取机制"></a>8.4. HashMap存取机制</h3>
 <div class="sect3">
-<h4 id="_hashmap存取机制"><a class="anchor" href="#_hashmap存取机制"></a>1.8.4. HashMap存取机制</h4>
-<div class="sect4">
-<h5 id="_1_添加元素"><a class="anchor" href="#_1_添加元素"></a>1.添加元素</h5>
+<h4 id="_1_添加元素"><a class="anchor" href="#_1_添加元素"></a>8.4.1. 1.添加元素</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public V put(K key, V value) {
@@ -952,8 +978,8 @@ key有可能是null，key为null时，hash值为0，放在数组的0位置。
 </div>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_获取元素"><a class="anchor" href="#_获取元素"></a>获取元素</h5>
+<div class="sect3">
+<h4 id="_获取元素"><a class="anchor" href="#_获取元素"></a>8.4.2. 获取元素</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">/**
@@ -1029,8 +1055,8 @@ get方法相对put要简单的多，分析源码可以看出hash算法的精髓�
 </table>
 </div>
 </div>
-<div class="sect4">
-<h5 id="_移除元素"><a class="anchor" href="#_移除元素"></a>移除元素</h5>
+<div class="sect3">
+<h4 id="_移除元素"><a class="anchor" href="#_移除元素"></a>8.4.3. 移除元素</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public V remove(Object key) {
@@ -1100,8 +1126,10 @@ public boolean remove(Object key, Object value) {
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_小结"><a class="anchor" href="#_小结"></a>1.9. 小结</h3>
+</div>
+<div class="sect1">
+<h2 id="_小结"><a class="anchor" href="#_小结"></a>9. 小结</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>本文对JDK1.8 HashMap的原代码进行了简要的分析，主要目的是了解其内部的
 存储机制和实现原理，从而达到在编程中更高效的使用HashMap。<br></p>
@@ -1125,8 +1153,10 @@ public boolean remove(Object key, Object value) {
 避免map进行频繁的扩容。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考"><a class="anchor" href="#_参考"></a>1.10. 参考</h3>
+</div>
+<div class="sect1">
+<h2 id="_参考"><a class="anchor" href="#_参考"></a>10. 参考</h2>
+<div class="sectionbody">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1147,15 +1177,19 @@ public boolean remove(Object key, Object value) {
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_jdk_1_8_的实现"><a class="anchor" href="#_jdk_1_8_的实现"></a>1.11. JDK 1.8 的实现</h3>
+</div>
+<div class="sect1">
+<h2 id="_jdk_1_8_的实现"><a class="anchor" href="#_jdk_1_8_的实现"></a>11. JDK 1.8 的实现</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><strong>继上一章介绍了HashMap的签名、数据结构以及存储原理之后，相信大家对HashMap有了更加深入的理解，在使用时也会得心应手。</strong><br>
 <strong>本章将继续介绍HashMap的使用，主要是分析HashMap的三种遍历方式。</strong></p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_hashmap遍历"><a class="anchor" href="#_hashmap遍历"></a>1.12. HashMap遍历</h3>
+</div>
+<div class="sect1">
+<h2 id="_hashmap遍历"><a class="anchor" href="#_hashmap遍历"></a>12. HashMap遍历</h2>
+<div class="sectionbody">
 <hr>
 <div class="ulist">
 <ul>
@@ -1335,8 +1369,10 @@ final class EntrySet extends AbstractSet&lt;Map.Entry&lt;K,V&gt;&gt; {
 <p>理解了 HashIterator 后再看 entrySet() 和 EntrySet 类就比较容易理解了，注意到 HashMap 的实现中使用了一个 entrySet 成员来缓存结果。 keySet() 和 values() 的实现也是类似的，只是 values() 返回的是 Collection ，因为值不能保证唯一性，而键是可以的。</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_注意"><a class="anchor" href="#_注意"></a>1.13. 注意</h3>
+</div>
+<div class="sect1">
+<h2 id="_注意"><a class="anchor" href="#_注意"></a>13. 注意</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><strong>对于Map中的Key是包装类型时，从map总get元素时要特别注意，get元素的key也必须是对应的包装类型，否者不能获得到对应的value。
 因为get方法内部通过key查找对应的value时，key用的是equals方法比较，所以key的数据类型也必须相同。<br>
@@ -1350,8 +1386,8 @@ map.put(123L,"java");
 String value = map.get(key);  // value是null？还是java？</code></pre>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_小结_2"><a class="anchor" href="#_小结_2"></a>1.13.1. 小结</h4>
+<div class="sect2">
+<h3 id="_小结_2"><a class="anchor" href="#_小结_2"></a>13.1. 小结</h3>
 <div class="paragraph">
 <p>有关HashMap的遍历就介绍这写，遍历HashMap一共有三种方式，一般遍历key和遍历Entry用的比较多，而且遍历Entry要比遍历
 key效率要更快些。对于HashMap的源码暂时就分析这么多，由于本人还是一个菜鸟，水平有限，有些地方也许没有分析的透彻，希望
@@ -1360,8 +1396,10 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_参考_2"><a class="anchor" href="#_参考_2"></a>1.14. 参考</h3>
+</div>
+<div class="sect1">
+<h2 id="_参考_2"><a class="anchor" href="#_参考_2"></a>14. 参考</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -1372,10 +1410,9 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 </div>
 </div>
-</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-04-30 10:46:16 +0800
+Last updated 2020-06-10 07:20:59 UTC
 </div>
 </div>
 </body>
