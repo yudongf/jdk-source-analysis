@@ -20,6 +20,7 @@
 <li><a href="#_jdk_原生_socket_编程">1. JDK 原生 Socket 编程</a></li>
 <li><a href="#_server_startup">2. Server startup</a></li>
 <li><a href="#_nioeventloop">3. <code>NioEventLoop</code></a></li>
+<li><a href="#_netty">4. Netty</a></li>
 </ul>
 </div>
 </div>
@@ -636,10 +637,440 @@ public class Test03 {
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_netty"><a class="anchor" href="#_netty"></a>4. Netty</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>创建 bossGroup 和 workerGroup
+. 创建两个线程组 bossGroup 和 workerGroup
+. bossGroup 只是处理连接请求，真正的客户端业务处理，会交给 workerGroup 完成
+. 两个都是无限循环
+. bossGroup 和 workerGroup 含有的子线程(NioEventLoop)的个数。默认 <code>CPU 内核数 * 2</code>，在 <code>io.netty.channel.MultithreadEventLoopGroup.DEFAULT_EVENT_LOOP_THREADS</code> 常量中定义</p>
+</div>
+<div class="sect2">
+<h3 id="_异步任务"><a class="anchor" href="#_异步任务"></a>4.1. 异步任务</h3>
+<div class="paragraph">
+<p>比如这里我们有一个非常耗时长的业务&#8594; 异步执行 &#8594; 提交该 channel 对应的 NIOEventLoop 的 taskQueue 中, 从 ctx &#8594; pipeline &#8594; eventLoop &#8594; taskQueue 可以看到提交的任务。</p>
+</div>
+<div class="listingblock">
+<div class="title">NettyServer</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.junit.jupiter.api.Test;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 17:28
+ */
+public class NettyServer {
+  /**
+   * 在 JDK 11 下启动错误： https://stackoverflow.com/a/57892679/951836
+   */
+  @Test
+  public void server() throws InterruptedException {
+    // 创建 bossGroup 和 workerGroup
+    // 1. 创建两个线程组 bossGroup 和 workerGroup
+    // 2. bossGroup 只是处理连接请求，真正的客户端业务处理，会交给 workerGroup 完成
+    // 3. 两个都是无限循环
+    // 4. bossGroup 和 workerGroup 含有的子线程(NioEventLoop)的个数
+    //    默认 CPU 内核数 * 2，在 io.netty.channel.MultithreadEventLoopGroup.DEFAULT_EVENT_LOOP_THREADS 常量中定义
+    NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+
+    try {
+      // 创建服务器端的启动对象，配置参数
+      ServerBootstrap bootstrap = new ServerBootstrap();
+      // 使用链式编程进行配置
+      bootstrap.group(bossGroup, workerGroup) // 设置两个 线程组
+        .channel(NioServerSocketChannel.class) // 使用 NioSocketChannel 作为服务器的通道实现
+        .option(ChannelOption.SO_BACKLOG, 128) // 设置线程队列得到连接个数
+        .childOption(ChannelOption.SO_KEEPALIVE, true) // 设置保持活动连接状态
+        .childHandler(new ChannelInitializer&lt;SocketChannel&gt;() { // 创建一个通道测试对象
+          // 给 pipeline 设置处理器
+          @Override
+          protected void initChannel(SocketChannel ch) throws Exception {
+            ch.pipeline().addLast(new NettyServerHandler());
+          }
+        }); // 给 workerGroup 的 EventLoop 对应的管道设置处理器
+      System.out.println("....服务器 is ready...");
+
+      // 绑定一个端口并且同步，生成一个 ChannelFuture 对象
+      // 启动服务器（并绑定端口）
+      ChannelFuture future = bootstrap.bind(11911).sync();
+
+      // 给 future 注册监听器
+      future.addListener(new ChannelFutureListener() {
+        @Override
+        public void operationComplete(ChannelFuture future) throws Exception {
+          if (future.isSuccess()) {
+            System.out.println("监听端口 11911 成功");
+          } else {
+            System.out.println("监听端口 11911 失败");
+          }
+        }
+      });
+
+
+      // 对关闭通道进行监听
+      future.channel().closeFuture().sync();
+
+      // TODO Netty 的异步模型
+    } finally {
+      bossGroup.shutdownGracefully();
+      workerGroup.shutdownGracefully();
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">NettyServerHandler</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.util.concurrent.TimeUnit;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
+ * 说明：
+ * 我们自定义一个 Handler 需要继承 netty 规定好的某个 HandlerAdapter
+ *
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 18:54
+ */
+public class NettyServerHandler extends ChannelInboundHandlerAdapter {
+  /**
+   * 读取数据实际（这里我们可以读取客户端发送的消息）
+   *
+   * @param ctx ChannelHandlerContext 上下文对象，含有管道 pipeline，通道 channel，地址
+   * @param msg 客户端发送的数据，默认是 Object
+   * @throws Exception
+   */
+  @Override
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+//    // 第一：正常情况
+//    System.out.println("服务器读取线程 " + Thread.currentThread().getName());
+//    System.out.println("server ctx = " + ctx);
+//    System.out.println("看看 channel 和 pipeline 的关系");
+//    // 从 ctx 可以拿到非常非常多的信息
+//    Channel channel = ctx.channel();
+//    ChannelPipeline pipeline = ctx.pipeline(); // 本质是一个双向链接
+//
+//    // 将 msg 转成一个 ByteBuf
+//    // ByteBuf 是 Netty 提供的，不是 NIO 提供的 ByteBuffer
+//    ByteBuf buf = (ByteBuf) msg;
+//    System.out.println("客户端发送消息是：" + buf.toString(UTF_8));
+//    System.out.println("客户端地址：" + channel.remoteAddress());
+
+
+    // 第二种情况：
+    // 比如这里我们有一个非常耗时长的业务-&gt; 异步执行 -&gt; 提交该 channel 对应的
+    // NIOEventLoop 的 taskQueue 中,
+    // 从 ctx -&gt; pipeline -&gt; eventLoop -&gt; taskQueue 可以看到提交的任务
+    ctx.channel().eventLoop().execute(() -&gt; {
+      try {
+        Thread.sleep(20 * 1000);
+        ctx.writeAndFlush(Unpooled.copiedBuffer("hello, 客户端~(&gt;^ω^&lt;)喵 2", UTF_8));
+        System.out.println("channel code=" + ctx.channel().hashCode());
+      } catch (Exception ex) {
+        System.out.println("发生异常" + ex.getMessage());
+      }
+    });
+
+    // 定时任务
+    ctx.channel().eventLoop().schedule(() -&gt; {
+      try {
+        Thread.sleep(20 * 1000);
+        ctx.writeAndFlush(Unpooled.copiedBuffer("hello, 客户端~(&gt;^ω^&lt;)喵 2", UTF_8));
+        System.out.println("channel code=" + ctx.channel().hashCode());
+      } catch (Exception ex) {
+        System.out.println("发生异常" + ex.getMessage());
+      }
+    }, 10, TimeUnit.SECONDS);
+
+    System.out.println(ctx);
+  }
+
+  /**
+   * 数据读取完毕
+   */
+  @Override
+  public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+    // 将数据写入到缓存，并刷新
+    // 一般讲，我们对这个发送的数据进行编码
+    ctx.writeAndFlush(Unpooled.copiedBuffer("Hello, D瓜哥~, pong -&gt; O(∩_∩)O哈哈~", UTF_8));
+  }
+
+  /**
+   * 处理异常，一般需要关闭通道
+   */
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    ctx.close();
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">NettyClient</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import org.junit.jupiter.api.Test;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 19:35
+ */
+public class NettyClient {
+  @Test
+  public void client() throws InterruptedException {
+    // 客户端只需要一个事件循环组即可
+    NioEventLoopGroup group = new NioEventLoopGroup();
+
+    try {
+      // 创建客户端启动对象
+      Bootstrap bootstrap = new Bootstrap();
+      // 设置相关参数
+      bootstrap.group(group) // 设置线程组
+        .channel(NioSocketChannel.class) // 设置客户端通讯通道的实现类
+        .handler(new ChannelInitializer&lt;SocketChannel&gt;() {
+          @Override
+          protected void initChannel(SocketChannel ch) throws Exception {
+            ch.pipeline().addLast(new NettyClientHandler()); // 加入自己的处理器
+          }
+        });
+      System.out.println("....客户端 OK ...");
+
+      // 启动客户端去连接服务器端
+      // 关于 ChannelFuture 还要分析，涉及到 Netty 的异步模型
+      ChannelFuture future = bootstrap.connect("127.0.0.1", 11911).sync();
+
+      // 给关闭通道进行监听
+      future.channel().closeFuture().sync();
+    } finally {
+      group.shutdownGracefully();
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">NettyClientHandler</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 19:41
+ */
+public class NettyClientHandler extends ChannelInboundHandlerAdapter {
+    /**
+     * 当通道就绪就会触发该方法
+     */
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("client " + ctx);
+        ctx.writeAndFlush(Unpooled.copiedBuffer("Hello, D瓜哥，ping -&gt; \\(^o^)/", UTF_8));
+    }
+
+    /**
+     * 当通道有读取事件时，会触发
+     */
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("");
+        ByteBuf buf = (ByteBuf) msg;
+        System.out.println("服务器回复的消息：" + buf.toString(UTF_8));
+        System.out.println("服务器的地址：" + ctx.channel().remoteAddress());
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Netty 的异步模型，就是基于 <code>ChannelFuture</code> 和 Listener 的监听回调模型。在入站、出站整个处理链上，可以注册各种各样的 Listener，以事件来驱动它们的调用。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http"><a class="anchor" href="#_http"></a>4.2. HTTP</h3>
+<div class="paragraph">
+<p><code>io.netty.handler.codec.http.DefaultHttpRequest</code> 是 <code>io.netty.handler.codec.http.HttpObject</code> 的一个实现类。</p>
+</div>
+<div class="paragraph">
+<p>为什么刷新一次浏览器，会有两个请求？ 浏览器增加了一次访问 ico 图标的请求。</p>
+</div>
+<div class="paragraph">
+<p>HTTP 协议用完就关闭，所以，每次 pipeline 都不一样。跟 TCP 不太一样。</p>
+</div>
+<div class="listingblock">
+<div class="title">TestServer</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.http;
+
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.junit.jupiter.api.Test;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 23:33
+ */
+public class TestServer {
+
+  @Test
+  public void test() throws InterruptedException {
+    NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+    try {
+      ServerBootstrap bootstrap = new ServerBootstrap();
+      bootstrap.group(bossGroup, workerGroup)
+        .channel(NioServerSocketChannel.class)
+        .childHandler(new TestServerInitializer());
+
+      ChannelFuture future = bootstrap.bind(11911).sync();
+
+      future.channel().closeFuture().sync();
+    } finally {
+      bossGroup.shutdownGracefully();
+      workerGroup.shutdownGracefully();
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">TestServerInitializer</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.http;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.HttpServerCodec;
+
+/**
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 23:33
+ */
+public class TestServerInitializer extends ChannelInitializer&lt;SocketChannel&gt; {
+  @Override
+  protected void initChannel(SocketChannel ch) throws Exception {
+    // 向管道加入处理器
+    // 得到管道
+    ChannelPipeline pipeline = ch.pipeline();
+    // 加入一个 Netty 提供的 HttpServerCodec
+    // HttpServerCodec 的说明
+    // 1. HttpServerCodec 是 Netty 提供的处理 HTTP 的编解码器
+    pipeline.addLast("MyHttpServerCodec", new HttpServerCodec());
+    // 2. 增加一个自定义的 Handler
+    pipeline.addLast("MyTestServerHandler", new TestServerHandler());
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">TestServerHandler</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.http;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
+
+import java.net.URI;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
+ * 说明
+ * &lt;p&gt;
+ * 1. SimpleChannelInboundHandler 就是 ChannelInboundHandlerAdapter 的子类
+ * 2. HttpObject 客户端和服务器端相互同学的数据被封装成 HttpObject。
+ *
+ * @author D瓜哥, https://www.diguage.com/
+ * @since 2020-06-27 23:33
+ */
+public class TestServerHandler extends SimpleChannelInboundHandler&lt;HttpObject&gt; {
+  /**
+   * 读取客户端数据
+   */
+  @Override
+  protected void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws Exception {
+    // 判断 msg 是不是一个 HttpRequest 请求
+    if (msg instanceof HttpRequest) {
+
+      System.out.println("pipeline hashcode=" + ctx.pipeline().hashCode()
+        + " TestServerHandler hash=" + this.hashCode());
+
+      System.out.println("msg 类型 " + msg.getClass());
+      System.out.println("客户端地址 " + ctx.channel().remoteAddress());
+
+      HttpRequest httpRequest = (HttpRequest) msg;
+      URI uri = new URI(httpRequest.uri());
+      if ("/favicon.ico".equals(uri.getPath())) {
+        System.out.println("请求了 favicon.ico，不做响应");
+        return;
+      }
+
+      // 回复信息给浏览器(http协议)
+      ByteBuf content = Unpooled.copiedBuffer("Hello, D瓜哥。我是服务器", UTF_8);
+      FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
+      response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+      response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());
+
+      // 将构建好的 response 返回
+      ctx.writeAndFlush(response);
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-11 08:48:25 UTC
+Last updated 2020-06-27 16:44:07 UTC
 </div>
 </div>
 </body>
