@@ -25,6 +25,9 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>在JDK1.2之后，Java线程模型已经确定了基于操作系统原生线程模型实现。</p>
 </div>
 <div class="imageblock">
@@ -41,7 +44,7 @@
 <div class="listingblock">
 <div class="title">Thread</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">public class Thread implements Runnable {
+<pre>public class Thread implements Runnable {
     // ……
     /**
      * A thread state.  A thread can be in one of the following states:
@@ -143,7 +146,7 @@
     }
 
     // ……
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="imageblock">
@@ -183,7 +186,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre>package com.diguage.truman.concurrent;
 
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
@@ -222,7 +225,7 @@ public class JolTest {
         System.out.println("--o[1]--------------");
         System.out.println(ClassLayout.parseInstance(new Object[]{new Object()}).toPrintable());
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -230,9 +233,9 @@ public class JolTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre>package com.diguage.truman.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -652,7 +655,7 @@ public class ThreadTest {
         LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(30));
         System.out.println(account.money);
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -703,7 +706,7 @@ public class ThreadTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

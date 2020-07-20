@@ -27,13 +27,16 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>"Count Down" 在英语中意为倒计数，一个典型场景就是火箭🚀发射时的倒计时。它允许一个或多个线程等待其他线程完成操作。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre>package com.diguage.truman.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -87,7 +90,7 @@ public class CountDownLatchTest {
             }
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -98,7 +101,7 @@ public class CountDownLatchTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Synchronization control For CountDownLatch.
  * Uses AQS state to represent count.
  */
@@ -130,7 +133,7 @@ private static final class Sync extends AbstractQueuedSynchronizer {
     }
 }
 
-private final Sync sync;</code></pre>
+private final Sync sync;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -143,7 +146,7 @@ private final Sync sync;</code></pre>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Causes the current thread to wait until the latch has counted down to
  * zero, unless the thread is {@linkplain Thread#interrupt interrupted}.
  *
@@ -172,7 +175,7 @@ private final Sync sync;</code></pre>
  */
 public void await() throws InterruptedException {
     sync.acquireSharedInterruptibly(1);
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -181,7 +184,7 @@ public void await() throws InterruptedException {
 <div class="listingblock">
 <div class="title">AbstractQueuedSynchronizer</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    /**
+<pre>    /**
      * Acquires in shared mode, aborting if interrupted.  Implemented
      * by first checking interrupt status, then invoking at least once
      * {@link #tryAcquireShared}, returning on success.  Otherwise the
@@ -200,7 +203,7 @@ public void await() throws InterruptedException {
             throw new InterruptedException();
         if (tryAcquireShared(arg) &lt; 0)
             doAcquireSharedInterruptibly(arg);
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -223,7 +226,7 @@ public void await() throws InterruptedException {
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Decrements the count of the latch, releasing all waiting threads if
  * the count reaches zero.
  *
@@ -235,7 +238,7 @@ public void await() throws InterruptedException {
  */
 public void countDown() {
     sync.releaseShared(1);
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -244,7 +247,7 @@ public void countDown() {
 <div class="listingblock">
 <div class="title">AbstractQueuedSynchronizer</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    /**
+<pre>    /**
      * Releases in shared mode.  Implemented by unblocking one or more
      * threads if {@link #tryReleaseShared} returns true.
      *
@@ -259,7 +262,7 @@ public void countDown() {
             return true;
         }
         return false;
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -303,7 +306,7 @@ public void countDown() {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

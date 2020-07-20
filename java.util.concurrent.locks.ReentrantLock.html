@@ -25,6 +25,9 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p><code>ReentrantLock</code> 是重入锁，也是排他锁。</p>
 </div>
 </div>
@@ -75,9 +78,9 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre>package com.diguage.truman.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.locks.Condition;
@@ -245,12 +248,12 @@ public class ReentrantLockTest {
         Thread.sleep(15000);
         System.out.println("DONE");
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    /**
+<pre>    /**
      * Acquires in exclusive mode, aborting if interrupted.
      * Implemented by first checking interrupt status, then invoking
      * at least once {@link #tryAcquire}, returning on
@@ -270,7 +273,7 @@ public class ReentrantLockTest {
             throw new InterruptedException();
         if (!tryAcquire(arg))
             doAcquireInterruptibly(arg);
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -281,7 +284,7 @@ public class ReentrantLockTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

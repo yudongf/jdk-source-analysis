@@ -55,85 +55,165 @@
 <div class="listingblock">
 <div class="title">java.util.Collection</div>
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public interface Collection&lt;E&gt; extends Iterable&lt;E&gt; {
-    // Query Operations
+<pre class="rouge highlight"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+</pre></td><td class="code"><pre><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Collection</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="kd">extends</span> <span class="nc">Iterable</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="c1">// Query Operations</span>
 
-    int size();
+    <span class="kt">int</span> <span class="nf">size</span><span class="o">();</span>
 
-    boolean isEmpty();
+    <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">();</span>
 
-    boolean contains(Object o);
+    <span class="kt">boolean</span> <span class="nf">contains</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">);</span>
 
-    Iterator&lt;E&gt; iterator();
+    <span class="nc">Iterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">();</span>
 
-    Object[] toArray();
+    <span class="nc">Object</span><span class="o">[]</span> <span class="nf">toArray</span><span class="o">();</span>
 
-    &lt;T&gt; T[] toArray(T[] a);
+    <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span><span class="o">[]</span> <span class="nf">toArray</span><span class="o">(</span><span class="no">T</span><span class="o">[]</span> <span class="n">a</span><span class="o">);</span>
 
-    // Modification Operations
+    <span class="c1">// Modification Operations</span>
 
-    boolean add(E e);
+    <span class="kt">boolean</span> <span class="nf">add</span><span class="o">(</span><span class="no">E</span> <span class="n">e</span><span class="o">);</span>
 
-    boolean remove(Object o);
+    <span class="kt">boolean</span> <span class="nf">remove</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">);</span>
 
 
-    // Bulk Operations
+    <span class="c1">// Bulk Operations</span>
 
-    boolean containsAll(Collection&lt;?&gt; c);
+    <span class="kt">boolean</span> <span class="nf">containsAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?&gt;</span> <span class="n">c</span><span class="o">);</span>
 
-    boolean addAll(Collection&lt;? extends E&gt; c);
+    <span class="kt">boolean</span> <span class="nf">addAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">c</span><span class="o">);</span>
 
-    boolean removeAll(Collection&lt;?&gt; c);
+    <span class="kt">boolean</span> <span class="nf">removeAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?&gt;</span> <span class="n">c</span><span class="o">);</span>
 
-    /**
+    <span class="cm">/**
      * @since 1.8
-     */
-    default boolean removeIf(Predicate&lt;? super E&gt; filter) {
-        Objects.requireNonNull(filter);
-        boolean removed = false;
-        final Iterator&lt;E&gt; each = iterator();
-        while (each.hasNext()) {
-            if (filter.test(each.next())) {
-                each.remove();
-                removed = true;
-            }
-        }
-        return removed;
-    }
+     */</span>
+    <span class="k">default</span> <span class="kt">boolean</span> <span class="nf">removeIf</span><span class="o">(</span><span class="nc">Predicate</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">filter</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">filter</span><span class="o">);</span>
+        <span class="kt">boolean</span> <span class="n">removed</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="kd">final</span> <span class="nc">Iterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">each</span> <span class="o">=</span> <span class="n">iterator</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">each</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">filter</span><span class="o">.</span><span class="na">test</span><span class="o">(</span><span class="n">each</span><span class="o">.</span><span class="na">next</span><span class="o">()))</span> <span class="o">{</span>
+                <span class="n">each</span><span class="o">.</span><span class="na">remove</span><span class="o">();</span>
+                <span class="n">removed</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">removed</span><span class="o">;</span>
+    <span class="o">}</span>
 
-    boolean retainAll(Collection&lt;?&gt; c);
+    <span class="kt">boolean</span> <span class="nf">retainAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?&gt;</span> <span class="n">c</span><span class="o">);</span>
 
-    void clear();
+    <span class="kt">void</span> <span class="nf">clear</span><span class="o">();</span>
 
 
-    // Comparison and hashing
+    <span class="c1">// Comparison and hashing</span>
 
-    boolean equals(Object o);
+    <span class="kt">boolean</span> <span class="nf">equals</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">);</span>
 
-    int hashCode();
+    <span class="kt">int</span> <span class="nf">hashCode</span><span class="o">();</span>
 
-    /**
+    <span class="cm">/**
      * @since 1.8
-     */
-    @Override
-    default Spliterator&lt;E&gt; spliterator() {
-        return Spliterators.spliterator(this, 0);
-    }
+     */</span>
+    <span class="nd">@Override</span>
+    <span class="k">default</span> <span class="nc">Spliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">spliterator</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nc">Spliterators</span><span class="o">.</span><span class="na">spliterator</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+    <span class="o">}</span>
 
-    /**
+    <span class="cm">/**
      * @since 1.8
-     */
-    default Stream&lt;E&gt; stream() {
-        return StreamSupport.stream(spliterator(), false);
-    }
+     */</span>
+    <span class="k">default</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">stream</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nc">StreamSupport</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">spliterator</span><span class="o">(),</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="o">}</span>
 
-    /**
+    <span class="cm">/**
      * @since 1.8
-     */
-    default Stream&lt;E&gt; parallelStream() {
-        return StreamSupport.stream(spliterator(), true);
-    }
-}</code></pre>
+     */</span>
+    <span class="k">default</span> <span class="nc">Stream</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">parallelStream</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nc">StreamSupport</span><span class="o">.</span><span class="na">stream</span><span class="o">(</span><span class="n">spliterator</span><span class="o">(),</span> <span class="kc">true</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 </div>
@@ -141,8 +221,9 @@
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
+<link rel="stylesheet" href="assets/css/rouge-monokai.css">
 </body>
 </html>

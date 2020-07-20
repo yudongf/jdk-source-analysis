@@ -30,6 +30,9 @@
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10.1123%;">
@@ -88,7 +91,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    /**
+<pre>    /**
      * Executes the given task sometime in the future.  The task
      * may execute in a new thread or in an existing pooled thread.
      *
@@ -163,7 +166,7 @@
         else if (!addWorker(command, false))
             // 执行拒绝策略 -- 结束
             reject(command);
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -353,7 +356,7 @@
 <div class="listingblock">
 <div class="title"><a href="https://github.com/apache/tomcat/blob/master/java/org/apache/tomcat/util/threads/TaskQueue.java" class="bare">https://github.com/apache/tomcat/blob/master/java/org/apache/tomcat/util/threads/TaskQueue.java</a></div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">public class TaskQueue extends LinkedBlockingQueue&lt;Runnable&gt; {
+<pre>public class TaskQueue extends LinkedBlockingQueue&lt;Runnable&gt; {
 
     private transient volatile ThreadPoolExecutor parent = null;
 
@@ -370,7 +373,7 @@
         //if we reached here, we need to add it to the queue
         return super.offer(o);
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -439,9 +442,9 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre>package com.diguage.truman.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -588,7 +591,7 @@ public class ThreadPoolExecutorTest {
             return this.name;
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 </div>
@@ -698,7 +701,7 @@ public class ThreadPoolExecutorTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

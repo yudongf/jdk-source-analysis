@@ -25,6 +25,9 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>属性操作方法 <code>Field#set(Object obj, Object value)</code> 和 <code>Field#get(Object obj)</code> 底层都是委托到 <code>jdk.internal.reflect.FieldAccessor</code> 实现。</p>
 </div>
 <div class="paragraph">
@@ -33,7 +36,7 @@
 <div class="listingblock">
 <div class="title">jdk.internal.reflect.ReflectionFactory</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    public FieldAccessor newFieldAccessor(Field field, boolean override) {
+<pre>    public FieldAccessor newFieldAccessor(Field field, boolean override) {
         checkInitted();
 
         Field root = langReflectAccess.getRoot(field);
@@ -45,7 +48,7 @@
             }
         }
         return UnsafeFieldAccessorFactory.newFieldAccessor(field, override);
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -74,7 +77,7 @@
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

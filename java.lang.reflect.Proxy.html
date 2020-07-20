@@ -26,11 +26,14 @@
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.reflect;
+<pre>package com.diguage.truman.reflect;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -121,7 +124,7 @@ public class ProxyTest {
                 .getMethodName();
         return methodName;
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="imageblock">
@@ -154,7 +157,7 @@ public class ProxyTest {
 <div class="listingblock">
 <div class="title">反编译的示例类</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.sun.proxy;
+<pre>package com.sun.proxy;
 
 import com.diguage.proxy.UserService;
 import java.lang.reflect.InvocationHandler;
@@ -226,7 +229,7 @@ public final class $Proxy0 extends Proxy implements UserService {
             throw new NoClassDefFoundError(var3.getMessage());
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -268,7 +271,7 @@ public final class $Proxy0 extends Proxy implements UserService {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.reflect;
+<pre>package com.diguage.truman.reflect;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -329,7 +332,7 @@ public class ProxyAnnoTest {
         Diguage anno2 = AnnoTest2.class.getAnnotation(Diguage.class);
         System.out.println(anno2 + " : " + anno2.hashCode());
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -435,7 +438,7 @@ public class ProxyAnnoTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

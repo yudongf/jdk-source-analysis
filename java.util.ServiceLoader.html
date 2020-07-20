@@ -24,9 +24,12 @@
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
 /**
  * @author D瓜哥, https://www.diguage.com/
@@ -34,12 +37,12 @@
  */
 public interface ServiceLoaderSay {
     void say();
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
 /**
  * @author D瓜哥, https://www.diguage.com/
@@ -50,12 +53,12 @@ public class ServiceLoaderSayHello implements ServiceLoaderSay {
     public void say() {
         System.out.println("Hello, https://www.diguage.com/");
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
 /**
  * @author D瓜哥, https://www.diguage.com/
@@ -66,14 +69,14 @@ public class ServiceLoaderSayGoodbye implements ServiceLoaderSay {
     public void say() {
         System.out.println("Goodbye, https://www.diguage.com/");
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -93,7 +96,7 @@ public class ServiceLoaderTest {
             say.say();
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -126,7 +129,7 @@ public class ServiceLoaderTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

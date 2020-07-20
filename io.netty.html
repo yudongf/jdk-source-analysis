@@ -28,6 +28,9 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>Netty 和 <code>ServerSocketChannel</code> 可以互相操作吗？</p>
 </div>
 </div>
@@ -40,9 +43,9 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty;
+<pre>package com.diguage.truman.netty;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -156,7 +159,7 @@ public class ServerSocketTest {
             }
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="ulist">
@@ -176,7 +179,7 @@ public class ServerSocketTest {
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty;
+<pre>package com.diguage.truman.netty;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
@@ -194,7 +197,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
@@ -298,7 +301,7 @@ public class Test03 {
             System.out.println("Handl");
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -655,7 +658,7 @@ public class Test03 {
 <div class="listingblock">
 <div class="title">NettyServer</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+<pre>package com.diguage.truman.netty.simple;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -729,13 +732,13 @@ public class NettyServer {
       workerGroup.shutdownGracefully();
     }
   }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">NettyServerHandler</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+<pre>package com.diguage.truman.netty.simple;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -823,13 +826,13 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
   public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
     ctx.close();
   }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">NettyClient</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+<pre>package com.diguage.truman.netty.simple;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -873,13 +876,13 @@ public class NettyClient {
       group.shutdownGracefully();
     }
   }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">NettyClientHandler</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.simple;
+<pre>package com.diguage.truman.netty.simple;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -912,7 +915,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("服务器回复的消息：" + buf.toString(UTF_8));
         System.out.println("服务器的地址：" + ctx.channel().remoteAddress());
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -933,7 +936,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 <div class="listingblock">
 <div class="title">TestServer</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.http;
+<pre>package com.diguage.truman.netty.http;
 
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -966,13 +969,13 @@ public class TestServer {
       workerGroup.shutdownGracefully();
     }
   }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">TestServerInitializer</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.http;
+<pre>package com.diguage.truman.netty.http;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -996,13 +999,13 @@ public class TestServerInitializer extends ChannelInitializer&lt;SocketChannel&g
     // 2. 增加一个自定义的 Handler
     pipeline.addLast("MyTestServerHandler", new TestServerHandler());
   }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title">TestServerHandler</div>
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.netty.http;
+<pre>package com.diguage.truman.netty.http;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -1061,7 +1064,7 @@ public class TestServerHandler extends SimpleChannelInboundHandler&lt;HttpObject
       ctx.writeAndFlush(response);
     }
   }
-}</code></pre>
+}</pre>
 </div>
 </div>
 </div>
@@ -1070,7 +1073,7 @@ public class TestServerHandler extends SimpleChannelInboundHandler&lt;HttpObject
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

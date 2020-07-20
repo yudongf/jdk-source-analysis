@@ -31,6 +31,9 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>对于每种抽象数据类型并不存在什么法则来告诉我们必须要有哪些操作，这是一个设计决策。--《数据结构与算法分析》</p>
 </div>
 </div>
@@ -82,7 +85,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Default initial capacity.
  */
 private static final int DEFAULT_CAPACITY = 10;
@@ -158,7 +161,7 @@ public ArrayList(Collection&lt;? extends E&gt; c) {
         // replace with empty array.
         this.elementData = EMPTY_ELEMENTDATA;
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -190,7 +193,7 @@ public ArrayList(Collection&lt;? extends E&gt; c) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -226,7 +229,7 @@ public class ArrayListBaseTest {
             e.printStackTrace();
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -234,7 +237,7 @@ public class ArrayListBaseTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+<pre>    @Test
     public void testAddAtTail() {
         int initialCapacity = 8;
         ArrayList&lt;Integer&gt; integers = new ArrayList&lt;&gt;(initialCapacity);
@@ -242,7 +245,7 @@ public class ArrayListBaseTest {
             xray(integers);
             integers.add(i);
         }
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -250,7 +253,7 @@ public class ArrayListBaseTest {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Increases the capacity to ensure that it can hold at least the
  * number of elements specified by the minimum capacity argument.
  *
@@ -321,7 +324,7 @@ public boolean add(E e) {
     modCount++;
     add(e, elementData, size);
     return true;
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -332,7 +335,7 @@ public boolean add(E e) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">    @Test
+<pre>    @Test
     public void testAddAtHeader() {
         int initialCapacity = 8;
         ArrayList&lt;Integer&gt; integers = new ArrayList&lt;&gt;(initialCapacity);
@@ -340,12 +343,12 @@ public boolean add(E e) {
             xray(integers);
             integers.add(0, i);
         }
-    }</code></pre>
+    }</pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Inserts the specified element at the specified position in this
  * list. Shifts the element currently at that position (if any) and
  * any subsequent elements to the right (adds one to their indices).
@@ -374,7 +377,7 @@ public void add(int index, E element) {
 private void rangeCheckForAdd(int index) {
     if (index &gt; size || index &lt; 0)
         throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -382,7 +385,7 @@ private void rangeCheckForAdd(int index) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Appends all of the elements in the specified collection to the end of
  * this list, in the order that they are returned by the
  * specified collection's Iterator.  The behavior of this operation is
@@ -446,7 +449,7 @@ public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
     System.arraycopy(a, 0, elementData, index, numNew);
     size = s + numNew;
     return true;
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -487,7 +490,7 @@ public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
 import org.openjdk.jmh.annotations.*;
 
@@ -549,7 +552,7 @@ public class ArrayListIteratorSpeedTest {
             forEachValue = integer;
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -596,61 +599,61 @@ why?
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">//更新
-public E set(int index, E element) {
-	rangeCheck(index);
+<pre class="rouge highlight"><code data-lang="java"><span class="c1">//更新</span>
+<span class="kd">public</span> <span class="no">E</span> <span class="nf">set</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="no">E</span> <span class="n">element</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">rangeCheck</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
 
-	E oldValue = elementData(index);
-	elementData[index] = element;
-	return oldValue;
-}
-//查找
+	<span class="no">E</span> <span class="n">oldValue</span> <span class="o">=</span> <span class="n">elementData</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+	<span class="n">elementData</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">element</span><span class="o">;</span>
+	<span class="k">return</span> <span class="n">oldValue</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="c1">//查找</span>
 
-public E get(int index) {
-	rangeCheck(index);
+<span class="kd">public</span> <span class="no">E</span> <span class="nf">get</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">rangeCheck</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
 
-	return elementData(index);
-}
+	<span class="k">return</span> <span class="nf">elementData</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+<span class="o">}</span>
 
-//是否包含
-public boolean contains(Object o) {
-	return indexOf(o) &gt;= 0;
-}
+<span class="c1">//是否包含</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">contains</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="nf">indexOf</span><span class="o">(</span><span class="n">o</span><span class="o">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="o">}</span>
 
-public int indexOf(Object o) {
-	if (o == null) {
-		for (int i = 0; i &lt; size; i++)
-			if (elementData[i]==null)
-				return i;
-	} else {
-		for (int i = 0; i &lt; size; i++)
-			if (o.equals(elementData[i]))
-				return i;
-	}
-	return -1;
-}
-//反向查找
-public int lastIndexOf(Object o) {
-	if (o == null) {
-		for (int i = size-1; i &gt;= 0; i--)
-			if (elementData[i]==null)
-				return i;
-	} else {
-		for (int i = size-1; i &gt;= 0; i--)
-			if (o.equals(elementData[i]))
-				return i;
-	}
-	return -1;
-}
-//容量判断
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">indexOf</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="kc">null</span><span class="o">)</span>
+				<span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+	<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]))</span>
+				<span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="c1">//反向查找</span>
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">lastIndexOf</span><span class="o">(</span><span class="nc">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">o</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]==</span><span class="kc">null</span><span class="o">)</span>
+				<span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+	<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]))</span>
+				<span class="k">return</span> <span class="n">i</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="c1">//容量判断</span>
 
-public int size() {
-	return size;
-}
+<span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="n">size</span><span class="o">;</span>
+<span class="o">}</span>
 
-public boolean isEmpty() {
-	return size == 0;
-}</code></pre>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="o">;</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -667,174 +670,174 @@ public boolean isEmpty() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public Object clone() {
-	try {
-		ArrayList&lt;?&gt; v = (ArrayList&lt;?&gt;) super.clone();
-		v.elementData = Arrays.copyOf(elementData, size);
-		v.modCount = 0;
-		return v;
-	} catch (CloneNotSupportedException e) {
-		// this shouldn't happen, since we are Cloneable
-		throw new InternalError(e);
-	}
-}
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">public</span> <span class="nc">Object</span> <span class="nf">clone</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">try</span> <span class="o">{</span>
+		<span class="nc">ArrayList</span><span class="o">&lt;?&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="o">(</span><span class="nc">ArrayList</span><span class="o">&lt;?&gt;)</span> <span class="kd">super</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+		<span class="n">v</span><span class="o">.</span><span class="na">elementData</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">size</span><span class="o">);</span>
+		<span class="n">v</span><span class="o">.</span><span class="na">modCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+		<span class="k">return</span> <span class="n">v</span><span class="o">;</span>
+	<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">CloneNotSupportedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+		<span class="c1">// this shouldn't happen, since we are Cloneable</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">InternalError</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span>
 
-public Object[] toArray() {
-	return Arrays.copyOf(elementData, size);
-}
+<span class="kd">public</span> <span class="nc">Object</span><span class="o">[]</span> <span class="nf">toArray</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">size</span><span class="o">);</span>
+<span class="o">}</span>
 
-@SuppressWarnings("unchecked")
-public &lt;T&gt; T[] toArray(T[] a) {
-	if (a.length &lt; size)
-		// Make a new array of a's runtime type, but my contents:
-		return (T[]) Arrays.copyOf(elementData, size, a.getClass());
-	System.arraycopy(elementData, 0, a, 0, size);
-	if (a.length &gt; size)
-		a[size] = null;
-	return a;
-}
+<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="o">&lt;</span><span class="no">T</span><span class="o">&gt;</span> <span class="no">T</span><span class="o">[]</span> <span class="nf">toArray</span><span class="o">(</span><span class="no">T</span><span class="o">[]</span> <span class="n">a</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">)</span>
+		<span class="c1">// Make a new array of a's runtime type, but my contents:</span>
+		<span class="k">return</span> <span class="o">(</span><span class="no">T</span><span class="o">[])</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+	<span class="nc">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">a</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">size</span><span class="o">);</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="n">size</span><span class="o">)</span>
+		<span class="n">a</span><span class="o">[</span><span class="n">size</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+	<span class="k">return</span> <span class="n">a</span><span class="o">;</span>
+<span class="o">}</span>
 
-// Positional Access Operations
-//得到指定索引处的元素
-@SuppressWarnings("unchecked")
-E elementData(int index) {
-	return (E) elementData[index];
-}
-//清空
-public void clear() {
-	modCount++;
+<span class="c1">// Positional Access Operations</span>
+<span class="c1">//得到指定索引处的元素</span>
+<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+<span class="no">E</span> <span class="nf">elementData</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">index</span><span class="o">];</span>
+<span class="o">}</span>
+<span class="c1">//清空</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">clear</span><span class="o">()</span> <span class="o">{</span>
+	<span class="n">modCount</span><span class="o">++;</span>
 
-	// clear to let GC do its work
-	for (int i = 0; i &lt; size; i++)
-		elementData[i] = null;
+	<span class="c1">// clear to let GC do its work</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+		<span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 
-	size = 0;
-}
+	<span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<span class="o">}</span>
 
 
-protected void removeRange(int fromIndex, int toIndex) {
-	modCount++;
-	int numMoved = size - toIndex;
-	System.arraycopy(elementData, toIndex, elementData, fromIndex,
-					 numMoved);
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">removeRange</span><span class="o">(</span><span class="kt">int</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">toIndex</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">modCount</span><span class="o">++;</span>
+	<span class="kt">int</span> <span class="n">numMoved</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="n">toIndex</span><span class="o">;</span>
+	<span class="nc">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">toIndex</span><span class="o">,</span> <span class="n">elementData</span><span class="o">,</span> <span class="n">fromIndex</span><span class="o">,</span>
+					 <span class="n">numMoved</span><span class="o">);</span>
 
-	// clear to let GC do its work
-	int newSize = size - (toIndex-fromIndex);
-	for (int i = newSize; i &lt; size; i++) {
-		elementData[i] = null;
-	}
-	size = newSize;
-}
+	<span class="c1">// clear to let GC do its work</span>
+	<span class="kt">int</span> <span class="n">newSize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="o">(</span><span class="n">toIndex</span><span class="o">-</span><span class="n">fromIndex</span><span class="o">);</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">newSize</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+	<span class="o">}</span>
+	<span class="n">size</span> <span class="o">=</span> <span class="n">newSize</span><span class="o">;</span>
+<span class="o">}</span>
 
- //检查数否超出数组长度 用于添加元素时
-private void rangeCheck(int index) {
-	if (index &gt;= size)
-		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-}
-//检查是否溢出
-private void rangeCheckForAdd(int index) {
-	if (index &gt; size || index &lt; 0)
-		throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-}
+ <span class="c1">//检查数否超出数组长度 用于添加元素时</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">rangeCheck</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="n">outOfBoundsMsg</span><span class="o">(</span><span class="n">index</span><span class="o">));</span>
+<span class="o">}</span>
+<span class="c1">//检查是否溢出</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">rangeCheckForAdd</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&gt;</span> <span class="n">size</span> <span class="o">||</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="n">outOfBoundsMsg</span><span class="o">(</span><span class="n">index</span><span class="o">));</span>
+<span class="o">}</span>
 
-private String outOfBoundsMsg(int index) {
-	return "Index: "+index+", Size: "+size;
-}
-//删除指定集合的元素
-public boolean removeAll(Collection&lt;?&gt; c) {
-	Objects.requireNonNull(c);
-	return batchRemove(c, false);
-}
-//仅保留指定集合的元素
-public boolean retainAll(Collection&lt;?&gt; c) {
-	Objects.requireNonNull(c);
-	return batchRemove(c, true);
-}
-* @param complement true时从数组保留指定集合中元素的值，为false时从数组删除指定集合中元素的值。
-* @return 数组中重复的元素都会被删除(而不是仅删除一次或几次)，有任何删除操作都会返回true
-private boolean batchRemove(Collection&lt;?&gt; c, boolean complement) {
-	final Object[] elementData = this.elementData;
-	int r = 0, w = 0;
-	boolean modified = false;
-	try {
-		for (; r &lt; size; r++)
-			if (c.contains(elementData[r]) == complement)
-				elementData[w++] = elementData[r];
-	} finally {
-		// Preserve behavioral compatibility with AbstractCollection,
-		// even if c.contains() throws.
-		if (r != size) {
-			System.arraycopy(elementData, r,
-							 elementData, w,
-							 size - r);
-			w += size - r;
-		}
-		if (w != size) {
-			// clear to let GC do its work
-			for (int i = w; i &lt; size; i++)
-				elementData[i] = null;
-			modCount += size - w;
-			size = w;
-			modified = true;
-		}
-	}
-	return modified;
-}
- //保存数组实例的状态到一个流（即它序列化）。写入过程数组被更改会抛出异常
-private void writeObject(java.io.ObjectOutputStream s)
-	throws java.io.IOException{
-	// Write out element count, and any hidden stuff
-	int expectedModCount = modCount;
-	s.defaultWriteObject();
+<span class="kd">private</span> <span class="nc">String</span> <span class="nf">outOfBoundsMsg</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="s">"Index: "</span><span class="o">+</span><span class="n">index</span><span class="o">+</span><span class="s">", Size: "</span><span class="o">+</span><span class="n">size</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="c1">//删除指定集合的元素</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">removeAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?&gt;</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+	<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+	<span class="k">return</span> <span class="nf">batchRemove</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="c1">//仅保留指定集合的元素</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">retainAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?&gt;</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+	<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">c</span><span class="o">);</span>
+	<span class="k">return</span> <span class="nf">batchRemove</span><span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="o">*</span> <span class="nd">@param</span> <span class="n">complement</span> <span class="n">true时从数组保留指定集合中元素的值</span><span class="err">，</span><span class="n">为false时从数组删除指定集合中元素的值</span><span class="err">。</span>
+<span class="o">*</span> <span class="nd">@return</span> <span class="n">数组中重复的元素都会被删除</span><span class="o">(</span><span class="n">而不是仅删除一次或几次</span><span class="o">)</span><span class="err">，</span><span class="n">有任何删除操作都会返回true</span>
+<span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">batchRemove</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?&gt;</span> <span class="n">c</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">complement</span><span class="o">)</span> <span class="o">{</span>
+	<span class="kd">final</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+	<span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="kt">boolean</span> <span class="n">modified</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+	<span class="k">try</span> <span class="o">{</span>
+		<span class="k">for</span> <span class="o">(;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">r</span><span class="o">++)</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">r</span><span class="o">])</span> <span class="o">==</span> <span class="n">complement</span><span class="o">)</span>
+				<span class="n">elementData</span><span class="o">[</span><span class="n">w</span><span class="o">++]</span> <span class="o">=</span> <span class="n">elementData</span><span class="o">[</span><span class="n">r</span><span class="o">];</span>
+	<span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+		<span class="c1">// Preserve behavioral compatibility with AbstractCollection,</span>
+		<span class="c1">// even if c.contains() throws.</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">r</span> <span class="o">!=</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+			<span class="nc">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">elementData</span><span class="o">,</span> <span class="n">r</span><span class="o">,</span>
+							 <span class="n">elementData</span><span class="o">,</span> <span class="n">w</span><span class="o">,</span>
+							 <span class="n">size</span> <span class="o">-</span> <span class="n">r</span><span class="o">);</span>
+			<span class="n">w</span> <span class="o">+=</span> <span class="n">size</span> <span class="o">-</span> <span class="n">r</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">w</span> <span class="o">!=</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+			<span class="c1">// clear to let GC do its work</span>
+			<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">w</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+				<span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+			<span class="n">modCount</span> <span class="o">+=</span> <span class="n">size</span> <span class="o">-</span> <span class="n">w</span><span class="o">;</span>
+			<span class="n">size</span> <span class="o">=</span> <span class="n">w</span><span class="o">;</span>
+			<span class="n">modified</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+	<span class="k">return</span> <span class="n">modified</span><span class="o">;</span>
+<span class="o">}</span>
+ <span class="c1">//保存数组实例的状态到一个流（即它序列化）。写入过程数组被更改会抛出异常</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">writeObject</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">ObjectOutputStream</span> <span class="n">s</span><span class="o">)</span>
+	<span class="kd">throws</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">IOException</span><span class="o">{</span>
+	<span class="c1">// Write out element count, and any hidden stuff</span>
+	<span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+	<span class="n">s</span><span class="o">.</span><span class="na">defaultWriteObject</span><span class="o">();</span>
 
-	// Write out size as capacity for behavioural compatibility with clone()
-	s.writeInt(size);
+	<span class="c1">// Write out size as capacity for behavioural compatibility with clone()</span>
+	<span class="n">s</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">size</span><span class="o">);</span>
 
-	// Write out all elements in the proper order.
-	for (int i=0; i&lt;size; i++) {
-		s.writeObject(elementData[i]);
-	}
+	<span class="c1">// Write out all elements in the proper order.</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="n">s</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+	<span class="o">}</span>
 
-	if (modCount != expectedModCount) {
-		throw new ConcurrentModificationException();
-	}
-}
-//上面是写，这个就是读了。
-private void readObject(java.io.ObjectInputStream s)
-	throws java.io.IOException, ClassNotFoundException {
-	elementData = EMPTY_ELEMENTDATA;
+	<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">//上面是写，这个就是读了。</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">readObject</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">ObjectInputStream</span> <span class="n">s</span><span class="o">)</span>
+	<span class="kd">throws</span> <span class="n">java</span><span class="o">.</span><span class="na">io</span><span class="o">.</span><span class="na">IOException</span><span class="o">,</span> <span class="nc">ClassNotFoundException</span> <span class="o">{</span>
+	<span class="n">elementData</span> <span class="o">=</span> <span class="no">EMPTY_ELEMENTDATA</span><span class="o">;</span>
 
-	// Read in size, and any hidden stuff
-	s.defaultReadObject();
+	<span class="c1">// Read in size, and any hidden stuff</span>
+	<span class="n">s</span><span class="o">.</span><span class="na">defaultReadObject</span><span class="o">();</span>
 
-	// Read in capacity
-	s.readInt(); // ignored
+	<span class="c1">// Read in capacity</span>
+	<span class="n">s</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span> <span class="c1">// ignored</span>
 
-	if (size &gt; 0) {
-		// be like clone(), allocate array based upon size not capacity
-		ensureCapacityInternal(size);
+	<span class="k">if</span> <span class="o">(</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+		<span class="c1">// be like clone(), allocate array based upon size not capacity</span>
+		<span class="n">ensureCapacityInternal</span><span class="o">(</span><span class="n">size</span><span class="o">);</span>
 
-		Object[] a = elementData;
-		// Read in all elements in the proper order.
-		for (int i=0; i&lt;size; i++) {
-			a[i] = s.readObject();
-		}
-	}
-}
+		<span class="nc">Object</span><span class="o">[]</span> <span class="n">a</span> <span class="o">=</span> <span class="n">elementData</span><span class="o">;</span>
+		<span class="c1">// Read in all elements in the proper order.</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+			<span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
 
-public ListIterator&lt;E&gt; listIterator(int index) {
-	if (index &lt; 0 || index &gt; size)
-		throw new IndexOutOfBoundsException("Index: "+index);
-	return new ListItr(index);
-}
-实现Iterable
-public ListIterator&lt;E&gt; listIterator() {
-	return new ListItr(0);
-}
-实现Iterable
-public Iterator&lt;E&gt; iterator() {
-	return new Itr();
-}</code></pre>
+<span class="kd">public</span> <span class="nc">ListIterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">listIterator</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="n">size</span><span class="o">)</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="s">"Index: "</span><span class="o">+</span><span class="n">index</span><span class="o">);</span>
+	<span class="k">return</span> <span class="k">new</span> <span class="nf">ListItr</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="n">实现Iterable</span>
+<span class="kd">public</span> <span class="nc">ListIterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">listIterator</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="k">new</span> <span class="nf">ListItr</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+<span class="o">}</span>
+<span class="n">实现Iterable</span>
+<span class="kd">public</span> <span class="nc">Iterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="k">new</span> <span class="nf">Itr</span><span class="o">();</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="literalblock">
@@ -844,70 +847,70 @@ public Iterator&lt;E&gt; iterator() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">private class Itr implements Iterator&lt;E&gt; {
-	int cursor;       // index of next element to return
-	int lastRet = -1; // index of last element returned; -1 if no such
-	int expectedModCount = modCount;
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">private</span> <span class="kd">class</span> <span class="nc">Itr</span> <span class="kd">implements</span> <span class="nc">Iterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="o">{</span>
+	<span class="kt">int</span> <span class="n">cursor</span><span class="o">;</span>       <span class="c1">// index of next element to return</span>
+	<span class="kt">int</span> <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span> <span class="c1">// index of last element returned; -1 if no such</span>
+	<span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
 
-	public boolean hasNext() {
-		return cursor != size;
-	}
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">cursor</span> <span class="o">!=</span> <span class="n">size</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	@SuppressWarnings("unchecked")
-	public E next() {
-		checkForComodification();
-		int i = cursor;
-		if (i &gt;= size)
-			throw new NoSuchElementException();
-		Object[] elementData = ArrayList.this.elementData;
-		if (i &gt;= elementData.length)
-			throw new ConcurrentModificationException();
-		cursor = i + 1;
-		return (E) elementData[lastRet = i];
-	}
+	<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="no">E</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">NoSuchElementException</span><span class="o">();</span>
+		<span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+		<span class="k">return</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">];</span>
+	<span class="o">}</span>
 
-	public void remove() {
-		if (lastRet &lt; 0)
-			throw new IllegalStateException();
-		checkForComodification();
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">();</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
 
-		try {
-			ArrayList.this.remove(lastRet);
-			cursor = lastRet;
-			lastRet = -1;
-			expectedModCount = modCount;
-		} catch (IndexOutOfBoundsException ex) {
-			throw new ConcurrentModificationException();
-		}
-	}
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">);</span>
+			<span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="o">;</span>
+			<span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+			<span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void forEachRemaining(Consumer&lt;? super E&gt; consumer) {
-		Objects.requireNonNull(consumer);
-		final int size = ArrayList.this.size;
-		int i = cursor;
-		if (i &gt;= size) {
-			return;
-		}
-		final Object[] elementData = ArrayList.this.elementData;
-		if (i &gt;= elementData.length) {
-			throw new ConcurrentModificationException();
-		}
-		while (i != size &amp;&amp; modCount == expectedModCount) {
-			consumer.accept((E) elementData[i++]);
-		}
-		// update once at end of iteration to reduce heap write traffic
-		cursor = i;
-		lastRet = i - 1;
-		checkForComodification();
-	}
+	<span class="nd">@Override</span>
+	<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">forEachRemaining</span><span class="o">(</span><span class="nc">Consumer</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">consumer</span><span class="o">)</span> <span class="o">{</span>
+		<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">consumer</span><span class="o">);</span>
+		<span class="kd">final</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+		<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">return</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="kd">final</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="o">}</span>
+		<span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">size</span> <span class="o">&amp;&amp;</span> <span class="n">modCount</span> <span class="o">==</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">consumer</span><span class="o">.</span><span class="na">accept</span><span class="o">((</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">++]);</span>
+		<span class="o">}</span>
+		<span class="c1">// update once at end of iteration to reduce heap write traffic</span>
+		<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+		<span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+	<span class="o">}</span>
 
-	final void checkForComodification() {
-		if (modCount != expectedModCount)
-			throw new ConcurrentModificationException();
-	}
-}</code></pre>
+	<span class="kd">final</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -915,78 +918,78 @@ public Iterator&lt;E&gt; iterator() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">private class ListItr extends Itr implements ListIterator&lt;E&gt; {
-	ListItr(int index) {
-		super();
-		cursor = index;
-	}
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">private</span> <span class="kd">class</span> <span class="nc">ListItr</span> <span class="kd">extends</span> <span class="nc">Itr</span> <span class="kd">implements</span> <span class="nc">ListIterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="o">{</span>
+	<span class="nc">ListItr</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">();</span>
+		<span class="n">cursor</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public boolean hasPrevious() {
-		return cursor != 0;
-	}
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasPrevious</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">cursor</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public int nextIndex() {
-		return cursor;
-	}
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">nextIndex</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">cursor</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public int previousIndex() {
-		return cursor - 1;
-	}
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">previousIndex</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="n">cursor</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	@SuppressWarnings("unchecked")
-	public E previous() {
-		checkForComodification();
-		int i = cursor - 1;
-		if (i &lt; 0)
-			throw new NoSuchElementException();
-		Object[] elementData = ArrayList.this.elementData;
-		if (i &gt;= elementData.length)
-			throw new ConcurrentModificationException();
-		cursor = i;
-		return (E) elementData[lastRet = i];
-	}
+	<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+	<span class="kd">public</span> <span class="no">E</span> <span class="nf">previous</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">NoSuchElementException</span><span class="o">();</span>
+		<span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+		<span class="k">return</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">];</span>
+	<span class="o">}</span>
 
-	public void set(E e) {
-		if (lastRet &lt; 0)
-			throw new IllegalStateException();
-		checkForComodification();
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="no">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">();</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
 
-		try {
-			ArrayList.this.set(lastRet, e);
-		} catch (IndexOutOfBoundsException ex) {
-			throw new ConcurrentModificationException();
-		}
-	}
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">lastRet</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
 
-	public void add(E e) {
-		checkForComodification();
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="no">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
 
-		try {
-			int i = cursor;
-			ArrayList.this.add(i, e);
-			cursor = i + 1;
-			lastRet = -1;
-			expectedModCount = modCount;
-		} catch (IndexOutOfBoundsException ex) {
-			throw new ConcurrentModificationException();
-		}
-	}
-}
-//返回指定范围的子数组
-public List&lt;E&gt; subList(int fromIndex, int toIndex) {
-	subListRangeCheck(fromIndex, toIndex, size);
-	return new SubList(this, 0, fromIndex, toIndex);
-}
+		<span class="k">try</span> <span class="o">{</span>
+			<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+			<span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+			<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+			<span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">//返回指定范围的子数组</span>
+<span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">subList</span><span class="o">(</span><span class="kt">int</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">toIndex</span><span class="o">)</span> <span class="o">{</span>
+	<span class="n">subListRangeCheck</span><span class="o">(</span><span class="n">fromIndex</span><span class="o">,</span> <span class="n">toIndex</span><span class="o">,</span> <span class="n">size</span><span class="o">);</span>
+	<span class="k">return</span> <span class="k">new</span> <span class="nf">SubList</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="n">toIndex</span><span class="o">);</span>
+<span class="o">}</span>
 
-static void subListRangeCheck(int fromIndex, int toIndex, int size) {
-	if (fromIndex &lt; 0)
-		throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
-	if (toIndex &gt; size)
-		throw new IndexOutOfBoundsException("toIndex = " + toIndex);
-	if (fromIndex &gt; toIndex)
-		throw new IllegalArgumentException("fromIndex(" + fromIndex +
-										   ") &gt; toIndex(" + toIndex + ")");
-}</code></pre>
+<span class="kd">static</span> <span class="kt">void</span> <span class="nf">subListRangeCheck</span><span class="o">(</span><span class="kt">int</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">toIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">fromIndex</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="s">"fromIndex = "</span> <span class="o">+</span> <span class="n">fromIndex</span><span class="o">);</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">toIndex</span> <span class="o">&gt;</span> <span class="n">size</span><span class="o">)</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="s">"toIndex = "</span> <span class="o">+</span> <span class="n">toIndex</span><span class="o">);</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">fromIndex</span> <span class="o">&gt;</span> <span class="n">toIndex</span><span class="o">)</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">"fromIndex("</span> <span class="o">+</span> <span class="n">fromIndex</span> <span class="o">+</span>
+										   <span class="s">") &gt; toIndex("</span> <span class="o">+</span> <span class="n">toIndex</span> <span class="o">+</span> <span class="s">")"</span><span class="o">);</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -994,417 +997,417 @@ static void subListRangeCheck(int fromIndex, int toIndex, int size) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">private class SubList extends AbstractList&lt;E&gt; implements RandomAccess {
-	private final AbstractList&lt;E&gt; parent;
-	private final int parentOffset;
-	private final int offset;
-	int size;
+<pre class="rouge highlight"><code data-lang="java"><span class="kd">private</span> <span class="kd">class</span> <span class="nc">SubList</span> <span class="kd">extends</span> <span class="nc">AbstractList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="nc">RandomAccess</span> <span class="o">{</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="nc">AbstractList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">parent</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">parentOffset</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">offset</span><span class="o">;</span>
+	<span class="kt">int</span> <span class="n">size</span><span class="o">;</span>
 
-	SubList(AbstractList&lt;E&gt; parent,
-			int offset, int fromIndex, int toIndex) {
-		this.parent = parent;
-		this.parentOffset = fromIndex;
-		this.offset = offset + fromIndex;
-		this.size = toIndex - fromIndex;
-		this.modCount = ArrayList.this.modCount;
-	}
+	<span class="nc">SubList</span><span class="o">(</span><span class="nc">AbstractList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">parent</span><span class="o">,</span>
+			<span class="kt">int</span> <span class="n">offset</span><span class="o">,</span> <span class="kt">int</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">toIndex</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">parentOffset</span> <span class="o">=</span> <span class="n">fromIndex</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">offset</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">fromIndex</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">size</span> <span class="o">=</span> <span class="n">toIndex</span> <span class="o">-</span> <span class="n">fromIndex</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">modCount</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public E set(int index, E e) {
-		rangeCheck(index);
-		checkForComodification();
-		E oldValue = ArrayList.this.elementData(offset + index);
-		ArrayList.this.elementData[offset + index] = e;
-		return oldValue;
-	}
+	<span class="kd">public</span> <span class="no">E</span> <span class="nf">set</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="no">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">rangeCheck</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="no">E</span> <span class="n">oldValue</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">index</span><span class="o">);</span>
+		<span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">[</span><span class="n">offset</span> <span class="o">+</span> <span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">e</span><span class="o">;</span>
+		<span class="k">return</span> <span class="n">oldValue</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public E get(int index) {
-		rangeCheck(index);
-		checkForComodification();
-		return ArrayList.this.elementData(offset + index);
-	}
+	<span class="kd">public</span> <span class="no">E</span> <span class="nf">get</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">rangeCheck</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="k">return</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">index</span><span class="o">);</span>
+	<span class="o">}</span>
 
-	public int size() {
-		checkForComodification();
-		return this.size;
-	}
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public void add(int index, E e) {
-		rangeCheckForAdd(index);
-		checkForComodification();
-		parent.add(parentOffset + index, e);
-		this.modCount = parent.modCount;
-		this.size++;
-	}
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="no">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">rangeCheckForAdd</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="n">parent</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">parentOffset</span> <span class="o">+</span> <span class="n">index</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">modCount</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">++;</span>
+	<span class="o">}</span>
 
-	public E remove(int index) {
-		rangeCheck(index);
-		checkForComodification();
-		E result = parent.remove(parentOffset + index);
-		this.modCount = parent.modCount;
-		this.size--;
-		return result;
-	}
+	<span class="kd">public</span> <span class="no">E</span> <span class="nf">remove</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">rangeCheck</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="no">E</span> <span class="n">result</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">parentOffset</span> <span class="o">+</span> <span class="n">index</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">modCount</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">--;</span>
+		<span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	protected void removeRange(int fromIndex, int toIndex) {
-		checkForComodification();
-		parent.removeRange(parentOffset + fromIndex,
-						   parentOffset + toIndex);
-		this.modCount = parent.modCount;
-		this.size -= toIndex - fromIndex;
-	}
+	<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">removeRange</span><span class="o">(</span><span class="kt">int</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">toIndex</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="n">parent</span><span class="o">.</span><span class="na">removeRange</span><span class="o">(</span><span class="n">parentOffset</span> <span class="o">+</span> <span class="n">fromIndex</span><span class="o">,</span>
+						   <span class="n">parentOffset</span> <span class="o">+</span> <span class="n">toIndex</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">modCount</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">size</span> <span class="o">-=</span> <span class="n">toIndex</span> <span class="o">-</span> <span class="n">fromIndex</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public boolean addAll(Collection&lt;? extends E&gt; c) {
-		return addAll(this.size, c);
-	}
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">addAll</span><span class="o">(</span><span class="nc">Collection</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="nf">addAll</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+	<span class="o">}</span>
 
-	public boolean addAll(int index, Collection&lt;? extends E&gt; c) {
-		rangeCheckForAdd(index);
-		int cSize = c.size();
-		if (cSize==0)
-			return false;
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">addAll</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">,</span> <span class="nc">Collection</span><span class="o">&lt;?</span> <span class="kd">extends</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">rangeCheckForAdd</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+		<span class="kt">int</span> <span class="n">cSize</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">cSize</span><span class="o">==</span><span class="mi">0</span><span class="o">)</span>
+			<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
 
-		checkForComodification();
-		parent.addAll(parentOffset + index, c);
-		this.modCount = parent.modCount;
-		this.size += cSize;
-		return true;
-	}
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="n">parent</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">parentOffset</span> <span class="o">+</span> <span class="n">index</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">modCount</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">size</span> <span class="o">+=</span> <span class="n">cSize</span><span class="o">;</span>
+		<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public Iterator&lt;E&gt; iterator() {
-		return listIterator();
-	}
+	<span class="kd">public</span> <span class="nc">Iterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">iterator</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="nf">listIterator</span><span class="o">();</span>
+	<span class="o">}</span>
 
-	public ListIterator&lt;E&gt; listIterator(final int index) {
-		checkForComodification();
-		rangeCheckForAdd(index);
-		final int offset = this.offset;
+	<span class="kd">public</span> <span class="nc">ListIterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">listIterator</span><span class="o">(</span><span class="kd">final</span> <span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="n">rangeCheckForAdd</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+		<span class="kd">final</span> <span class="kt">int</span> <span class="n">offset</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">offset</span><span class="o">;</span>
 
-		return new ListIterator&lt;E&gt;() {
-			int cursor = index;
-			int lastRet = -1;
-			int expectedModCount = ArrayList.this.modCount;
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">ListIterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;()</span> <span class="o">{</span>
+			<span class="kt">int</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
+			<span class="kt">int</span> <span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+			<span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
 
-			public boolean hasNext() {
-				return cursor != SubList.this.size;
-			}
+			<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNext</span><span class="o">()</span> <span class="o">{</span>
+				<span class="k">return</span> <span class="n">cursor</span> <span class="o">!=</span> <span class="nc">SubList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+			<span class="o">}</span>
 
-			@SuppressWarnings("unchecked")
-			public E next() {
-				checkForComodification();
-				int i = cursor;
-				if (i &gt;= SubList.this.size)
-					throw new NoSuchElementException();
-				Object[] elementData = ArrayList.this.elementData;
-				if (offset + i &gt;= elementData.length)
-					throw new ConcurrentModificationException();
-				cursor = i + 1;
-				return (E) elementData[offset + (lastRet = i)];
-			}
+			<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+			<span class="kd">public</span> <span class="no">E</span> <span class="nf">next</span><span class="o">()</span> <span class="o">{</span>
+				<span class="n">checkForComodification</span><span class="o">();</span>
+				<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="nc">SubList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">size</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">NoSuchElementException</span><span class="o">();</span>
+				<span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+				<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+				<span class="k">return</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">offset</span> <span class="o">+</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">)];</span>
+			<span class="o">}</span>
 
-			public boolean hasPrevious() {
-				return cursor != 0;
-			}
+			<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasPrevious</span><span class="o">()</span> <span class="o">{</span>
+				<span class="k">return</span> <span class="n">cursor</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span>
+			<span class="o">}</span>
 
-			@SuppressWarnings("unchecked")
-			public E previous() {
-				checkForComodification();
-				int i = cursor - 1;
-				if (i &lt; 0)
-					throw new NoSuchElementException();
-				Object[] elementData = ArrayList.this.elementData;
-				if (offset + i &gt;= elementData.length)
-					throw new ConcurrentModificationException();
-				cursor = i;
-				return (E) elementData[offset + (lastRet = i)];
-			}
+			<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+			<span class="kd">public</span> <span class="no">E</span> <span class="nf">previous</span><span class="o">()</span> <span class="o">{</span>
+				<span class="n">checkForComodification</span><span class="o">();</span>
+				<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">NoSuchElementException</span><span class="o">();</span>
+				<span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+				<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+				<span class="k">return</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">offset</span> <span class="o">+</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">=</span> <span class="n">i</span><span class="o">)];</span>
+			<span class="o">}</span>
 
-			@SuppressWarnings("unchecked")
-			public void forEachRemaining(Consumer&lt;? super E&gt; consumer) {
-				Objects.requireNonNull(consumer);
-				final int size = SubList.this.size;
-				int i = cursor;
-				if (i &gt;= size) {
-					return;
-				}
-				final Object[] elementData = ArrayList.this.elementData;
-				if (offset + i &gt;= elementData.length) {
-					throw new ConcurrentModificationException();
-				}
-				while (i != size &amp;&amp; modCount == expectedModCount) {
-					consumer.accept((E) elementData[offset + (i++)]);
-				}
-				// update once at end of iteration to reduce heap write traffic
-				lastRet = cursor = i;
-				checkForComodification();
-			}
+			<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+			<span class="kd">public</span> <span class="kt">void</span> <span class="nf">forEachRemaining</span><span class="o">(</span><span class="nc">Consumer</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">consumer</span><span class="o">)</span> <span class="o">{</span>
+				<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">consumer</span><span class="o">);</span>
+				<span class="kd">final</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="nc">SubList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+				<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+					<span class="k">return</span><span class="o">;</span>
+				<span class="o">}</span>
+				<span class="kd">final</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">elementData</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+				<span class="o">}</span>
+				<span class="k">while</span> <span class="o">(</span><span class="n">i</span> <span class="o">!=</span> <span class="n">size</span> <span class="o">&amp;&amp;</span> <span class="n">modCount</span> <span class="o">==</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+					<span class="n">consumer</span><span class="o">.</span><span class="na">accept</span><span class="o">((</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">offset</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span><span class="o">++)]);</span>
+				<span class="o">}</span>
+				<span class="c1">// update once at end of iteration to reduce heap write traffic</span>
+				<span class="n">lastRet</span> <span class="o">=</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+				<span class="n">checkForComodification</span><span class="o">();</span>
+			<span class="o">}</span>
 
-			public int nextIndex() {
-				return cursor;
-			}
+			<span class="kd">public</span> <span class="kt">int</span> <span class="nf">nextIndex</span><span class="o">()</span> <span class="o">{</span>
+				<span class="k">return</span> <span class="n">cursor</span><span class="o">;</span>
+			<span class="o">}</span>
 
-			public int previousIndex() {
-				return cursor - 1;
-			}
+			<span class="kd">public</span> <span class="kt">int</span> <span class="nf">previousIndex</span><span class="o">()</span> <span class="o">{</span>
+				<span class="k">return</span> <span class="n">cursor</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="o">}</span>
 
-			public void remove() {
-				if (lastRet &lt; 0)
-					throw new IllegalStateException();
-				checkForComodification();
+			<span class="kd">public</span> <span class="kt">void</span> <span class="nf">remove</span><span class="o">()</span> <span class="o">{</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">();</span>
+				<span class="n">checkForComodification</span><span class="o">();</span>
 
-				try {
-					SubList.this.remove(lastRet);
-					cursor = lastRet;
-					lastRet = -1;
-					expectedModCount = ArrayList.this.modCount;
-				} catch (IndexOutOfBoundsException ex) {
-					throw new ConcurrentModificationException();
-				}
-			}
+				<span class="k">try</span> <span class="o">{</span>
+					<span class="nc">SubList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">lastRet</span><span class="o">);</span>
+					<span class="n">cursor</span> <span class="o">=</span> <span class="n">lastRet</span><span class="o">;</span>
+					<span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+					<span class="n">expectedModCount</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+				<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+				<span class="o">}</span>
+			<span class="o">}</span>
 
-			public void set(E e) {
-				if (lastRet &lt; 0)
-					throw new IllegalStateException();
-				checkForComodification();
+			<span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="no">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">lastRet</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">();</span>
+				<span class="n">checkForComodification</span><span class="o">();</span>
 
-				try {
-					ArrayList.this.set(offset + lastRet, e);
-				} catch (IndexOutOfBoundsException ex) {
-					throw new ConcurrentModificationException();
-				}
-			}
+				<span class="k">try</span> <span class="o">{</span>
+					<span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">offset</span> <span class="o">+</span> <span class="n">lastRet</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+				<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+				<span class="o">}</span>
+			<span class="o">}</span>
 
-			public void add(E e) {
-				checkForComodification();
+			<span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="no">E</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">checkForComodification</span><span class="o">();</span>
 
-				try {
-					int i = cursor;
-					SubList.this.add(i, e);
-					cursor = i + 1;
-					lastRet = -1;
-					expectedModCount = ArrayList.this.modCount;
-				} catch (IndexOutOfBoundsException ex) {
-					throw new ConcurrentModificationException();
-				}
-			}
+				<span class="k">try</span> <span class="o">{</span>
+					<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">;</span>
+					<span class="nc">SubList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+					<span class="n">cursor</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+					<span class="n">lastRet</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+					<span class="n">expectedModCount</span> <span class="o">=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+				<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IndexOutOfBoundsException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+				<span class="o">}</span>
+			<span class="o">}</span>
 
-			final void checkForComodification() {
-				if (expectedModCount != ArrayList.this.modCount)
-					throw new ConcurrentModificationException();
-			}
-		};
-	}
+			<span class="kd">final</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">()</span> <span class="o">{</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">expectedModCount</span> <span class="o">!=</span> <span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">)</span>
+					<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+			<span class="o">}</span>
+		<span class="o">};</span>
+	<span class="o">}</span>
 
-	public List&lt;E&gt; subList(int fromIndex, int toIndex) {
-		subListRangeCheck(fromIndex, toIndex, size);
-		return new SubList(this, offset, fromIndex, toIndex);
-	}
+	<span class="kd">public</span> <span class="nc">List</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">subList</span><span class="o">(</span><span class="kt">int</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">toIndex</span><span class="o">)</span> <span class="o">{</span>
+		<span class="n">subListRangeCheck</span><span class="o">(</span><span class="n">fromIndex</span><span class="o">,</span> <span class="n">toIndex</span><span class="o">,</span> <span class="n">size</span><span class="o">);</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nf">SubList</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">offset</span><span class="o">,</span> <span class="n">fromIndex</span><span class="o">,</span> <span class="n">toIndex</span><span class="o">);</span>
+	<span class="o">}</span>
 
-	private void rangeCheck(int index) {
-		if (index &lt; 0 || index &gt;= this.size)
-			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-	}
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">rangeCheck</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="n">outOfBoundsMsg</span><span class="o">(</span><span class="n">index</span><span class="o">));</span>
+	<span class="o">}</span>
 
-	private void rangeCheckForAdd(int index) {
-		if (index &lt; 0 || index &gt; this.size)
-			throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-	}
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">rangeCheckForAdd</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">IndexOutOfBoundsException</span><span class="o">(</span><span class="n">outOfBoundsMsg</span><span class="o">(</span><span class="n">index</span><span class="o">));</span>
+	<span class="o">}</span>
 
-	private String outOfBoundsMsg(int index) {
-		return "Index: "+index+", Size: "+this.size;
-	}
+	<span class="kd">private</span> <span class="nc">String</span> <span class="nf">outOfBoundsMsg</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="s">"Index: "</span><span class="o">+</span><span class="n">index</span><span class="o">+</span><span class="s">", Size: "</span><span class="o">+</span><span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	private void checkForComodification() {
-		if (ArrayList.this.modCount != this.modCount)
-			throw new ConcurrentModificationException();
-	}
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkForComodification</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">modCount</span> <span class="o">!=</span> <span class="k">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
 
-	public Spliterator&lt;E&gt; spliterator() {
-		checkForComodification();
-		return new ArrayListSpliterator&lt;E&gt;(ArrayList.this, offset,
-										   offset + this.size, this.modCount);
-	}
-}</code></pre>
+	<span class="kd">public</span> <span class="nc">Spliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">spliterator</span><span class="o">()</span> <span class="o">{</span>
+		<span class="n">checkForComodification</span><span class="o">();</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">ArrayListSpliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;(</span><span class="nc">ArrayList</span><span class="o">.</span><span class="na">this</span><span class="o">,</span> <span class="n">offset</span><span class="o">,</span>
+										   <span class="n">offset</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">modCount</span><span class="o">);</span>
+	<span class="o">}</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">//按照比较器的判断逻辑进行排序
-@Override
-@SuppressWarnings("unchecked")
-public void sort(Comparator&lt;? super E&gt; c) {
-	final int expectedModCount = modCount;
-	Arrays.sort((E[]) elementData, 0, size, c);
-	if (modCount != expectedModCount) {
-		throw new ConcurrentModificationException();
-	}
-	modCount++;
-}
- 以下基于 1.8，和函数式编程相关的方法
-@Override
-public void forEach(Consumer&lt;? super E&gt; action) {
-	Objects.requireNonNull(action);
-	final int expectedModCount = modCount;
-	@SuppressWarnings("unchecked")
-	final E[] elementData = (E[]) this.elementData;
-	final int size = this.size;
-	for (int i=0; modCount == expectedModCount &amp;&amp; i &lt; size; i++) {
-		action.accept(elementData[i]);
-	}
-	if (modCount != expectedModCount) {
-		throw new ConcurrentModificationException();
-	}
-}
+<pre class="rouge highlight"><code data-lang="java"><span class="c1">//按照比较器的判断逻辑进行排序</span>
+<span class="nd">@Override</span>
+<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">sort</span><span class="o">(</span><span class="nc">Comparator</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">c</span><span class="o">)</span> <span class="o">{</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+	<span class="nc">Arrays</span><span class="o">.</span><span class="na">sort</span><span class="o">((</span><span class="no">E</span><span class="o">[])</span> <span class="n">elementData</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">size</span><span class="o">,</span> <span class="n">c</span><span class="o">);</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
+	<span class="n">modCount</span><span class="o">++;</span>
+<span class="o">}</span>
+ <span class="n">以下基于</span> <span class="mf">1.8</span><span class="err">，</span><span class="n">和函数式编程相关的方法</span>
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">forEach</span><span class="o">(</span><span class="nc">Consumer</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">action</span><span class="o">)</span> <span class="o">{</span>
+	<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">action</span><span class="o">);</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+	<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+	<span class="kd">final</span> <span class="no">E</span><span class="o">[]</span> <span class="n">elementData</span> <span class="o">=</span> <span class="o">(</span><span class="no">E</span><span class="o">[])</span> <span class="k">this</span><span class="o">.</span><span class="na">elementData</span><span class="o">;</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">modCount</span> <span class="o">==</span> <span class="n">expectedModCount</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="n">action</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+	<span class="o">}</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
+<span class="o">}</span>
 
-@Override
-public Spliterator&lt;E&gt; spliterator() {
-	return new ArrayListSpliterator&lt;&gt;(this, 0, -1, 0);
-}
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">Spliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">spliterator</span><span class="o">()</span> <span class="o">{</span>
+	<span class="k">return</span> <span class="k">new</span> <span class="nc">ArrayListSpliterator</span><span class="o">&lt;&gt;(</span><span class="k">this</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+<span class="o">}</span>
 
-static final class ArrayListSpliterator&lt;E&gt; implements Spliterator&lt;E&gt; {
+<span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ArrayListSpliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="kd">implements</span> <span class="nc">Spliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="o">{</span>
 
 
-	private final ArrayList&lt;E&gt; list;
-	private int index; // current index, modified on advance/split
-	private int fence; // -1 until used; then one past last index
-	private int expectedModCount; // initialized when fence set
+	<span class="kd">private</span> <span class="kd">final</span> <span class="nc">ArrayList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">index</span><span class="o">;</span> <span class="c1">// current index, modified on advance/split</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">fence</span><span class="o">;</span> <span class="c1">// -1 until used; then one past last index</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">expectedModCount</span><span class="o">;</span> <span class="c1">// initialized when fence set</span>
 
-	/** Create new spliterator covering the given  range */
-	ArrayListSpliterator(ArrayList&lt;E&gt; list, int origin, int fence,
-						 int expectedModCount) {
-		this.list = list; // OK if null unless traversed
-		this.index = origin;
-		this.fence = fence;
-		this.expectedModCount = expectedModCount;
-	}
+	<span class="cm">/** Create new spliterator covering the given  range */</span>
+	<span class="nc">ArrayListSpliterator</span><span class="o">(</span><span class="nc">ArrayList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">list</span><span class="o">,</span> <span class="kt">int</span> <span class="n">origin</span><span class="o">,</span> <span class="kt">int</span> <span class="n">fence</span><span class="o">,</span>
+						 <span class="kt">int</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">list</span> <span class="o">=</span> <span class="n">list</span><span class="o">;</span> <span class="c1">// OK if null unless traversed</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">index</span> <span class="o">=</span> <span class="n">origin</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">fence</span> <span class="o">=</span> <span class="n">fence</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">expectedModCount</span> <span class="o">=</span> <span class="n">expectedModCount</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	private int getFence() { // initialize fence to size on first use
-		int hi; // (a specialized variant appears in method forEach)
-		ArrayList&lt;E&gt; lst;
-		if ((hi = fence) &lt; 0) {
-			if ((lst = list) == null)
-				hi = fence = 0;
-			else {
-				expectedModCount = lst.modCount;
-				hi = fence = lst.size;
-			}
-		}
-		return hi;
-	}
+	<span class="kd">private</span> <span class="kt">int</span> <span class="nf">getFence</span><span class="o">()</span> <span class="o">{</span> <span class="c1">// initialize fence to size on first use</span>
+		<span class="kt">int</span> <span class="n">hi</span><span class="o">;</span> <span class="c1">// (a specialized variant appears in method forEach)</span>
+		<span class="nc">ArrayList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">lst</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">((</span><span class="n">hi</span> <span class="o">=</span> <span class="n">fence</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span> <span class="o">((</span><span class="n">lst</span> <span class="o">=</span> <span class="n">list</span><span class="o">)</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+				<span class="n">hi</span> <span class="o">=</span> <span class="n">fence</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+			<span class="k">else</span> <span class="o">{</span>
+				<span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+				<span class="n">hi</span> <span class="o">=</span> <span class="n">fence</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+			<span class="o">}</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="n">hi</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public ArrayListSpliterator&lt;E&gt; trySplit() {
-		int hi = getFence(), lo = index, mid = (lo + hi) &gt;&gt;&gt; 1;
-		return (lo &gt;= mid) ? null : // divide range in half unless too small
-			new ArrayListSpliterator&lt;E&gt;(list, lo, index = mid,
-										expectedModCount);
-	}
+	<span class="kd">public</span> <span class="nc">ArrayListSpliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="nf">trySplit</span><span class="o">()</span> <span class="o">{</span>
+		<span class="kt">int</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">getFence</span><span class="o">(),</span> <span class="n">lo</span> <span class="o">=</span> <span class="n">index</span><span class="o">,</span> <span class="n">mid</span> <span class="o">=</span> <span class="o">(</span><span class="n">lo</span> <span class="o">+</span> <span class="n">hi</span><span class="o">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span><span class="o">;</span>
+		<span class="k">return</span> <span class="o">(</span><span class="n">lo</span> <span class="o">&gt;=</span> <span class="n">mid</span><span class="o">)</span> <span class="o">?</span> <span class="kc">null</span> <span class="o">:</span> <span class="c1">// divide range in half unless too small</span>
+			<span class="k">new</span> <span class="nc">ArrayListSpliterator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;(</span><span class="n">list</span><span class="o">,</span> <span class="n">lo</span><span class="o">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">mid</span><span class="o">,</span>
+										<span class="n">expectedModCount</span><span class="o">);</span>
+	<span class="o">}</span>
 
-	public boolean tryAdvance(Consumer&lt;? super E&gt; action) {
-		if (action == null)
-			throw new NullPointerException();
-		int hi = getFence(), i = index;
-		if (i &lt; hi) {
-			index = i + 1;
-			@SuppressWarnings("unchecked") E e = (E)list.elementData[i];
-			action.accept(e);
-			if (list.modCount != expectedModCount)
-				throw new ConcurrentModificationException();
-			return true;
-		}
-		return false;
-	}
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">tryAdvance</span><span class="o">(</span><span class="nc">Consumer</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">action</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">action</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
+		<span class="kt">int</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">getFence</span><span class="o">(),</span> <span class="n">i</span> <span class="o">=</span> <span class="n">index</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="o">)</span> <span class="o">{</span>
+			<span class="n">index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+			<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span> <span class="no">E</span> <span class="n">e</span> <span class="o">=</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span><span class="n">list</span><span class="o">.</span><span class="na">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+			<span class="n">action</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+			<span class="k">if</span> <span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span>
+				<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+			<span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+		<span class="o">}</span>
+		<span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+	<span class="o">}</span>
 
-	public void forEachRemaining(Consumer&lt;? super E&gt; action) {
-		int i, hi, mc; // hoist accesses and checks from loop
-		ArrayList&lt;E&gt; lst; Object[] a;
-		if (action == null)
-			throw new NullPointerException();
-		if ((lst = list) != null &amp;&amp; (a = lst.elementData) != null) {
-			if ((hi = fence) &lt; 0) {
-				mc = lst.modCount;
-				hi = lst.size;
-			}
-			else
-				mc = expectedModCount;
-			if ((i = index) &gt;= 0 &amp;&amp; (index = hi) &lt;= a.length) {
-				for (; i &lt; hi; ++i) {
-					@SuppressWarnings("unchecked") E e = (E) a[i];
-					action.accept(e);
-				}
-				if (lst.modCount == mc)
-					return;
-			}
-		}
-		throw new ConcurrentModificationException();
-	}
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">forEachRemaining</span><span class="o">(</span><span class="nc">Consumer</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">action</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="n">hi</span><span class="o">,</span> <span class="n">mc</span><span class="o">;</span> <span class="c1">// hoist accesses and checks from loop</span>
+		<span class="nc">ArrayList</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">lst</span><span class="o">;</span> <span class="nc">Object</span><span class="o">[]</span> <span class="n">a</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">action</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">NullPointerException</span><span class="o">();</span>
+		<span class="k">if</span> <span class="o">((</span><span class="n">lst</span> <span class="o">=</span> <span class="n">list</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">a</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="na">elementData</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">if</span> <span class="o">((</span><span class="n">hi</span> <span class="o">=</span> <span class="n">fence</span><span class="o">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+				<span class="n">mc</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="na">modCount</span><span class="o">;</span>
+				<span class="n">hi</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+			<span class="o">}</span>
+			<span class="k">else</span>
+				<span class="n">mc</span> <span class="o">=</span> <span class="n">expectedModCount</span><span class="o">;</span>
+			<span class="k">if</span> <span class="o">((</span><span class="n">i</span> <span class="o">=</span> <span class="n">index</span><span class="o">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">index</span> <span class="o">=</span> <span class="n">hi</span><span class="o">)</span> <span class="o">&lt;=</span> <span class="n">a</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span>
+				<span class="k">for</span> <span class="o">(;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hi</span><span class="o">;</span> <span class="o">++</span><span class="n">i</span><span class="o">)</span> <span class="o">{</span>
+					<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span> <span class="no">E</span> <span class="n">e</span> <span class="o">=</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">a</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+					<span class="n">action</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+				<span class="o">}</span>
+				<span class="k">if</span> <span class="o">(</span><span class="n">lst</span><span class="o">.</span><span class="na">modCount</span> <span class="o">==</span> <span class="n">mc</span><span class="o">)</span>
+					<span class="k">return</span><span class="o">;</span>
+			<span class="o">}</span>
+		<span class="o">}</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
 
-	public long estimateSize() {
-		return (long) (getFence() - index);
-	}
+	<span class="kd">public</span> <span class="kt">long</span> <span class="nf">estimateSize</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="o">(</span><span class="kt">long</span><span class="o">)</span> <span class="o">(</span><span class="n">getFence</span><span class="o">()</span> <span class="o">-</span> <span class="n">index</span><span class="o">);</span>
+	<span class="o">}</span>
 
-	public int characteristics() {
-		return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
-	}
-}
+	<span class="kd">public</span> <span class="kt">int</span> <span class="nf">characteristics</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">return</span> <span class="nc">Spliterator</span><span class="o">.</span><span class="na">ORDERED</span> <span class="o">|</span> <span class="nc">Spliterator</span><span class="o">.</span><span class="na">SIZED</span> <span class="o">|</span> <span class="nc">Spliterator</span><span class="o">.</span><span class="na">SUBSIZED</span><span class="o">;</span>
+	<span class="o">}</span>
+<span class="o">}</span>
 
-@Override
-public boolean removeIf(Predicate&lt;? super E&gt; filter) {
-	Objects.requireNonNull(filter);
-	// figure out which elements are to be removed
-	// any exception thrown from the filter predicate at this stage
-	// will leave the collection unmodified
-	int removeCount = 0;
-	final BitSet removeSet = new BitSet(size);
-	final int expectedModCount = modCount;
-	final int size = this.size;
-	for (int i=0; modCount == expectedModCount &amp;&amp; i &lt; size; i++) {
-		@SuppressWarnings("unchecked")
-		final E element = (E) elementData[i];
-		if (filter.test(element)) {
-			removeSet.set(i);
-			removeCount++;
-		}
-	}
-	if (modCount != expectedModCount) {
-		throw new ConcurrentModificationException();
-	}
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">removeIf</span><span class="o">(</span><span class="nc">Predicate</span><span class="o">&lt;?</span> <span class="kd">super</span> <span class="no">E</span><span class="o">&gt;</span> <span class="n">filter</span><span class="o">)</span> <span class="o">{</span>
+	<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">filter</span><span class="o">);</span>
+	<span class="c1">// figure out which elements are to be removed</span>
+	<span class="c1">// any exception thrown from the filter predicate at this stage</span>
+	<span class="c1">// will leave the collection unmodified</span>
+	<span class="kt">int</span> <span class="n">removeCount</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="kd">final</span> <span class="nc">BitSet</span> <span class="n">removeSet</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BitSet</span><span class="o">(</span><span class="n">size</span><span class="o">);</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">modCount</span> <span class="o">==</span> <span class="n">expectedModCount</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+		<span class="kd">final</span> <span class="no">E</span> <span class="n">element</span> <span class="o">=</span> <span class="o">(</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">filter</span><span class="o">.</span><span class="na">test</span><span class="o">(</span><span class="n">element</span><span class="o">))</span> <span class="o">{</span>
+			<span class="n">removeSet</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+			<span class="n">removeCount</span><span class="o">++;</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
 
-	// shift surviving elements left over the spaces left by removed elements
-	final boolean anyToRemove = removeCount &gt; 0;
-	if (anyToRemove) {
-		final int newSize = size - removeCount;
-		for (int i=0, j=0; (i &lt; size) &amp;&amp; (j &lt; newSize); i++, j++) {
-			i = removeSet.nextClearBit(i);
-			elementData[j] = elementData[i];
-		}
-		for (int k=newSize; k &lt; size; k++) {
-			elementData[k] = null;  // Let gc do its work
-		}
-		this.size = newSize;
-		if (modCount != expectedModCount) {
-			throw new ConcurrentModificationException();
-		}
-		modCount++;
-	}
+	<span class="c1">// shift surviving elements left over the spaces left by removed elements</span>
+	<span class="kd">final</span> <span class="kt">boolean</span> <span class="n">anyToRemove</span> <span class="o">=</span> <span class="n">removeCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">anyToRemove</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">final</span> <span class="kt">int</span> <span class="n">newSize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">-</span> <span class="n">removeCount</span><span class="o">;</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">,</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">newSize</span><span class="o">);</span> <span class="n">i</span><span class="o">++,</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+			<span class="n">i</span> <span class="o">=</span> <span class="n">removeSet</span><span class="o">.</span><span class="na">nextClearBit</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+			<span class="n">elementData</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+		<span class="o">}</span>
+		<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="n">newSize</span><span class="o">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">k</span><span class="o">++)</span> <span class="o">{</span>
+			<span class="n">elementData</span><span class="o">[</span><span class="n">k</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>  <span class="c1">// Let gc do its work</span>
+		<span class="o">}</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">size</span> <span class="o">=</span> <span class="n">newSize</span><span class="o">;</span>
+		<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+		<span class="o">}</span>
+		<span class="n">modCount</span><span class="o">++;</span>
+	<span class="o">}</span>
 
-	return anyToRemove;
-}
+	<span class="k">return</span> <span class="n">anyToRemove</span><span class="o">;</span>
+<span class="o">}</span>
 
-@Override
-@SuppressWarnings("unchecked")
-public void replaceAll(UnaryOperator&lt;E&gt; operator) {
-	Objects.requireNonNull(operator);
-	final int expectedModCount = modCount;
-	final int size = this.size;
-	for (int i=0; modCount == expectedModCount &amp;&amp; i &lt; size; i++) {
-		elementData[i] = operator.apply((E) elementData[i]);
-	}
-	if (modCount != expectedModCount) {
-		throw new ConcurrentModificationException();
-	}
-	modCount++;
-}
+<span class="nd">@Override</span>
+<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unchecked"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">replaceAll</span><span class="o">(</span><span class="nc">UnaryOperator</span><span class="o">&lt;</span><span class="no">E</span><span class="o">&gt;</span> <span class="n">operator</span><span class="o">)</span> <span class="o">{</span>
+	<span class="nc">Objects</span><span class="o">.</span><span class="na">requireNonNull</span><span class="o">(</span><span class="n">operator</span><span class="o">);</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">expectedModCount</span> <span class="o">=</span> <span class="n">modCount</span><span class="o">;</span>
+	<span class="kd">final</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">size</span><span class="o">;</span>
+	<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">modCount</span> <span class="o">==</span> <span class="n">expectedModCount</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+		<span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="na">apply</span><span class="o">((</span><span class="no">E</span><span class="o">)</span> <span class="n">elementData</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+	<span class="o">}</span>
+	<span class="k">if</span> <span class="o">(</span><span class="n">modCount</span> <span class="o">!=</span> <span class="n">expectedModCount</span><span class="o">)</span> <span class="o">{</span>
+		<span class="k">throw</span> <span class="k">new</span> <span class="nf">ConcurrentModificationException</span><span class="o">();</span>
+	<span class="o">}</span>
+	<span class="n">modCount</span><span class="o">++;</span>
+<span class="o">}</span>
 
-}</code></pre>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1499,8 +1502,9 @@ public void replaceAll(UnaryOperator&lt;E&gt; operator) {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
+<link rel="stylesheet" href="assets/css/rouge-monokai.css">
 </body>
 </html>

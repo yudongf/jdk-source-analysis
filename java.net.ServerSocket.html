@@ -25,6 +25,9 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>在纠结了 N 久之后，终于动手写程序完成了 Socket 全双工实验。实验证实，Socket 在接受的同时，还可以发送报文。</p>
 </div>
 <div class="imageblock">
@@ -34,9 +37,9 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.net;
+<pre>package com.diguage.truman.net;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -131,7 +134,7 @@ public class SocketFullDuplexTest {
 
         LockSupport.park();
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 </div>
@@ -151,7 +154,7 @@ public class SocketFullDuplexTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

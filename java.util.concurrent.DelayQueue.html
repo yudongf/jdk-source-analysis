@@ -19,11 +19,14 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p><code>DelayQueue</code> 对元素进行持有直到一个特定的延迟到期。注入其中的元素必须实现 <code>java.util.concurrent.Delayed</code> 接口，该接口定义:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package java.util.concurrent;
+<pre>package java.util.concurrent;
 
 /**
  * A mix-in style interface for marking objects that should be
@@ -47,7 +50,7 @@ public interface Delayed extends Comparable&lt;Delayed&gt; {
      * that the delay has already elapsed
      */
     long getDelay(TimeUnit unit);
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -55,9 +58,9 @@ public interface Delayed extends Comparable&lt;Delayed&gt; {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman.concurrent;
+<pre>package com.diguage.truman.concurrent;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 import java.util.concurrent.DelayQueue;
@@ -105,7 +108,7 @@ public class DelayQueueTest {
         }
     }
 
-}</code></pre>
+}</pre>
 </div>
 </div>
 </div>
@@ -113,7 +116,7 @@ public class DelayQueueTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>

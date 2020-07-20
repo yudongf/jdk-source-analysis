@@ -25,11 +25,14 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
+<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
+</div>
+<div class="paragraph">
 <p>虽然对 <code>ClassLoader</code> 的双亲委派流程比较了解，但是一直没有仔细专研过代码实现。今天翻看代码，代码写的简单明了：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">/**
+<pre>/**
  * Loads the class with the specified &lt;a href="#binary-name"&gt;binary name&lt;/a&gt;.  The
  * default implementation of this method searches for classes in the
  * following order:
@@ -129,7 +132,7 @@ protected Class&lt;?&gt; loadClass(String name, boolean resolve)
  */
 protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {
     throw new ClassNotFoundException(name);
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -137,9 +140,9 @@ protected Class&lt;?&gt; findClass(String name) throws ClassNotFoundException {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-java" data-lang="java">package com.diguage.truman;
+<pre>package com.diguage.truman;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -209,7 +212,7 @@ public class ClassLoaderTest {
             return defineClass(className, bytecodes, 0, bytecodes.length);
         }
     }
-}</code></pre>
+}</pre>
 </div>
 </div>
 <div class="olist arabic">
@@ -275,7 +278,7 @@ public class ClassLoaderTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-27 16:44:07 UTC
+Last updated 2020-07-20 06:55:02 UTC
 </div>
 </div>
 </body>
