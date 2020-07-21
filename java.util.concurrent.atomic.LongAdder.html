@@ -18,52 +18,91 @@
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>source%nowrap,java,linenums,indent=0,subs="attributes,verbatim,quotes"</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>package com.diguage.truman.concurrent;
+<pre class="rouge highlight nowrap"><code data-lang="java"><table class="linenotable"><tbody><tr><td class="linenos gl"><pre class="lineno"> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+</pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman.concurrent</span><span class="o">;</span>
 
-import org.junit.jupiter.api.Test;
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.LongAdder;
-import java.util.concurrent.locks.LockSupport;
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.LongAdder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.LockSupport</span><span class="o">;</span>
 
-/**
+<span class="cm">/**
  * @author D瓜哥, https://www.diguage.com/
  * @since 2020-04-09 14:23
- */
-public class LongAdderTest {
-    @Test
-    public void test() {
-        LongAdder adder = new LongAdder();
-        int processors = Runtime.getRuntime().availableProcessors();
-        System.out.println(processors);
-        ExecutorService executor = Executors.newFixedThreadPool(processors);
-        for (int i = 0; i &lt; processors - 1; i++) {
-            executor.execute(() -&gt; {
-                for (int j = 0; j &lt; Integer.MAX_VALUE; j++) {
-                    adder.increment();
-                }
-            });
-        }
-        executor.execute(() -&gt; {
-            while (true) {
-                try {
-                    System.out.println(adder.sum());
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        executor.shutdown();
-        LockSupport.park();
-    }
-}</pre>
+ */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">LongAdderTest</span> <span class="o">{</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
+        <span class="nc">LongAdder</span> <span class="n">adder</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LongAdder</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">processors</span> <span class="o">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">availableProcessors</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">processors</span><span class="o">);</span>
+        <span class="nc">ExecutorService</span> <span class="n">executor</span> <span class="o">=</span> <span class="nc">Executors</span><span class="o">.</span><span class="na">newFixedThreadPool</span><span class="o">(</span><span class="n">processors</span><span class="o">);</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">processors</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">executor</span><span class="o">.</span><span class="na">execute</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                    <span class="n">adder</span><span class="o">.</span><span class="na">increment</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">});</span>
+        <span class="o">}</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">execute</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">try</span> <span class="o">{</span>
+                    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">adder</span><span class="o">.</span><span class="na">sum</span><span class="o">());</span>
+                    <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">100</span><span class="o">);</span>
+                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+        <span class="n">executor</span><span class="o">.</span><span class="na">shutdown</span><span class="o">();</span>
+        <span class="nc">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre>
 </div>
 </div>
 </div>
@@ -71,8 +110,9 @@ public class LongAdderTest {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-07-20 06:55:02 UTC
+Last updated 2020-07-21 01:25:49 UTC
 </div>
 </div>
+<link rel="stylesheet" href="assets/css/rouge-monokai.css">
 </body>
 </html>
