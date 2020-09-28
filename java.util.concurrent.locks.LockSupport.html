@@ -210,11 +210,15 @@
 68
 69
 70
+71
+72
 </pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman.concurrent</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.Test</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">java.util.concurrent.locks.LockSupport</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">com</span><span class="o">.</span><span class="na">diguage</span><span class="o">.</span><span class="na">truman</span><span class="o">.</span><span class="na">concurrent</span><span class="o">.</span><span class="na">SynchronizedTest</span><span class="o">.</span><span class="na">SynMain</span><span class="o">.*;</span>
 
 <span class="cm">/**
  * @author D瓜哥, https://www.diguage.com/
@@ -236,8 +240,8 @@
     <span class="nc">SynMain</span> <span class="n">main</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SynMain</span><span class="o">();</span>
     <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="nl">main:</span><span class="o">:</span><span class="n">getInstanceLock1</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
     <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="nl">main:</span><span class="o">:</span><span class="n">getInstanceLock2</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
-    <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">main</span><span class="o">.</span><span class="na">getStaticLock1</span><span class="o">()).</span><span class="na">start</span><span class="o">();</span>
-    <span class="k">new</span> <span class="nf">Thread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="n">main</span><span class="o">.</span><span class="na">getStaticLock2</span><span class="o">()).</span><span class="na">start</span><span class="o">();</span>
+    <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="nl">SynMain:</span><span class="o">:</span><span class="n">getStaticLock1</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
+    <span class="k">new</span> <span class="nf">Thread</span><span class="o">(</span><span class="nl">SynMain:</span><span class="o">:</span><span class="n">getStaticLock2</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
     <span class="nc">LockSupport</span><span class="o">.</span><span class="na">park</span><span class="o">();</span>
   <span class="o">}</span>
 
@@ -291,7 +295,7 @@
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-09-28 06:31:22 UTC
+Last updated 2020-09-28 06:34:44 UTC
 </div>
 </div>
 <link rel="stylesheet" href="assets/css/rouge-monokai.css">
