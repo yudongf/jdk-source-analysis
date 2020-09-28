@@ -8947,7 +8947,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 
   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SynMain</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">getStaticLock1</span><span class="o">()</span> <span class="o">{</span>
-      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"getStaticLock get lock, running..."</span><span class="o">);</span>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"getStaticLock1 get lock, running..."</span><span class="o">);</span>
       <span class="k">try</span> <span class="o">{</span>
         <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">);</span>
       <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -8956,7 +8956,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
     <span class="o">}</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">synchronized</span> <span class="kt">void</span> <span class="nf">getStaticLock2</span><span class="o">()</span> <span class="o">{</span>
-      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"getStaticLock get lock, running..."</span><span class="o">);</span>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"getStaticLock2 get lock, running..."</span><span class="o">);</span>
       <span class="k">try</span> <span class="o">{</span>
         <span class="nc">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="nc">Integer</span><span class="o">.</span><span class="na">MAX_VALUE</span><span class="o">);</span>
       <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
@@ -29261,7 +29261,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-09-28 06:25:20 UTC
+Last updated 2020-09-28 06:31:22 UTC
 </div>
 </div>
 <link rel="stylesheet" href="assets/css/rouge-monokai.css">
