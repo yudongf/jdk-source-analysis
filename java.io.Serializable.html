@@ -166,15 +166,15 @@
       <span class="n">test</span><span class="o">(</span><span class="k">new</span> <span class="nc">InnerClass</span><span class="o">());</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nc">Object</span> <span class="n">param</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">ClassNotFoundException</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nc">Object</span> <span class="n">param</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"param = "</span> <span class="o">+</span> <span class="n">param</span><span class="o">);</span>
-      <span class="nc">ByteArrayOutputStream</span> <span class="n">byteArrayOutputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayOutputStream</span><span class="o">(</span><span class="mi">10240</span><span class="o">);</span>
-      <span class="nc">ObjectOutputStream</span> <span class="n">objectOutputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectOutputStream</span><span class="o">(</span><span class="n">byteArrayOutputStream</span><span class="o">);</span>
-      <span class="n">objectOutputStream</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">param</span><span class="o">);</span>
+      <span class="nc">ByteArrayOutputStream</span> <span class="n">baos</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayOutputStream</span><span class="o">(</span><span class="mi">10240</span><span class="o">);</span>
+      <span class="nc">ObjectOutputStream</span> <span class="n">oos</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectOutputStream</span><span class="o">(</span><span class="n">baos</span><span class="o">);</span>
+      <span class="n">oos</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">param</span><span class="o">);</span>
 
-      <span class="nc">ByteArrayInputStream</span> <span class="n">byteArrayInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">byteArrayOutputStream</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">());</span>
-      <span class="nc">ObjectInputStream</span> <span class="n">objectInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectInputStream</span><span class="o">(</span><span class="n">byteArrayInputStream</span><span class="o">);</span>
-      <span class="nc">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">objectInputStream</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
+      <span class="nc">ByteArrayInputStream</span> <span class="n">bais</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">baos</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">());</span>
+      <span class="nc">ObjectInputStream</span> <span class="n">ois</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectInputStream</span><span class="o">(</span><span class="n">bais</span><span class="o">);</span>
+      <span class="nc">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">ois</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"deser = "</span> <span class="o">+</span> <span class="n">object</span><span class="o">);</span>
     <span class="o">}</span>
   <span class="o">}</span>
@@ -187,7 +187,7 @@
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-04 12:05:31 UTC
+Last updated 2020-12-04 12:14:51 UTC
 </div>
 </div>
 </body>

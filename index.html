@@ -15887,6 +15887,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 92
 93
 94
+95
 </pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.apache.commons.lang3.time.FastDateFormat</span><span class="o">;</span>
@@ -15915,7 +15916,8 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 
   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="nc">DateTimeFormatter</span><span class="o">.</span><span class="na">ofPattern</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">FastDateFormat</span> <span class="n">fastFormat</span> <span class="o">=</span> <span class="nc">FastDateFormat</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
-  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">org</span><span class="o">.</span><span class="na">joda</span><span class="o">.</span><span class="na">time</span><span class="o">.</span><span class="na">format</span><span class="o">.</span><span class="na">DateTimeFormatter</span> <span class="n">jodaFormat</span> <span class="o">=</span> <span class="nc">DateTimeFormat</span><span class="o">.</span><span class="na">forPattern</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">org</span><span class="o">.</span><span class="na">joda</span><span class="o">.</span><span class="na">time</span><span class="o">.</span><span class="na">format</span><span class="o">.</span><span class="na">DateTimeFormatter</span>
+    <span class="n">jodaFormat</span> <span class="o">=</span> <span class="nc">DateTimeFormat</span><span class="o">.</span><span class="na">forPattern</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
 
   <span class="nd">@Benchmark</span>
   <span class="kd">public</span> <span class="nc">String</span> <span class="nf">testSimpleDateFormat</span><span class="o">()</span> <span class="o">{</span>
@@ -16136,15 +16138,15 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
       <span class="n">test</span><span class="o">(</span><span class="k">new</span> <span class="nc">InnerClass</span><span class="o">());</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nc">Object</span> <span class="n">param</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span><span class="o">,</span> <span class="nc">ClassNotFoundException</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">test</span><span class="o">(</span><span class="nc">Object</span> <span class="n">param</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"param = "</span> <span class="o">+</span> <span class="n">param</span><span class="o">);</span>
-      <span class="nc">ByteArrayOutputStream</span> <span class="n">byteArrayOutputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayOutputStream</span><span class="o">(</span><span class="mi">10240</span><span class="o">);</span>
-      <span class="nc">ObjectOutputStream</span> <span class="n">objectOutputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectOutputStream</span><span class="o">(</span><span class="n">byteArrayOutputStream</span><span class="o">);</span>
-      <span class="n">objectOutputStream</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">param</span><span class="o">);</span>
+      <span class="nc">ByteArrayOutputStream</span> <span class="n">baos</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayOutputStream</span><span class="o">(</span><span class="mi">10240</span><span class="o">);</span>
+      <span class="nc">ObjectOutputStream</span> <span class="n">oos</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectOutputStream</span><span class="o">(</span><span class="n">baos</span><span class="o">);</span>
+      <span class="n">oos</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">param</span><span class="o">);</span>
 
-      <span class="nc">ByteArrayInputStream</span> <span class="n">byteArrayInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">byteArrayOutputStream</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">());</span>
-      <span class="nc">ObjectInputStream</span> <span class="n">objectInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectInputStream</span><span class="o">(</span><span class="n">byteArrayInputStream</span><span class="o">);</span>
-      <span class="nc">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">objectInputStream</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
+      <span class="nc">ByteArrayInputStream</span> <span class="n">bais</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">baos</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">());</span>
+      <span class="nc">ObjectInputStream</span> <span class="n">ois</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ObjectInputStream</span><span class="o">(</span><span class="n">bais</span><span class="o">);</span>
+      <span class="nc">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">ois</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
       <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"deser = "</span> <span class="o">+</span> <span class="n">object</span><span class="o">);</span>
     <span class="o">}</span>
   <span class="o">}</span>
@@ -29784,7 +29786,7 @@ key效率要更快些。对于HashMap的源码暂时就分析这么多，由于�
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-04 12:05:31 UTC
+Last updated 2020-12-04 12:14:51 UTC
 </div>
 </div>
 </body>

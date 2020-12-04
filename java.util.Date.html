@@ -115,6 +115,7 @@
 92
 93
 94
+95
 </pre></td><td class="code"><pre><span class="kn">package</span> <span class="nn">com.diguage.truman</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.apache.commons.lang3.time.FastDateFormat</span><span class="o">;</span>
@@ -143,7 +144,8 @@
 
   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">DateTimeFormatter</span> <span class="n">formatter</span> <span class="o">=</span> <span class="nc">DateTimeFormatter</span><span class="o">.</span><span class="na">ofPattern</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
   <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">FastDateFormat</span> <span class="n">fastFormat</span> <span class="o">=</span> <span class="nc">FastDateFormat</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
-  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">org</span><span class="o">.</span><span class="na">joda</span><span class="o">.</span><span class="na">time</span><span class="o">.</span><span class="na">format</span><span class="o">.</span><span class="na">DateTimeFormatter</span> <span class="n">jodaFormat</span> <span class="o">=</span> <span class="nc">DateTimeFormat</span><span class="o">.</span><span class="na">forPattern</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
+  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">org</span><span class="o">.</span><span class="na">joda</span><span class="o">.</span><span class="na">time</span><span class="o">.</span><span class="na">format</span><span class="o">.</span><span class="na">DateTimeFormatter</span>
+    <span class="n">jodaFormat</span> <span class="o">=</span> <span class="nc">DateTimeFormat</span><span class="o">.</span><span class="na">forPattern</span><span class="o">(</span><span class="n">yyyyMMdd</span><span class="o">);</span>
 
   <span class="nd">@Benchmark</span>
   <span class="kd">public</span> <span class="nc">String</span> <span class="nf">testSimpleDateFormat</span><span class="o">()</span> <span class="o">{</span>
@@ -217,7 +219,7 @@
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-12-04 12:05:31 UTC
+Last updated 2020-12-04 12:14:51 UTC
 </div>
 </div>
 </body>
