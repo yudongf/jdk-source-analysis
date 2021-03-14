@@ -1,5 +1,4 @@
 = JDK 源码分析
-D瓜哥 <https://www.diguage.com>
 {docdate}
 :doctype: book
 :creator: {author}
@@ -10,7 +9,7 @@ ifndef::source-highlighter[:source-highlighter: rouge]
 
 :!sectnums:
 
-include::preface.adoc[leveloffset=+1]
+include::../preface.adoc[leveloffset=+1]
 
 :sectnums:
 

@@ -42,5 +42,9 @@ image::images/cms-g1.png[width=100%]
    需暂停用户线程（并行）
    负责更新Region的统计数据， 对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。
 
+*TLAB*::
+
+
+
 *参考资料*::
 [*]https://my.oschina.net/u/4588934/blog/4809561[G1的Region是如何划分数量和大小的]
