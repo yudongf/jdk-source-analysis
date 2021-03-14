@@ -8,12 +8,10 @@
 ifndef::source-highlighter[:source-highlighter: rouge]
 
 :!sectnums:
-
 include::preface.adoc[leveloffset=+1]
 
 :sectnums:
-
-
 include::gc/垃圾回收基础.adoc[leveloffset=+1]
 
+:sectnums:
 include::gc/G1.adoc[leveloffset=+1]
