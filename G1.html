@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.12">
+<title>G1</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="assets/css/asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_g1">1. G1</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_g1"><a class="anchor" href="#_g1"></a>1. G1</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>把连续的Java堆划分为多个大小相等的独立区域（Region） ， 每一个Region都可以根据需要， 扮演新生代的Eden空间、 Survivor空间， 或者老年代空间。 收集器能够对扮演不同角色的Region采用不同的策略去处理。</p>
+</div>
+<div class="paragraph">
+<p>Region中还有一类特殊的Humongous区域，专门用来存储大对象。G1认为只要大小超过了一个Region容量一半的对象即可判定为大对象。 每个Region的大小可以通过参数-XX:G1HeapRegionSize设定，取值范围为1MB～32MB，且应为2的N次幂。<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>而对于那些超过了整个Region容量的超级大对象，将会被存放在N个连续的Humongous Region之中，G1的大多数行为都把Humongous Region作为老年代的一部分来进行看待。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/cms-g1.png" alt="cms g1" width="100%">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>参数</strong></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">参数</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">说明</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">描述</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:G1HeapRegionSize=n</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置region大小</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:MaxGCPauseMillis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置G1收集过程目标时间，默认值200ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">仅时目标时间，非真实可达时间</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:G1NewSizePercent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代最小值，默认值5%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置收集目标时间，不要设置此值，否则此值不生效</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:G1MaxNewSizePercent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代最大值，默认值60%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置收集目标时间，不要设置此值，否则此值不生效</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:ParallelGCThreads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STW期间，并行GC线程数</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:ConcGCThreads=n</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">并发标记阶段，并行执行的线程数</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:InitiatingHeapOccupancyPercent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>G1步骤</strong></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>初始标记(Initial Marking)
+需暂停用户线程(借用进行Minor GC的时候同步完成)
+仅仅只标记GC Roots能直接关联到的对象，并且修改TAMS指针的值，让下一阶段用户线程并发运行时，能正确地在可用的Region中分配新对象。</p>
+</li>
+<li>
+<p>并发标记(Concurrent Marking)</p>
+<div class="literalblock">
+<div class="content">
+<pre>从GC Root开始对堆中对象进行可达性分析，递归扫描整个堆里的对象图，找出要回收的对象，这阶段耗时较长。当对象图扫描完成以后，还要重新处理SATB记录下的在并发时有引用变动的对象。</pre>
+</div>
+</div>
+</li>
+<li>
+<p>最终标记(Final Marking)</p>
+<div class="literalblock">
+<div class="content">
+<pre>需暂停用户线程
+用于处理并发阶段结束后仍遗留下来的最后那少量的原始快照（SATB）记录。</pre>
+</div>
+</div>
+</li>
+<li>
+<p>筛选回收(Live Data Counting and Evacuation)</p>
+<div class="literalblock">
+<div class="content">
+<pre>需暂停用户线程（并行）
+负责更新Region的统计数据， 对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><strong>参考资料</strong></dt>
+<dd>
+<p>[*]<a href="https://my.oschina.net/u/4588934/blog/4809561">G1的Region是如何划分数量和大小的</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. heapReginSize必须是2的N次方，参考资料1中的内容详解
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-03-14 13:26:17 UTC
+</div>
+</div>
+</body>
+</html>
