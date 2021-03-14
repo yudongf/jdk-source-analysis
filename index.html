@@ -14,28 +14,875 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>p>code{color: #d14 !important;background-color: #f5f5f5 !important;border: 1px solid #e1e1e8;white-space: nowrap;border-radius: 3px;}</style>
 </head>
-<body class="book">
+<body class="book toc2 toc-left">
 <div id="header">
 <h1>JDK 源码分析</h1>
 <div class="details">
 <span id="author" class="author">2021-03-14</span><br>
 </div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_前言jvm_gc">前言：JVM GC</a></li>
+<li><a href="#_垃圾回收基础">1. 垃圾回收基础</a></li>
+</ul>
+</div>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="_前言jvm_gc"><a class="anchor" href="#_前言jvm_gc"></a>前言：JVM GC</h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+本文档基于 <strong>OpenJDK 8u275b01</strong> 来进行实验分析，请 PR 的小伙伴使用相同的 JDK。谢谢！
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_垃圾回收基础"><a class="anchor" href="#_垃圾回收基础"></a>1. 垃圾回收基础</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Unresolved directive in index.adoc - include::../preface.adoc[leveloffset=+1]</p>
+<p>引用美团技术博客里的一张图表示JVM中的各个区的概念，灰色的区域是会做垃圾回收的区域。
+<a href="https://tech.meituan.com/2020/11/12/java-9-cms-gc.html">美团技术博客-Java中9种常见的CMS GC问题分析与解决</a></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/jvm-memory.jpg" alt="width:100%">
+</div>
+</div>
+<div class="sect3">
+<h4 id="_swtstop_the_world"><a class="anchor" href="#_swtstop_the_world"></a>1.1. SWT(Stop The World)</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Unresolved directive in gc/垃圾回收基础.adoc - include::/home/runner/work/jdk-source-analysis/jdk-source-analysis/src/main/java/com/diguage/truman/swt/SWTTest.java[]</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/SWT-测试.png" alt="SWT 测试" width="100%">
+</div>
 </div>
 <div class="paragraph">
-<p>Unresolved directive in index.adoc - include::垃圾回收基础.adoc[leveloffset=+1]</p>
+<p>添加-XX:+PrintGCApplicationStoppedTime，可以显示应用程序在Java虚拟机进行所有GC暂停的总耗时。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>2020-12-28T14:57:12.947+0800: [Full GC (Ergonomics) [PSYoungGen: 5632K-&gt;5528K(6144K)] [ParOldGen: 13392K-&gt;13383K(13824K)] 19024K-&gt;18912K(19968K), [Metaspace: 3256K-&gt;3256K(1056768K)], 0.0124098 secs] [Times: user=0.09 sys=0.00, real=0.01 secs]
+2020-12-28T14:57:12.960+0800: Total time for which application threads were stopped: 0.0126262 seconds, Stopping threads took: 0.0000144 seconds</pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_垃圾收集算法"><a class="anchor" href="#_垃圾收集算法"></a>1.2. 垃圾收集算法</h3>
+<div class="sect4">
+<h5 id="_分代收集理论"><a class="anchor" href="#_分代收集理论"></a>分代收集理论</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>弱分代假说（Weak Generational Hypothesis） ： 绝大多数对象都是朝生夕灭的。</p>
+</li>
+<li>
+<p>强分代假说（Strong Generational Hypothesis） ： 熬过越多次垃圾收集过程的对象就越难以消亡。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_标记清除mark_sweep算法"><a class="anchor" href="#_标记清除mark_sweep算法"></a>标记清除（Mark-Sweep）算法</h5>
+<div class="ulist">
+<ul>
+<li>
+<p>新生代收集（ Minor GC/Young GC）</p>
+</li>
+<li>
+<p>老年代收集（ Major GC/Old GC）: CMS</p>
+</li>
+<li>
+<p>混合收集（ Mixed GC）: G1</p>
+</li>
+<li>
+<p>整堆收集（ Full GC）: 收集老年代新生代和方法区
+回收过程主要分为两个阶段，第一阶段为追踪（Tracing）阶段，即从 GC Root 开始遍历对象图，并标记（Mark）所遇到的每个对象，第二阶段为清除（Sweep）阶段，即回收器检查堆中每一个对象，并将所有未被标记的对象进行回收，整个过程不会发生对象移动。整个算法在不同的实现中会使用三色抽象（Tricolour Abstraction）、位图标记（BitMap）等技术来提高算法的效率，存活对象较多时较高效。</p>
+<div class="literalblock">
+<div class="content">
+<pre>三色抽象（Tricolour Abstraction）
+回收器将对象图划分为灰色对象(确定存活)和白色对象(可能死亡)。对象起始状态为白色，回收器初次扫描到某一对象时为灰色，当完成扫描并找到其所有子节点之后，回收器将其着为黑色。从概念上将黑色意味已被处理过，灰色意味已被回收器遍历但尚未完成处理（或需要进行再次处理）。</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/三色抽象.png" alt="width:100%">
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>位图标记(BitMap)
+回收期将对象的标记位保留在其头部某个字中，也可以使用独立的位图来维护标记位。即：位图中每个位关联堆中每个可能分配对象的地址。位图所需空间取决于虚拟机的字节对齐要求。</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/标记清除.png" alt="width:100%">
+</div>
+</div>
+<div class="paragraph">
+<p>标记清除缺点有两个： 第一个是执行效率不稳定， 如果Java堆中包含大量对象， 而且其中大部分是需要被回收的， 这时必须进行大量标记和清除的动作， 导致标记和清除两个过
+程的执行效率都随对象数量增长而降低； 第二个是内存空间的碎片化问题， 标记、 清除之后会产生大量不连续的内存碎片， 空间碎片太多可能会导致当以后在程序运行过程中需要分配较大对象时无法找
+到足够的连续内存而不得不提前触发另一次垃圾收集动作。</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_标记复制算法"><a class="anchor" href="#_标记复制算法"></a>标记复制算法</h5>
+<div class="paragraph">
+<p>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/标记复制.png" alt="标记复制" width="100%">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_标记整理mark_compact算法"><a class="anchor" href="#_标记整理mark_compact算法"></a>标记整理(Mark-Compact)算法</h5>
+<div class="paragraph">
+<p>标记-清除算法与标记-整理算法的本质差异在于前者是一种非移动式的回收算法， 而后者是移动式的。
+移动存活对象， 尤其是在老年代这种每次回收都有大量对象存活区域， 移动存活对象并更新所有引用这些对象的地方将会是一种极为负重的操作，而且这种对象移动操作必须全程暂停用户应用程序才能进行（Stop The World）</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/标记整理.png" alt="标记整理" width="100%">
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_根节点枚举"><a class="anchor" href="#_根节点枚举"></a>根节点枚举</h5>
+<div class="paragraph">
+<p>所有收集器在根节点枚举这一步骤时都是必须暂停用户线程的。
+JAVA中可作为GC Roots的对象有：
+虚拟机栈(栈帧中的本地变量表)中引用的对象；
+方法区中的类静态属性引用的对象;
+方法区中常量引用的对;
+本地方法栈中JNI（即一般说的Native方法）中引用的对象</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Unresolved directive in gc/垃圾回收基础.adoc - include::/home/runner/work/jdk-source-analysis/jdk-source-analysis/src/main/java/com/diguage/truman/gcroots/TestGCRoots01.java[]</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_记忆集与卡表"><a class="anchor" href="#_记忆集与卡表"></a>1.2.6. 记忆集与卡表</h4>
+<div class="paragraph">
+<p>记忆集是一种用于记录从非收集区域指向收集区域的指针集合的抽象数据结构。
+卡表就是记忆集的一种具体实现，它定义了记忆集的记录精度、与堆内存的映射关系等。 关于卡表与记忆集的关系，不妨按照Java语言中HashMap与Map的关系来类比理解。</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>卡表元素何时变脏的答案是很明确的——有其他分代区域中对象引用了本区域对象时，其对应的卡表元素就应该变脏，变脏时间点原则上应该发生在引用类型字段赋值的那一刻。</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_安全点"><a class="anchor" href="#_安全点"></a>1.2.7. 安全点</h4>
+<div class="paragraph">
+<p>安全点就是指代码中一些特定的位置,当线程运行到这些位置时它的状态是确定的,这样JVM就可以安全的进行一些操作,比如GC。
+这些特定的位置主要有几下几种:
+方法返回之前
+调用某个方法之后
+抛出异常的位置
+循环的末尾</p>
+</div>
+<div class="paragraph">
+<p>可以设置JVM参数 -XX:+PrintSafepointStatistics –XX:PrintSafepointStatisticsCount=1 来输出safepoint的统计信息</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_读写屏障read_write_barrier"><a class="anchor" href="#_读写屏障read_write_barrier"></a>1.2.8. 读写屏障（Read Write Barrier）</h4>
+<div class="paragraph">
+<p>写屏障可以看作在虚拟机层面对“引用类型字段赋值”这个动作的AOP切面，在引用对象赋值时会产生一个环形（Around）通知，供程序执行额外的动作，也就是说赋值的前后都在写屏障的覆盖范畴内。在赋值前的部分的写屏障叫作写前屏障（Pre-Write Barrier），在赋值后的则叫作写后屏障（Post-Write Barrier）</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>void oop_field_store(oop* field, oop new_value) {
+	// 引用字段赋值操作
+	*field = new_value;
+	// 写后屏障，在这里完成卡表状态更新
+	post_write_barrier(field, new_value);
+}</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+JDK 7之后，HotSpot虚拟机增加了一个新的参数-XX：+UseCondCardMark，用来决定是否开启卡表更新的条件判断。开启会增加一次额外判断的开销，但能够避免伪共享问题，两者各有性能损耗，是否打开要根据应用实际运行情况来进行测试权衡。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_垃圾收集器"><a class="anchor" href="#_垃圾收集器"></a>1.2.9. 垃圾收集器</h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">收集器名称</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">类型</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">算法</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">说明</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">搭配收集器</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serial</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记复制算法（单线程）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用一个线程进行 GC ，串行，其它工作线程暂停</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用-XX:+UseSerialGC来使用Serial + Serial Old或Serial + CMS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ParNew</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记复制算法（多线程）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serial 收集器的多线程版</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用-XX:+UseParNewGC来使用ParNew + Serial Old或使用-XX:+UseConcMarkSweepGC进行ParNew + CMS + Serial Old(内存不足时)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parallel Scavenge</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记复制算法（多线程）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">目的达到可控制的吞吐量（Throughput）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+UseParallelGC来使用Parallel Scavenge + Serial Old收集器组合回收垃圾</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serial Old</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">老年代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记整理算法（单线程）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serial收集器的老年代版本</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">作为CMS收集器发生失败时的后备预案</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parallel Old</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">老年代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记整理算法（多线程）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parallel Scavenge收集器的老年代版本</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用-XX:+UseParallelOldGC来使用Parallel Scavenge + Parallel Old组合收集器进行收集</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CMS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">老年代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记清除（多线程）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">浮动垃圾、增量更新</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用-XX:+UseConcMarkSweepGC进行ParNew + CMS + Serial Old进行内存回收，优先使用ParNew + CMS（原因见后面），当用户线程内存不足时，采用备用方案Serial Old收集</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">G1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代老年代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">基于Region</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">记忆集、卡表、原始快照（SATB）、写屏障</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shenandoah</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代老年代</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">基于Region</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ZGC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">不分带</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">标记整理，基于Region（动态大小）</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">读屏障、染色指针</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cms垃圾回收"><a class="anchor" href="#_cms垃圾回收"></a>1.3. CMS垃圾回收</h3>
+<div class="imageblock">
+<div class="content">
+<img src="./images/cms运行过程.png" alt="width:100%" height="100%">
+</div>
+</div>
+<div class="paragraph">
+<p>CMS GC 的执行过程，具体来说就是：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>初始标记(CMS-initial-mark)</p>
+<div class="literalblock">
+<div class="content">
+<pre>该阶段是 stop the world 阶段，因此此阶段标记的对象只是从 root 集最直接可达的对象。
+此阶段会打印 1 条日志：
+CMS-initial-mark：961330K（1572864K），指标记时，老年代的已用空间和总空间</pre>
+</div>
+</div>
+</li>
+<li>
+<p>并发标记(CMS-concurrent-mark)</p>
+<div class="literalblock">
+<div class="content">
+<pre>此阶段是和应用线程并发执行的，所谓并发收集器指的就是这个，主要作用是标记可达的对象，此阶段不需要用户线程停顿。
+在并发标记时，GC和用户线程是并发执行的，可能导致本来不可达对象变可达。需要Remark将这部分对象更正。
+此阶段会打印 2 条日志：CMS-concurrent-mark-start，CMS-concurrent-mark
+CMS是基于增量更新来做并发标记的， G1则是用原始快照（SATB）来实现</pre>
+</div>
+</div>
+</li>
+<li>
+<p>预清理(CMS-concurrent-preclean)</p>
+<div class="literalblock">
+<div class="content">
+<pre>此阶段主要是进行一些预清理，因为标记和应用线程是并发执行的，因此会有些对象的状态在标记后会改变，此阶段正是解决这个问题。因为之后的 CMS-remark 阶段也会 stop the world，为了使暂停的时间尽可能的小，也需要preclean阶段先做一部分工作以节省时间。
+此阶段会打印 2 条日志：CMS-concurrent-preclean-start，CMS-concurrent-preclean</pre>
+</div>
+</div>
+</li>
+<li>
+<p>可控预清理(CMS-concurrent-abortable-preclean)</p>
+<div class="literalblock">
+<div class="content">
+<pre>此阶段的目的是使 CMS GC 更加可控一些，作用也是执行一些预清理，以减少 CMS-remark 阶段造成应用暂停的时间。
+此阶段会打印3条日志：CMS-concurrent-abortable-preclean-start，CMS-concurrent-abortable-preclean，CMS：abort preclean due to time XXX</pre>
+</div>
+</div>
+</li>
+<li>
+<p>重新标记(CMS-remark)</p>
+<div class="literalblock">
+<div class="content">
+<pre>此阶段暂停应用线程，停顿时间比并发标记小得多，但比初始标记稍长，因为会对所有对象进行重新扫描并标记。
+此阶段会打印以下日志：
+YG occupancy：964861K（2403008K），指执行时年轻代的情况。
+CMS remark：961330K（1572864K），指执行时老年代的情况。
+此外，还打印出了弱引用处理、类卸载等过程的耗时。</pre>
+</div>
+</div>
+</li>
+<li>
+<p>并发清除(CMS-concurrent-sweep)</p>
+<div class="literalblock">
+<div class="content">
+<pre>此阶段进行并发的垃圾清理。
+并发重设状态等待下次CMS的触发(CMS-concurrent-reset)
+此阶段是为下一次 CMS GC 重置相关数据结构。</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+CMS的收集过程，概括一下就是：2 次标记，2 次预清除，1 次重新标记，1 次清除。 在CMS清理过程中，只有初始标记和重新标记需要短暂停顿用户线程，并发标记和并发清除不需要暂停用户线程。CMS 默认启动线程数为( ParallelGCThreads + 3 ) / 4。
+</td>
+</tr>
+</table>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>参数</strong></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">参数</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">说明</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">描述</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+UseConcMarkSweepGC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">开启该参数后会自动将-XX:+UseParNewGC打开。即: ParNew(Young区用)+CMS(Old区用)+Serial Old的组合</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:CMSInitiatingOccupancyFraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置堆内存使用率的阈值,一旦达到该阈值,便开始进行回收(JDK5及以前版本的默认值为68,JDK6及以上版本默认值为92)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">即当老年代的空间使用率达到设置值时,会执行一次CMS回收。如果内存增长缓慢,则可以设置一个稍大的值,大的阈值可以有效降低CMS的触发频率,减少老年代回收的次数可以较为明显地改善应用程序性能。反之,如果应用程序内存使用率增长很快,则应该降低这个阈值,以避免频繁触发老年代串行收集器。因此通过该选项可便可以有效降低Full GC的执行次数</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+UseCMSCompactAtFullCollection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">用于指定在执行完Full GC后对内存空间进行压缩整理,以此避免内存碎片的产生。不过由于内存压缩整理过程无法并发执行,所带来的问题就是停顿时间变得更长了</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:CMSFullGCsBeforeCompaction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置在执行多少次Full GC后对内存空间进行压缩整理</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">默认值为0，表示每次进入Full GC时都进行碎片整理，</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:ParallelCMSThreads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置CMS的线程数量</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CMS默认启动的线程数是(ParallelGCThreads+3)/4,ParallelGCThreads 是年轻代并行收集器的线程数。当CPU资源比较紧张时,受到CMS收集器线程的影响,应用程序的性能在垃圾回收阶段可能会非常糟糕</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+UseCMSInitiatingOccupancyOnly</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用手动定义初始化定义开始CMS收集</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM不基于运行时收集的数据来启动CMS垃圾收集周期，而是，当该标志被开启时，JVM通过CMSInitiatingOccupancyFraction的值进行每一次CMS收集，而不仅仅是第一次</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+CMSParallelRemarkEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">降低标记停顿</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+CMSClassUnloadingEnabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">对永久代进行垃圾回收</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CMS收集器默认不会对永久代进行垃圾回收，即使没有设置这个标志，一旦永久代耗尽空间也会尝试进行垃圾回收，但是收集不会是并行的，而再一次进行Full GC</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+CMSIncrementalMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">开启CMS收集器的增量模式</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">增量模式经常暂停CMS过程，以便对应用程序线程作出完全的让步。收集器将花更长的时间完成整个收集周期。因此，只有通过测试后发现正常CMS周期对应用程序线程干扰太大时，才应该使用增量模式。由于现代服务器有足够的处理器来适应并发的垃圾收集，所以这种情况发生得很少</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:+CMSScavengeBeforeRemark</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CMS GC前启动一次ygc，目的减少old gen对ygc gen的引用</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">降低remark时的开销-----一般CMS的GC耗时 80%都在remark阶段</p></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>实验</strong></dt>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Unresolved directive in gc/垃圾回收基础.adoc - include::/home/runner/work/jdk-source-analysis/jdk-source-analysis/src/main/java/com/diguage/truman/cms/CmsGcTest1.java[]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>当CMSInitiatingOccupancyFraction为40时，日志中会出现：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>分配12M空间
+{Heap before GC invocations=4 (full 6):
+ par new generation   total 9216K, used 6356K [0x00000000fec00000, 0x00000000ff600000, 0x00000000ff600000)
+  eden space 8192K,  77% used [0x00000000fec00000, 0x00000000ff235368, 0x00000000ff400000)
+  from space 1024K,   0% used [0x00000000ff400000, 0x00000000ff400000, 0x00000000ff500000)
+  to   space 1024K,   0% used [0x00000000ff500000, 0x00000000ff500000, 0x00000000ff600000)
+ concurrent mark-sweep generation total 10240K, used 7047K [0x00000000ff600000, 0x0000000100000000, 0x0000000100000000)
+ Metaspace       used 3224K, capacity 4556K, committed 4864K, reserved 1056768K
+  class space    used 337K, capacity 392K, committed 512K, reserved 1048576K
+0.223: [Full GC (System.gc()) 0.223: [CMS0.225: [CMS-concurrent-mark: 0.001/0.003 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+ (concurrent mode interrupted): 7047K-&gt;7047K(10240K), 0.0053004 secs] 13404K-&gt;13191K(19456K), [Metaspace: 3224K-&gt;3224K(1056768K)], 0.0053410 secs] [Times: user=0.00 sys=0.00, real=0.01 secs]
+Heap after GC invocations=5 (full 7):
+ par new generation   total 9216K, used 6144K [0x00000000fec00000, 0x00000000ff600000, 0x00000000ff600000)
+  eden space 8192K,  75% used [0x00000000fec00000, 0x00000000ff2000f8, 0x00000000ff400000)
+  from space 1024K,   0% used [0x00000000ff400000, 0x00000000ff400000, 0x00000000ff500000)
+  to   space 1024K,   0% used [0x00000000ff500000, 0x00000000ff500000, 0x00000000ff600000)
+ concurrent mark-sweep generation total 10240K, used 7047K [0x00000000ff600000, 0x0000000100000000, 0x0000000100000000)
+ Metaspace       used 3224K, capacity 4556K, committed 4864K, reserved 1056768K
+  class space    used 337K, capacity 392K, committed 512K, reserved 1048576K
+}
+2.228: [GC (CMS Initial Mark) [1 CMS-initial-mark: 7047K(10240K)] 13313K(19456K), 0.0008117 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+2.229: [CMS-concurrent-mark-start]
+2.233: [CMS-concurrent-mark: 0.004/0.004 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+2.234: [CMS-concurrent-preclean-start]
+2.237: [CMS-concurrent-preclean: 0.003/0.003 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+2.237: [CMS-concurrent-abortable-preclean-start]
+ CMS: abort preclean due to time 7.269: [CMS-concurrent-abortable-preclean: 0.007/5.032 secs] [Times: user=0.00 sys=0.00, real=5.03 secs]
+7.269: [GC (CMS Final Remark) [YG occupancy: 6266 K (9216 K)]7.269: [Rescan (parallel) , 0.0008389 secs]7.270: [weak refs processing, 0.0001650 secs]7.270: [class unloading, 0.0005747 secs]7.271: [scrub symbol table, 0.0011212 secs]7.272: [scrub string table, 0.0003953 secs][1 CMS-remark: 7047K(10240K)] 13313K(19456K), 0.0032776 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+7.273: [CMS-concurrent-sweep-start]
+7.274: [CMS-concurrent-sweep: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+7.274: [CMS-concurrent-reset-start]
+7.274: [CMS-concurrent-reset: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+9.274: [GC (CMS Initial Mark) [1 CMS-initial-mark: 7037K(10240K)] 13303K(19456K), 0.0011628 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+9.275: [CMS-concurrent-mark-start]
+9.279: [CMS-concurrent-mark: 0.004/0.004 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+9.279: [CMS-concurrent-preclean-start]
+9.280: [CMS-concurrent-preclean: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+9.280: [CMS-concurrent-abortable-preclean-start]
+ CMS: abort preclean due to time 14.302: [CMS-concurrent-abortable-preclean: 0.008/5.022 secs] [Times: user=0.00 sys=0.00, real=5.02 secs]
+14.302: [GC (CMS Final Remark) [YG occupancy: 6266 K (9216 K)]14.302: [Rescan (parallel) , 0.0007911 secs]14.303: [weak refs processing, 0.0001738 secs]14.303: [class unloading, 0.0005547 secs]14.304: [scrub symbol table, 0.0011073 secs]14.305: [scrub string table, 0.0003917 secs][1 CMS-remark: 7037K(10240K)] 13303K(19456K), 0.0032154 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+14.306: [CMS-concurrent-sweep-start]
+14.307: [CMS-concurrent-sweep: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+14.307: [CMS-concurrent-reset-start]
+14.307: [CMS-concurrent-reset: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+16.307: [GC (CMS Initial Mark) [1 CMS-initial-mark: 7022K(10240K)] 13288K(19456K), 0.0007228 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]
+16.308: [CMS-concurrent-mark-start]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>当改为90时，不会出现CMS垃圾回收</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>CMSInitiatingOccupancyFraction值与Xmn的关系公式</p>
+<div class="literalblock">
+<div class="content">
+<pre>eden空间不足的情况下将eden与From survivor中的存活对象存入To survivor区时,To survivor区的空间不足，再次晋升到old gen区，而old gen区内存也不够的情况下产生了promontion faild从而导致full gc.那可以推断出：eden+from survivor &lt; old gen区剩余内存时，不会出现promontion faild的情况，即：
+(Xmx-Xmn)*(1-CMSInitiatingOccupancyFraction/100)&gt;=(Xmn-Xmn/(SurvivorRatior+2))
+进而推断出：
+CMSInitiatingOccupancyFraction &lt;=((Xmx-Xmn)-(Xmn-Xmn/(SurvivorRatio+2)))/(Xmx-Xmn)*100</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>实验</strong></dt>
+</dl>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Unresolved directive in gc/垃圾回收基础.adoc - include::/home/runner/work/jdk-source-analysis/jdk-source-analysis/src/main/java/com/diguage/truman/cms/CMSCompactAtFullCollectionTest.java[]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以看到右边开启UseCMSCompactAtFullCollection后的耗时比昨边高一些。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="/images/CMS-UseCMSCompactAtFullCollection.png" alt="CMS UseCMSCompactAtFullCollection" width="100%">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>实验</strong></dt>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>设置-XX:ParallelCMSThreads=10，通过jps显示当前java进行，通过jstack -l xxx&gt;/logs/1.log打印线程堆栈信息，显示如下堆栈信息：
+
+"VM Thread" os_prio=2 tid=0x000002c1f4f0b000 nid=0x385c runnable
+
+"Gang worker#0 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e15ef800 nid=0x2cc8 runnable
+
+"Gang worker#1 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e15f2000 nid=0x1b3c runnable
+
+"Gang worker#2 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e15f3800 nid=0x38c4 runnable
+
+"Gang worker#3 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e15ff000 nid=0x598 runnable
+
+"Gang worker#4 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e1600800 nid=0x1ca4 runnable
+
+"Gang worker#5 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e1608800 nid=0x6f0 runnable
+
+"Gang worker#6 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e1611800 nid=0x33c4 runnable
+
+"Gang worker#7 (Parallel GC Threads)" os_prio=2 tid=0x000002c1e1612000 nid=0x1f14 runnable
+
+"Concurrent Mark-Sweep GC Thread" os_prio=2 tid=0x000002c1f4e27000 nid=0xdd0 runnable
+
+"Gang worker#0 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e167c800 nid=0xa50 runnable
+
+"Gang worker#1 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e167d000 nid=0x2f40 runnable
+
+"Gang worker#2 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e167d800 nid=0x35c8 runnable
+
+"Gang worker#3 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e1681800 nid=0x2fc0 runnable
+
+"Gang worker#4 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e1682000 nid=0xedc runnable
+
+"Gang worker#5 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e1686800 nid=0x314c runnable
+
+"Gang worker#6 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1e1689000 nid=0x9cc runnable
+
+"Gang worker#7 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1f4e22800 nid=0x1db0 runnable
+
+"Gang worker#8 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1f4e21000 nid=0x2fb4 runnable
+
+"Gang worker#9 (Parallel CMS Threads)" os_prio=2 tid=0x000002c1f4e27800 nid=0x1974 runnable
+
+"VM Periodic Task Thread" os_prio=2 tid=0x000002c1f6751000 nid=0x32ec waiting on condition</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于8核cpu来说，默认线程有多少个呢</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"VM Thread" os_prio=2 tid=0x000002777705c800 nid=0x16d4 runnable
+
+"Gang worker#0 (Parallel GC Threads)" os_prio=2 tid=0x0000027762560000 nid=0x371c runnable
+
+"Gang worker#1 (Parallel GC Threads)" os_prio=2 tid=0x0000027762561800 nid=0x36d0 runnable
+
+"Gang worker#2 (Parallel GC Threads)" os_prio=2 tid=0x0000027762564800 nid=0x3690 runnable
+
+"Gang worker#3 (Parallel GC Threads)" os_prio=2 tid=0x0000027762566800 nid=0x3b7c runnable
+
+"Gang worker#4 (Parallel GC Threads)" os_prio=2 tid=0x0000027762573800 nid=0x10f4 runnable
+
+"Gang worker#5 (Parallel GC Threads)" os_prio=2 tid=0x0000027762579800 nid=0xa14 runnable
+
+"Gang worker#6 (Parallel GC Threads)" os_prio=2 tid=0x0000027762582800 nid=0x37bc runnable
+
+"Gang worker#7 (Parallel GC Threads)" os_prio=2 tid=0x0000027762588800 nid=0x2824 runnable
+
+"Concurrent Mark-Sweep GC Thread" os_prio=2 tid=0x0000027762583800 nid=0xf90 runnable
+
+"Gang worker#0 (Parallel CMS Threads)" os_prio=2 tid=0x0000027762584000 nid=0x245c runnable
+
+"Gang worker#1 (Parallel CMS Threads)" os_prio=2 tid=0x0000027762589000 nid=0x23bc runnable
+
+"VM Periodic Task Thread" os_prio=2 tid=0x00000277774c6000 nid=0x2728 waiting on condition
+
+JNI global references: 12</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果将GCThread设置为20时，我们看一下GC线程数：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>"VM Thread" os_prio=2 tid=0x0000024003420000 nid=0x397c runnable
+
+"Gang worker#0 (Parallel GC Threads)" os_prio=2 tid=0x000002406cde1000 nid=0x2bfc runnable
+
+"Gang worker#1 (Parallel GC Threads)" os_prio=2 tid=0x000002406cde2800 nid=0x2cbc runnable
+
+"Gang worker#2 (Parallel GC Threads)" os_prio=2 tid=0x000002406cde4800 nid=0xef4 runnable
+
+"Gang worker#3 (Parallel GC Threads)" os_prio=2 tid=0x000002406cde7000 nid=0x2990 runnable
+
+"Gang worker#4 (Parallel GC Threads)" os_prio=2 tid=0x000002406cdee000 nid=0x11b0 runnable
+
+"Gang worker#5 (Parallel GC Threads)" os_prio=2 tid=0x000002406cdf0800 nid=0x1cc0 runnable
+
+"Gang worker#6 (Parallel GC Threads)" os_prio=2 tid=0x000002406cdf5000 nid=0x2730 runnable
+
+"Gang worker#7 (Parallel GC Threads)" os_prio=2 tid=0x000002406cdf7800 nid=0x3900 runnable
+
+"Gang worker#8 (Parallel GC Threads)" os_prio=2 tid=0x000002406cdf9000 nid=0xb94 runnable
+
+"Gang worker#9 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce0b000 nid=0x11b8 runnable
+
+"Gang worker#10 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce0e800 nid=0x3274 runnable
+
+"Gang worker#11 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce12000 nid=0x2a50 runnable
+
+"Gang worker#12 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce13000 nid=0x3934 runnable
+
+"Gang worker#13 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce15800 nid=0xa70 runnable
+
+"Gang worker#14 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce23800 nid=0x3114 runnable
+
+"Gang worker#15 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce28000 nid=0x2df0 runnable
+
+"Gang worker#16 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce25000 nid=0x3488 runnable
+
+"Gang worker#17 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce26000 nid=0x1a34 runnable
+
+"Gang worker#18 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce25800 nid=0x1fa8 runnable
+
+"Gang worker#19 (Parallel GC Threads)" os_prio=2 tid=0x000002406ce27000 nid=0x3768 runnable
+
+"Concurrent Mark-Sweep GC Thread" os_prio=2 tid=0x000002406ce23000 nid=0x814 runnable
+
+"Gang worker#0 (Parallel CMS Threads)" os_prio=2 tid=0x000002406ce27800 nid=0x460 runnable
+
+"Gang worker#1 (Parallel CMS Threads)" os_prio=2 tid=0x000002406ce29000 nid=0x248c runnable
+
+"Gang worker#2 (Parallel CMS Threads)" os_prio=2 tid=0x000002406ce24000 nid=0x2928 runnable
+
+"Gang worker#3 (Parallel CMS Threads)" os_prio=2 tid=0x000002406ce21800 nid=0x2284 runnable
+
+"Gang worker#4 (Parallel CMS Threads)" os_prio=2 tid=0x000002406ce22000 nid=0x3964 runnable
+
+"VM Periodic Task Thread" os_prio=2 tid=0x0000024003acc800 nid=0x17c0 waiting on condition
+
+JNI global references: 12</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>结论</strong></dt>
+<dd>
+<p>CMS线程数如果未手动指定时是按照(ParallelGCThreads+3)/4这个公式进行的</p>
+</dd>
+<dt class="hdlist1"><strong>参考资料</strong></dt>
+<dd>
+<div class="ulist checklist">
+<ul class="checklist">
+<li>
+<p><i class="fa fa-check-square-o"></i> <a href="https://juejin.cn/post/6844903984998645768#heading-0">GC 知识点补充——CMS</a></p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> <a href="https://tech.meituan.com/2020/11/12/java-9-cms-gc.html">Java中9种常见的CMS GC问题分析与解决</a></p>
+</li>
+<li>
+<p><i class="fa fa-check-square-o"></i> <a href="https://blog.csdn.net/iter_zc/article/details/41847887">聊聊JVM（六）理解JVM的safepoint</a></p>
+</li>
+<li>
+<p><i class="fa fa-square-o"></i> <a href="https://blog.csdn.net/hollis_chuang/article/details/111659079">炸了！一口气问了我18个JVM问题！</a></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_g1"><a class="anchor" href="#_g1"></a>1.4. G1</h3>
+<div class="paragraph">
+<p>把连续的Java堆划分为多个大小相等的独立区域（Region） ， 每一个Region都可以根据需要， 扮演新生代的Eden空间、 Survivor空间， 或者老年代空间。 收集器能够对扮演不同角色的Region采用不同的策略去处理。</p>
+</div>
+<div class="paragraph">
+<p>Region中还有一类特殊的Humongous区域，专门用来存储大对象。G1认为只要大小超过了一个Region容量一半的对象即可判定为大对象。 每个Region的大小可以通过参数-XX:G1HeapRegionSize设定，取值范围为1MB～32MB，且应为2的N次幂。<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
+</div>
+<div class="paragraph">
+<p>而对于那些超过了整个Region容量的超级大对象，将会被存放在N个连续的Humongous Region之中，G1的大多数行为都把Humongous Region作为老年代的一部分来进行看待。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/cms-g1.png" alt="cms g1" width="100%">
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>参数</strong></dt>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">参数</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">说明</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">描述</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:G1HeapRegionSize=n</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置region大小</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:MaxGCPauseMillis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置G1收集过程目标时间，默认值200ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">仅时目标时间，非真实可达时间</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:G1NewSizePercent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代最小值，默认值5%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置收集目标时间，不要设置此值，否则此值不生效</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:G1MaxNewSizePercent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">新生代最大值，默认值60%</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置收集目标时间，不要设置此值，否则此值不生效</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:ParallelGCThreads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STW期间，并行GC线程数</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:ConcGCThreads=n</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">并发标记阶段，并行执行的线程数</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-XX:InitiatingHeapOccupancyPercent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">设置触发标记周期的 Java 堆占用率阈值。默认值是45%。这里的java堆占比指的是non_young_capacity_bytes，包括old+humongous</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>G1步骤</strong></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>初始标记(Initial Marking)
+需暂停用户线程(借用进行Minor GC的时候同步完成)
+仅仅只标记GC Roots能直接关联到的对象，并且修改TAMS指针的值，让下一阶段用户线程并发运行时，能正确地在可用的Region中分配新对象。</p>
+</li>
+<li>
+<p>并发标记(Concurrent Marking)</p>
+<div class="literalblock">
+<div class="content">
+<pre>从GC Root开始对堆中对象进行可达性分析，递归扫描整个堆里的对象图，找出要回收的对象，这阶段耗时较长。当对象图扫描完成以后，还要重新处理SATB记录下的在并发时有引用变动的对象。</pre>
+</div>
+</div>
+</li>
+<li>
+<p>最终标记(Final Marking)</p>
+<div class="literalblock">
+<div class="content">
+<pre>需暂停用户线程
+用于处理并发阶段结束后仍遗留下来的最后那少量的原始快照（SATB）记录。</pre>
+</div>
+</div>
+</li>
+<li>
+<p>筛选回收(Live Data Counting and Evacuation)</p>
+<div class="literalblock">
+<div class="content">
+<pre>需暂停用户线程（并行）
+负责更新Region的统计数据， 对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><strong>TLAB</strong></dt>
+<dt class="hdlist1"><strong>参考资料</strong></dt>
+<dd>
+<p>[*]<a href="https://my.oschina.net/u/4588934/blog/4809561">G1的Region是如何划分数量和大小的</a></p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. heapReginSize必须是2的N次方，参考资料1中的内容详解
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-03-14 13:49:15 UTC
+Last updated 2021-03-14 14:10:35 UTC
 </div>
 </div>
 </body>
