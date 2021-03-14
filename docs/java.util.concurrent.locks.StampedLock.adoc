@@ -1,6 +1,0 @@
-= StampedLock
-
-[{java_src_attr}]
-----
-include::{sourcedir}/concurrent/StampedLockTest.java[]
-----

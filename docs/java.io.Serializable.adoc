@@ -1,6 +1,0 @@
-= `Serializable`
-
-[{java_src_attr}]
-----
-include::{sourcedir}/OuterClass.java[]
-----

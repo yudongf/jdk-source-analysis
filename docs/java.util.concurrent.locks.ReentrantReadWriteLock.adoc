@@ -1,6 +1,0 @@
-= ReentrantReadWriteLock
-
-[{java_src_attr}]
-----
-include::{sourcedir}/concurrent/ReentrantReadWriteLockTest.java[]
-----

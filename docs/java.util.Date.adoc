@@ -1,6 +1,0 @@
-= `Date`
-
-[{java_src_attr}]
-----
-include::{sourcedir}/DateFormatTest.java[]
-----

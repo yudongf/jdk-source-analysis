@@ -1,6 +1,0 @@
-= CyclicBarrier
-
-[{java_src_attr}]
-----
-include::{sourcedir}/concurrent/CyclicBarrierTest.java[]
-----

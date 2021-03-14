@@ -1,6 +1,0 @@
-= LongAdder
-
-[{java_src_attr}]
-----
-include::{sourcedir}/concurrent/LongAdderTest.java[]
-----
