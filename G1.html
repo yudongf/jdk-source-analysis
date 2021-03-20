@@ -133,6 +133,84 @@
 </div>
 </dd>
 <dt class="hdlist1"><strong>TLAB</strong></dt>
+<dd>
+<p>对象分配：TLAB快速-&#8594; TLAB慢速-&#8594;慢速分配</p>
+</dd>
+<dt class="hdlist1"><strong>G1中垃圾回收模式</strong></dt>
+<dd>
+<p>新生代回收、混合回收(mixed)、Full GC</p>
+</dd>
+<dt class="hdlist1"><strong>记忆集(RSet)</strong></dt>
+<dd>
+<p>记忆集有Point In和Point Out两种，G1中采用的Point In方式。
+因为G1中新生代是发生gc时全量扫描的，而老年代只会扫描部分分区。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>老年代-&#8594;新生代  需要</p>
+</li>
+<li>
+<p>新生代-&#8594;老年代 不需要</p>
+</li>
+<li>
+<p>新生代-&#8594;新生代 不需要</p>
+</li>
+<li>
+<p>老年代-&#8594;老年代 需要</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><strong> PRT</strong></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>稀疏PRT：通过哈希表存储，默认长度为4.</p>
+</li>
+<li>
+<p>细粒度PRT：通过PRT指针.</p>
+</li>
+<li>
+<p>粗粒度：通过位图指示，每一位标识对应分期有引用到该分区数据结构.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><strong>Refine线程</strong></dt>
+<dd>
+<p>Refine线程用于处理新生代分区的抽样；管理RSet。Refine线程池最后一个线程是抽样线程。主要作用是设置新生代分区的个数，使G1满足垃圾回收的预测停顿时间。
+线程默认数据为G1ConcRefinementThreads+1
+0号线程由任意Mutator来通知，而1号到n-1号线程执行有前一个标号的Refine线程通知。</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>工作负载分区：
+* 白区[0,Green) 该区Refine线程不处理，交由GC线程来处理DCQ  比例：1
+* 绿区[Green,Yellow) 该区Refine线程开启启动  比例：3
+* 黄区[Yellow,Red) 所有的Refine线程(除了抽样线程)都参与DCQ处理 比例：6
+* 红区[Red,+无穷) 不仅所有Refine线程参与处理DCQ，连Mutator也参与处理DCQ</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><strong>写屏障</strong></dt>
+<dd>
+<p>写屏障是在改变特定内存的值时额外执行的一些动作。G1垃圾回收器的RSet就是通过写屏障完成，在写变更的时候通过插入一条额外的代码把引用关系放入到DCQ中，随后Refine线程更新RSet，记录对分区内部中对象的指针。</p>
+</dd>
+<dt class="hdlist1"><strong>新生代回收</strong></dt>
+<dd>
+<p>每一次YGC都是手机所有的新生代分区。所以每一次GC后都会根据预测停顿模型调整新生代分区数据。</p>
+</dd>
+<dt class="hdlist1"><strong>CSet</strong></dt>
+<dd>
+<p>Collection Set,一次垃圾回收集中被收集区域的集合。对于YGC来说整个新生代分区就是CSet。</p>
+</dd>
+<dt class="hdlist1"><strong>PLAB</strong></dt>
+<dd>
+<p>对象从Eden提升到Suvivor或Old区域，为了避免多线程竞争，通过PLAB（ promotion local allocation buffer）进行内存分配。新生代PLAB大小为16KB（32位），由YoungPLABSize控制。老年代PLAB大小4KB(32位)，由OldPLABSize控制。参数ParallelGCBufferWastePct表示PLAB浪费的比例。
+如果要分配一个新的PLAB时，需要把当前PLAB里碎片部分填充为dummy对象。</p>
+</dd>
 <dt class="hdlist1"><strong>参考资料</strong></dt>
 <dd>
 <p>[*]<a href="https://my.oschina.net/u/4588934/blog/4809561">G1的Region是如何划分数量和大小的</a></p>
@@ -150,7 +228,7 @@
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2021-03-14 14:17:24 UTC
+Last updated 2021-03-20 07:50:45 UTC
 </div>
 </div>
 </body>
