@@ -43,7 +43,50 @@ image::images/cms-g1.png[width=100%]
    负责更新Region的统计数据， 对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。
 
 *TLAB*::
+对象分配：TLAB快速--> TLAB慢速-->慢速分配
 
+*G1中垃圾回收模式*::
+新生代回收、混合回收(mixed)、Full GC
+
+*记忆集(RSet)*::
+
+记忆集有Point In和Point Out两种，G1中采用的Point In方式。
+因为G1中新生代是发生gc时全量扫描的，而老年代只会扫描部分分区。
+
+* 老年代-->新生代  需要
+* 新生代-->老年代 不需要
+* 新生代-->新生代 不需要
+* 老年代-->老年代 需要
+
+** PRT**::
+* 稀疏PRT：通过哈希表存储，默认长度为4.
+* 细粒度PRT：通过PRT指针.
+* 粗粒度：通过位图指示，每一位标识对应分期有引用到该分区数据结构.
+
+*Refine线程*::
+Refine线程用于处理新生代分区的抽样；管理RSet。Refine线程池最后一个线程是抽样线程。主要作用是设置新生代分区的个数，使G1满足垃圾回收的预测停顿时间。
+线程默认数据为G1ConcRefinementThreads+1
+0号线程由任意Mutator来通知，而1号到n-1号线程执行有前一个标号的Refine线程通知。
+
+工作负载分区：
+* 白区[0,Green) 该区Refine线程不处理，交由GC线程来处理DCQ  比例：1
+* 绿区[Green,Yellow) 该区Refine线程开启启动  比例：3
+* 黄区[Yellow,Red) 所有的Refine线程(除了抽样线程)都参与DCQ处理 比例：6
+* 红区[Red,+无穷) 不仅所有Refine线程参与处理DCQ，连Mutator也参与处理DCQ
+
+*写屏障*::
+写屏障是在改变特定内存的值时额外执行的一些动作。G1垃圾回收器的RSet就是通过写屏障完成，在写变更的时候通过插入一条额外的代码把引用关系放入到DCQ中，随后Refine线程更新RSet，记录对分区内部中对象的指针。
+
+*新生代回收*::
+每一次YGC都是手机所有的新生代分区。所以每一次GC后都会根据预测停顿模型调整新生代分区数据。
+
+**CSet**::
+Collection Set,一次垃圾回收集中被收集区域的集合。对于YGC来说整个新生代分区就是CSet。
+
+
+**PLAB**::
+对象从Eden提升到Suvivor或Old区域，为了避免多线程竞争，通过PLAB（ promotion local allocation buffer）进行内存分配。新生代PLAB大小为16KB（32位），由YoungPLABSize控制。老年代PLAB大小4KB(32位)，由OldPLABSize控制。参数ParallelGCBufferWastePct表示PLAB浪费的比例。
+如果要分配一个新的PLAB时，需要把当前PLAB里碎片部分填充为dummy对象。
 
 
 *参考资料*::
