@@ -15,7 +15,7 @@ WARNING: 本文档基于 *OpenJDK 11.0.6 2020-01-14 LTS* 的代码开展分析�
 
 [cols="2*^",frame=none]
 |===
-| image:images/alipay.png[title="支付宝", alt="支付宝", width="45%"] | image:images/wxpay.png[title="微信", alt="微信", width="45%"]
+| image:images/alipay.png[title="支付宝", alt="支付宝", width="95%"] | image:images/wxpay.png[title="微信", alt="微信", width="95%"]
 |===
 
 有些打赏的朋友希望可以加个好友，欢迎关注D瓜哥的微信公众号，这样就可以通过公众号的回复直接给我发信息。
